@@ -1,4 +1,7 @@
-<?php include 'dashboard.php';?>
+<?php
+  session_start();
+  include 'header.php';
+?>
 <div class="main-panel">
         <div class="content-wrapper">
           <div class="row">
@@ -33,7 +36,7 @@
                             } catch (PDOException $e) {
                                 die($e->getMessage());
                             }
-                            if (!empty($_FILES['image']['name'])) {
+                            if (!empty($_FILES['image']['name']) && !empty($_POST['pname']) && !empty($_POST['price'])) {
                                 $pname = $_POST['pname'];
                                 $price = $_POST['price'];
                                 $name = $_FILES['image']['name'];
@@ -44,6 +47,8 @@
                                 } else {
                                     echo 'No';
                                 }
+                            } else {
+                                echo "Please enter the data..";
                             }
                         }
                   ?>
@@ -52,3 +57,4 @@
             </div>
         </div>
 </div>
+<?php include 'footer.php'; ?>

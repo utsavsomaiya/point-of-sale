@@ -1,4 +1,6 @@
-<?php include 'dashboard.php'; ?>
+<?php
+session_start();
+include 'header.php'; ?>
       <div class="main-panel">
         <div class="content-wrapper">
           <div class="row">
@@ -64,6 +66,4 @@
                 </div>
               </div>
             </div>
-</body>
-
-</html>
+<?php include 'footer.php'; ?>

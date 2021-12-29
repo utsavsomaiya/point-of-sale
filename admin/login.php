@@ -19,6 +19,6 @@
                         if (!$result) {
                             echo "no";
                         } else {
-                            header('location:admin/dashboard.php');
+                            header('location:dashboard.php');
                         }
                     }
