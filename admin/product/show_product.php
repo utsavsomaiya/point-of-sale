@@ -14,6 +14,7 @@
 					<?php
                         if (isset($_SESSION['msg'])) {
                             echo $_SESSION['msg'];
+                            unset($_SESSION['msg']);
                         }
                     ?>
 					<table class="table">
@@ -49,9 +50,8 @@
 									<td><?= $r['name'] ?></td>
 									<td><?= $r['price'] ?></td>
 									<td><img src="<?= '/images/'.$r['image'] ?>"></td>
-									<td><button type="submit" name="edit" class="btn btn-primary me-2">Edit</button>
-									</td>
-									<td><button type="submit" name="delete" class="btn btn-primary me-2">Delete</button>
+									<td><a href="../product/edit_product.php?id=<?= $r['id']?>" class="btn btn-primary me-2">Edit</a></td>
+									<td><a href="../product/delete_product.php?id=<?= $r['id']?>" class="btn btn-primary me-2">Delete</a>
 									</td>
 								</tr>
 								<?php
@@ -60,14 +60,6 @@
                                         }
                                     }
                                 ?>
-								<?php
-                                    if (isset($_POST['edit'])) {
-                                        header('location:../product/edit_product.php');
-                                    }
-                                    if (isset($_POST['delete'])) {
-                                        header('location:../product/delete_product.php');
-                                    }
-                                  ?>
 							</tbody>
 						</form>
 					</table>

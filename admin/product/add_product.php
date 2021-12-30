@@ -18,15 +18,14 @@
           $fetch = $pdo->prepare("insert into product(name,price,image) values('$pname','$price','$name')");
           $result = $fetch->execute();
           if (isset($result)) {
-              $a = "product.php";
               $_SESSION['msg'] = "Add Successfully";
+              header('location:../product/show_product.php');
           } else {
               echo 'No';
           }
       } else {
           echo "Please enter the data..";
       }
-      header("location:$a");
   }
 ?>
 <div class="main-panel">
@@ -40,18 +39,18 @@
 							<div class="form-group">
 								<label for="exampleInputUsername1">Product Name</label>
 								<input type="text" class="form-control" id="exampleInputUsername1"
-									placeholder="Product Name" name="pname">
+									placeholder="Product Name" name="pname" require>
 							</div>
 							<div class="form-group">
 								<label for="exampleInputEmail1">Product Price</label>
 								<input type="text" class="form-control" id="exampleInputEmail1"
-									placeholder="Product Price" name="price">
+									placeholder="Product Price" name="price" require>
 							</div>
 							<div class="form-group">
 								<label for="exampleInputPassword1">Image</label>
-								<input type="file" class="form-control" accept="" name="image">
+								<input type="file" class="form-control" accept="" name="image" require>
 							</div>
-							<button type="submit" class="btn btn-primary me-2" name="submit">Submit</button>
+							<button type="submit" class="btn btn-primary me-2" name="submit" onclick="myFunction()">Submit</button>
 							<button class="btn btn-light">Cancel</button>
 						</form>
 					</div>
