@@ -23,16 +23,20 @@
     }
     if (isset($_POST['submit'])) {
         if (!empty($_FILES['image']['name']) && !empty($_POST['pname']) && !empty($_POST['price'])) {
-            $pname = $_POST['pname'];
-            $price = $_POST['price'];
-            $name = $_FILES['image']['name'];
-            $fetch = $pdo->prepare("update product set name='$pname', price='$price', image='$name' where id='$id'");
-            $result = $fetch->execute();
-            if (isset($result)) {
-                $_SESSION['msg'] = "Update Successfully";
-                header('location:../product/show_product.php');
+            if (is_numeric($_POST['price'])) {
+                $pname = $_POST['pname'];
+                $price = $_POST['price'];
+                $name = $_FILES['image']['name'];
+                $fetch = $pdo->prepare("update product set name='$pname', price='$price', image='$name' where id='$id'");
+                $result = $fetch->execute();
+                if (isset($result)) {
+                    $_SESSION['msg'] = "Update Successfully";
+                    header('location:../product/show_product.php');
+                } else {
+                    echo 'No';
+                }
             } else {
-                echo 'No';
+                $price_alert = "Enter Only Numeric Value";
             }
         } else {
             echo "Please enter the data..";
@@ -57,6 +61,11 @@
                                 <label for="exampleInputEmail1">Product Price</label>
                                 <input type="text" class="form-control" id="exampleInputEmail1"
                                     placeholder="Product Price" name="price" value="<?= $price; ?>">
+                                    <?php
+                                    if (isset($price_alert)) {
+                                        $price_alert;
+                                    }
+                                    ?>
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputPassword1" style="margin-right: 20px;">Image</label>

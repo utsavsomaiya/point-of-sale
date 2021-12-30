@@ -12,16 +12,20 @@
           die($e->getMessage());
       }
       if (!empty($_FILES['image']['name']) && !empty($_POST['pname']) && !empty($_POST['price'])) {
-          $pname = $_POST['pname'];
-          $price = $_POST['price'];
-          $name = $_FILES['image']['name'];
-          $fetch = $pdo->prepare("insert into product(name,price,image) values('$pname','$price','$name')");
-          $result = $fetch->execute();
-          if (isset($result)) {
-              $_SESSION['msg'] = "Add Successfully";
-              header('location:../product/show_product.php');
+          if (is_numeric($_POST['price'])) {
+              $pname = $_POST['pname'];
+              $price = $_POST['price'];
+              $name = $_FILES['image']['name'];
+              $fetch = $pdo->prepare("insert into product(name,price,image) values('$pname','$price','$name')");
+              $result = $fetch->execute();
+              if (isset($result)) {
+                  $_SESSION['msg'] = "Add Successfully";
+                  header('location:../product/show_product.php');
+              } else {
+                  echo 'No';
+              }
           } else {
-              echo 'No';
+              echo "Enter Only Numeric Value";
           }
       } else {
           echo "Please enter the data..";
