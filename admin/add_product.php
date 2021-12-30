@@ -1,6 +1,33 @@
 <?php
   session_start();
   include 'header.php';
+  if (isset($_POST['submit'])) {
+      try {
+          $pdo =  new PDO('mysql:host=127.0.0.1;dbname=abc', 'root', '1234');
+          $pdo->setAttribute(
+              PDO::ATTR_ERRMODE,
+              PDO::ERRMODE_EXCEPTION
+          );
+      } catch (PDOException $e) {
+          die($e->getMessage());
+      }
+      if (!empty($_FILES['image']['name']) && !empty($_POST['pname']) && !empty($_POST['price'])) {
+          $pname = $_POST['pname'];
+          $price = $_POST['price'];
+          $name = $_FILES['image']['name'];
+          $fetch = $pdo->prepare("insert into product(name,price,image) values('$pname','$price','$name')");
+          $result = $fetch->execute();
+          if (isset($result)) {
+              $a = "product.php";
+              $_SESSION['msg'] = "Add Successfully";
+          } else {
+              echo 'No';
+          }
+      } else {
+          echo "Please enter the data..";
+      }
+      header("location:$a");
+  }
 ?>
 <div class="main-panel">
         <div class="content-wrapper">
@@ -25,33 +52,6 @@
                     <button type="submit" class="btn btn-primary me-2" name="submit">Submit</button>
                     <button class="btn btn-light">Cancel</button>
                   </form>
-                  <?php
-                        if (isset($_POST['submit'])) {
-                            try {
-                                $pdo =  new PDO('mysql:host=127.0.0.1;dbname=abc', 'root', '1234');
-                                $pdo->setAttribute(
-                                    PDO::ATTR_ERRMODE,
-                                    PDO::ERRMODE_EXCEPTION
-                                );
-                            } catch (PDOException $e) {
-                                die($e->getMessage());
-                            }
-                            if (!empty($_FILES['image']['name']) && !empty($_POST['pname']) && !empty($_POST['price'])) {
-                                $pname = $_POST['pname'];
-                                $price = $_POST['price'];
-                                $name = $_FILES['image']['name'];
-                                $fetch = $pdo->prepare("insert into product(name,price,image) values('$pname','$price','$name')");
-                                $result = $fetch->execute();
-                                if (isset($result)) {
-                                    echo 'Add Product Successfully';
-                                } else {
-                                    echo 'No';
-                                }
-                            } else {
-                                echo "Please enter the data..";
-                            }
-                        }
-                  ?>
                 </div>
               </div>
             </div>

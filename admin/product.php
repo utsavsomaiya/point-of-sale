@@ -8,6 +8,10 @@ include 'header.php'; ?>
               <div class="card">
                 <div class="card-body">
                   <h4 class="card-title">Products&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="add_product.php">Add New Product</a></h4>
+                  <?php
+                  if ($_SESSION['msg']==true) {
+                      echo $_SESSION['msg'];
+                  }  ?>
                   <div class="table-responsive">
                     <table class="table">
                       <form method="post">
