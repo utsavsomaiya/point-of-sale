@@ -5,14 +5,12 @@ include 'header.php'; ?>
         <div class="content-wrapper">
           <div class="row">
             <div class="col-lg-6 grid-margin stretch-card">
-              <div class="card">
                 <div class="card-body">
                   <h4 class="card-title">Products&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="add_product.php">Add New Product</a></h4>
                   <?php
-                  if ($_SESSION['msg']==true) {
+                  if (isset($_SESSION['msg'])) {
                       echo $_SESSION['msg'];
                   }  ?>
-                  <div class="table-responsive">
                     <table class="table">
                       <form method="post">
                       <thead>
@@ -70,4 +68,5 @@ include 'header.php'; ?>
                 </div>
               </div>
             </div>
+      </div>
 <?php include 'footer.php'; ?>
