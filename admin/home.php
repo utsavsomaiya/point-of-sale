@@ -30,7 +30,11 @@
                 </div>
                 <div class="mt-3">
                   <input type="submit" name="s1" value="SIGN IN"class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">
-                  <?php require 'login.php'; ?>
+                  <?php require 'login.php';
+                      if ($_SESSION["login"] == "OK") {
+                          header("location:dashboard.php");
+                      }
+                  ?>
                 </div>
                 <div class="my-2 d-flex justify-content-between align-items-center">
                   <a href="#" class="auth-link text-black">Forgot password?</a>

@@ -7,7 +7,7 @@ include 'header.php'; ?>
             <div class="col-lg-6 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
-                  <h4 class="card-title">Products</h4>
+                  <h4 class="card-title">Products&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="add_product.php">Add New Product</a></h4>
                   <div class="table-responsive">
                     <table class="table">
                       <form method="post">

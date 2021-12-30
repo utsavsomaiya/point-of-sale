@@ -10,15 +10,17 @@
                         } catch (PDOException $e) {
                             die($e->getMessage());
                         }
-                        $_SESSION['name'] = $_GET['email'];
                         $name=$_GET['email'];
                         $password = $_GET['password'];
                         $abc = $pdo->prepare("select id from admin where name='$name' and password='$password' and 1=1");
                         $abc->execute();
                         $result = $abc->fetchAll();
                         if (!$result) {
-                            echo "no";
+                            echo '<a href="home.php">Error: cannot execute query</a>';
+                            exit;
                         } else {
+                            $_SESSION['name'] = $_GET['email'];
+                            $_SESSION["login"] = "OK";
                             header('location:dashboard.php');
                         }
                     }
