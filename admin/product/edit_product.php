@@ -23,7 +23,19 @@
     }
     if (isset($_POST['submit'])) {
         if (!empty($_FILES['image']['name']) && !empty($_POST['pname']) && !empty($_POST['price'])) {
-            if (is_numeric($_POST['price'])) {
+            list($width, $height) = @getimagesize($_FILES['image']['name']);
+            $target = "images/".basename($_FILES['image']['name']);
+            $imageFileType = strtolower(pathinfo($target, PATHINFO_EXTENSION));
+            if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+&& $imageFileType != "gif") {
+                $file_alert = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+            } elseif (($_FILES["image"]["size"] > 2000000)) {
+                $file_alert = "Image size exceeds 2MB";
+            } elseif ($width >= "300" || $height >= "200") {
+                $file_alert = "Image dimension should be within 300X200";
+            } elseif (!is_numeric($_POST['price'])) {
+                $price_alert = "Enter Only Numeric Value";
+            } else {
                 $pname = $_POST['pname'];
                 $price = $_POST['price'];
                 $name = $_FILES['image']['name'];
@@ -35,11 +47,16 @@
                 } else {
                     echo 'No';
                 }
-            } else {
-                $price_alert = "Enter Only Numeric Value";
             }
-        } else {
-            echo "Please enter the data..";
+        }
+        if (empty($pname)) {
+            $name_alert = "Please enter data..";
+        }
+        if (empty($price)) {
+            $price_alert = "Please enter data";
+        }
+        if (empty($_FILES['image']['name'])) {
+            $file_alert = "Please enter data";
         }
     }
 ?>

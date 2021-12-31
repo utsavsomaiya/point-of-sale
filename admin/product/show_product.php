@@ -11,12 +11,6 @@
 						<span style="margin-right:80px;">Products</span>
 						<a href="add_product.php">Add New Product</a>
 					</h4>
-					<?php
-                        if (isset($_SESSION['msg'])) {
-                            echo $_SESSION['msg'];
-                            unset($_SESSION['msg']);
-                        }
-                    ?>
 					<table class="table">
 						<form method="post">
 							<thead>
@@ -68,4 +62,13 @@
 		</div>
 	</div>
 </div>
-<?php include '../layout/footer.php'; ?>
+<?php
+     if (isset($_SESSION['msg'])) {
+         ?>
+        <div id="snackbar"> <?php echo $_SESSION['msg']; ?> </div>
+<?php
+     }
+?>
+<?php include '../layout/footer.php';
+    unset($_SESSION['msg']);
+?>
