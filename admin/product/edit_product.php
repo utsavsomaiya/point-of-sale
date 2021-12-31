@@ -18,28 +18,19 @@
         foreach ($result as $r) {
             $name = $r['name'];
             $price = $r['price'];
-            $fname = $r['image'];
+            if (empty($_FILES['image']['name'])) {
+                $fname = $r['image'];
+            } else {
+                $fname=$_FILES['image']['name'];
+            }
         }
     }
     if (isset($_POST['submit'])) {
-        if (!empty($_FILES['image']['name']) && !empty($_POST['pname']) && !empty($_POST['price'])) {
-            list($width, $height) = @getimagesize($_FILES['image']['name']);
-            $target = "images/".basename($_FILES['image']['name']);
-            $imageFileType = strtolower(pathinfo($target, PATHINFO_EXTENSION));
-            if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-&& $imageFileType != "gif") {
-                $file_alert = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-            } elseif (($_FILES["image"]["size"] > 2000000)) {
-                $file_alert = "Image size exceeds 2MB";
-            } elseif ($width >= "300" || $height >= "200") {
-                $file_alert = "Image dimension should be within 300X200";
-            } elseif (!is_numeric($_POST['price'])) {
-                $price_alert = "Enter Only Numeric Value";
-            } else {
+        if (!empty($_POST['pname']) && !empty($_POST['price'])) {
+            if (is_numeric($_POST['price'])) {
                 $pname = $_POST['pname'];
                 $price = $_POST['price'];
-                $name = $_FILES['image']['name'];
-                $fetch = $pdo->prepare("update product set name='$pname', price='$price', image='$name' where id='$id'");
+                $fetch = $pdo->prepare("update product set name='$pname', price='$price', image='$fname' where id='$id'");
                 $result = $fetch->execute();
                 if (isset($result)) {
                     $_SESSION['msg'] = "Update Successfully";
@@ -47,16 +38,11 @@
                 } else {
                     echo 'No';
                 }
+            } else {
+                $price_alert = "Enter Only Numeric Value";
             }
-        }
-        if (empty($pname)) {
-            $name_alert = "Please enter data..";
-        }
-        if (empty($price)) {
-            $price_alert = "Please enter data";
-        }
-        if (empty($_FILES['image']['name'])) {
-            $file_alert = "Please enter data";
+        } else {
+            $alert = "Please enter the data..";
         }
     }
 ?>
@@ -73,16 +59,25 @@
                                 <label for="exampleInputUsername1">Product Name</label>
                                 <input type="text" class="form-control" id="exampleInputUsername1"
                                     placeholder="Product Name" name="pname" value="<?= $name; ?>">
+                                    <label style="color:red;">
+                                    <?php
+                                    if (isset($alert)) {
+                                        echo $alert;
+                                    }
+                                    ?>
+                                    </label>
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Product Price</label>
-                                <input type="text" class="form-control" id="exampleInputEmail1"
+                                <input type="number" class="form-control" id="exampleInputEmail1"
                                     placeholder="Product Price" name="price" value="<?= $price; ?>">
+                                    <label style="color:red;">
                                     <?php
                                     if (isset($price_alert)) {
-                                        $price_alert;
+                                        echo $price_alert;
                                     }
                                     ?>
+                                    </label>
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputPassword1" style="margin-right: 20px;">Image</label>

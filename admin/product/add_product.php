@@ -60,7 +60,12 @@
 							<div class="form-group">
 								<label for="exampleInputUsername1">Product Name</label>
 								<input type="text" class="form-control" id="exampleInputUsername1"
-									placeholder="Product Name" name="pname" require>
+									placeholder="Product Name" name="pname"
+                                    <?php
+                                    if (isset($_POST['pname'])) {
+                                        echo "value=\"".$_POST['pname']."\"";
+                                    }?>
+                                require>
                                 <label style="color:red;">
                                 <?php
                                 if (isset($name_alert)) {
@@ -71,8 +76,13 @@
 							</div>
 							<div class="form-group">
 								<label for="exampleInputEmail1">Product Price</label>
-								<input type="text" class="form-control" id="exampleInputEmail1"
-									placeholder="Product Price" name="price" require>
+								<input type="number" class="form-control" id="exampleInputEmail1"
+									placeholder="Product Price" name="price"
+                                    <?php
+                                    if (isset($_POST['price'])) {
+                                        echo "value=\"".$_POST['price']."\"";
+                                    }?>
+                                require>
                                 <label style="color:red;">
                                 <?php
                                 if (isset($price_alert)) {

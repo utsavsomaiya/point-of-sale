@@ -42,10 +42,10 @@
 								<tr>
 									<td><?= $r['id']?></td>
 									<td><?= $r['name'] ?></td>
-									<td><?= $r['price'] ?></td>
+									<td><?= "$".$r['price'] ?></td>
 									<td><img src="<?= '/images/'.$r['image'] ?>"></td>
 									<td><a href="../product/edit_product.php?id=<?= $r['id']?>" class="btn btn-primary me-2">Edit</a></td>
-									<td><a href="../product/delete_product.php?id=<?= $r['id']?>" class="btn btn-primary me-2">Delete</a>
+									<td><a href="javascript:alert(<?= $r['id']?>)" class="btn btn-primary me-2">Delete</a>
 									</td>
 								</tr>
 								<?php
