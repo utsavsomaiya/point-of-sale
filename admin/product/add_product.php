@@ -65,7 +65,7 @@
                                     if (isset($_POST['pname'])) {
                                         echo "value=\"".$_POST['pname']."\"";
                                     }?>
-                                require>
+                                required>
                                 <label style="color:red;">
                                 <?php
                                 if (isset($name_alert)) {
@@ -82,7 +82,7 @@
                                     if (isset($_POST['price'])) {
                                         echo "value=\"".$_POST['price']."\"";
                                     }?>
-                                require>
+                                required>
                                 <label style="color:red;">
                                 <?php
                                 if (isset($price_alert)) {
@@ -91,9 +91,34 @@
                                 ?>
                                 </label>
 							</div>
+                            <div class="form-group">
+                                <label for="exampleSelectGender">Select Category</label>
+                                <select class="form-control" id="exampleSelectGender">
+                                    <option>--Select Category--</option>
+                                    <?php
+                                        try {
+                                            $pdo =  new PDO('mysql:host=127.0.0.1;dbname=abc', 'root', '1234');
+                                            $pdo->setAttribute(
+                                                PDO::ATTR_ERRMODE,
+                                                PDO::ERRMODE_EXCEPTION
+                                            );
+                                        } catch (PDOException $e) {
+                                            die($e->getMessage());
+                                        }
+                                        $fetch = $pdo->prepare("select * from category");
+                                        $fetch->execute();
+                                        $res = $fetch->fetchAll();
+                                        foreach ($res as $r1) {
+                                            ?>
+                                    <option  value="<?= $r1['name'] ?>"><?= $r1['name']?></option>
+                                    <?php
+                                        }
+                                    ?>
+                                </select>
+                            </div>
 							<div class="form-group">
 								<label for="exampleInputPassword1">Image</label>
-								<input type="file" class="form-control" accept="" name="image" require>
+								<input type="file" class="form-control" accept="" name="image" required>
                                 <label style="color:red;">
                                 <?php
                                 if (isset($file_alert)) {

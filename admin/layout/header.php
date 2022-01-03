@@ -9,6 +9,7 @@
 	<link rel="stylesheet" href="/vendors/mdi/css/custom_styles.css">
 	<link rel="stylesheet" href="/vendors/simple-line-icons/css/simple-line-icons.css">
 	<link rel="stylesheet" href="/css/vertical-layout-light/style.css">
+	<link rel="stylesheet" href="/vendors/ti-icons/css/themify-icons.css">
 </head>
 
 <body>
@@ -83,6 +84,12 @@
 						<a class="nav-link" href="../product/show_product.php" >
 							<i class="menu-icon mdi mdi-floor-plan"></i>
 							<span class="menu-title">Products</span>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="../product/show_category.php" >
+							<i class="menu-icon mdi mdi-floor-plan"></i>
+							<span class="menu-title">Category</span>
 						</a>
 					</li>
 				</ul>

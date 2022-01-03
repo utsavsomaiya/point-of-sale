@@ -18,6 +18,7 @@
 									<th>Id</th>
 									<th>Name</th>
 									<th>Price</th>
+									<th>Category</th>
 									<th>Image</th>
 									<th colspan='2'>Action</th>
 								</tr>
@@ -43,9 +44,10 @@
 									<td><?= $r['id']?></td>
 									<td><?= $r['name'] ?></td>
 									<td><?= "$".$r['price'] ?></td>
+									<td><?= $r['category'] ?></td>
 									<td><img src="<?= '/images/'.$r['image'] ?>"></td>
-									<td><a href="../product/edit_product.php?id=<?= $r['id']?>" class="btn btn-primary me-2">Edit</a></td>
-									<td><a href="javascript:alert(<?= $r['id']?>)" class="btn btn-primary me-2">Delete</a>
+									<td><a href="../product/edit_product.php?id=<?= $r['id']?>" class="btn btn-dark btn-icon-text">Edit<i class="ti-file btn-icon-append"></i></a></td>
+									<td><a href="javascript:alert(<?= $r['id']?>)" class="btn btn-outline-danger btn-fw">Delete</a>
 									</td>
 								</tr>
 								<?php

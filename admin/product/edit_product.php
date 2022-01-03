@@ -18,6 +18,7 @@
         foreach ($result as $r) {
             $name = $r['name'];
             $price = $r['price'];
+            $category = $r['category'];
             if (empty($_FILES['image']['name'])) {
                 $fname = $r['image'];
             } else {
@@ -30,7 +31,8 @@
             if (is_numeric($_POST['price'])) {
                 $pname = $_POST['pname'];
                 $price = $_POST['price'];
-                $fetch = $pdo->prepare("update product set name='$pname', price='$price', image='$fname' where id='$id'");
+                $category = $_POST['category'];
+                $fetch = $pdo->prepare("update product set name='$pname', price='$price', category=$category,image='$fname' where id='$id'");
                 $result = $fetch->execute();
                 if (isset($result)) {
                     $_SESSION['msg'] = "Update Successfully";
@@ -78,6 +80,25 @@
                                     }
                                     ?>
                                     </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleSelectGender">Select Category</label>
+                                <select class="form-control" id="exampleSelectGender">
+                                    <option>--Select Category--</option>
+                                    <?php
+                                        $fetch = $pdo->prepare("select * from category");
+                                        $fetch->execute();
+                                        $res = $fetch->fetchAll();
+                                        foreach ($res as $r1) {
+                                            ?>
+                                    <option value="<?= $r1['name'] ?>" <?php
+                                            if ($category == $r1['name']) {
+                                                echo "selected='selected'";
+                                            } ?>><?= $r1['name']?></option>
+                                    <?php
+                                        }
+                                    ?>
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputPassword1" style="margin-right: 20px;">Image</label>
