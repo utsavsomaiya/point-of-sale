@@ -1,15 +1,7 @@
 <?php
     session_start();
     include '../layout/header.php';
-    try {
-        $pdo =  new PDO('mysql:host=127.0.0.1;dbname=abc', 'root', '1234');
-        $pdo->setAttribute(
-            PDO::ATTR_ERRMODE,
-            PDO::ERRMODE_EXCEPTION
-        );
-    } catch (PDOException $e) {
-        die($e->getMessage());
-    }
+    require '../layout/db_connect.php';
     if (isset($_GET['id'])) {
         $id = $_GET['id'];
         $fetch = $pdo->prepare("select * from product where id='$id'");
@@ -47,6 +39,9 @@
             $alert = "Please enter the data..";
         }
     }
+    if (isset($_POST['cancel'])) {
+        header('location:/admin/product/show_product.php');
+    }
 ?>
 <div class="main-panel">
     <div class="content-wrapper">
@@ -83,8 +78,8 @@
                             </div>
                             <div class="form-group">
                                 <label for="exampleSelectGender">Select Category</label>
-                                <select class="form-control" id="exampleSelectGender">
-                                    <option>--Select Category--</option>
+                                <select class="form-control" id="exampleSelectGender" name="category">
+                                    <option value="">--Select Category--</option>
                                     <?php
                                         $fetch = $pdo->prepare("select * from category");
                                         $fetch->execute();
@@ -106,7 +101,7 @@
                                 <input type="file" class="form-control" accept="" name="image">
                             </div>
                             <button type="submit" class="btn btn-primary me-2" name="submit" onclick="myFunction()">Submit</button>
-                            <button class="btn btn-light">Cancel</button>
+                            <button class="btn btn-light" name="cancel">Cancel</button>
                         </form>
                     </div>
                 </div>

@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,11 +7,11 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<title>Star Admin2 </title>
-	<link rel="stylesheet" href="/vendors/mdi/css/materialdesignicons.min.css">
-	<link rel="stylesheet" href="/vendors/mdi/css/custom_styles.css">
-	<link rel="stylesheet" href="/vendors/simple-line-icons/css/simple-line-icons.css">
-	<link rel="stylesheet" href="/css/vertical-layout-light/style.css">
-	<link rel="stylesheet" href="/vendors/ti-icons/css/themify-icons.css">
+	<link rel="stylesheet" href="/admin/vendors/mdi/css/materialdesignicons.min.css">
+	<link rel="stylesheet" href="/admin/vendors/mdi/css/custom_styles.css">
+	<link rel="stylesheet" href="/admin/vendors/simple-line-icons/css/simple-line-icons.css">
+	<link rel="stylesheet" href="/admin/css/vertical-layout-light/style.css">
+	<link rel="stylesheet" href="/admin/vendors/ti-icons/css/themify-icons.css">
 </head>
 
 <body>
@@ -59,7 +61,7 @@
 								<p class="mb-1 mt-3 font-weight-semibold"><?php echo $_SESSION['name']; ?></p>
 								<p class="fw-light text-muted mb-0"><?php echo $_SESSION['name'].'@gmail.com'?></p>
 							</div>
-							<a class="dropdown-item" href="../auth/signout.php"><i
+							<a class="dropdown-item" href="/admin/auth/signout.php"><i
 									class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out</a>
 						</div>
 					</li>
@@ -74,20 +76,20 @@
 			<nav class="sidebar sidebar-offcanvas" id="sidebar">
 				<ul class="nav">
 					<li class="nav-item">
-						<a class="nav-link" href="../layout/dashboard.php">
+						<a class="nav-link" href="/admin/dashboard.php">
 							<i class="mdi mdi-grid-large menu-icon"></i>
 							<span class="menu-title">Dashboard</span>
 						</a>
 					</li>
 					<li class="nav-item nav-category">Products</li>
 					<li class="nav-item">
-						<a class="nav-link" href="../product/show_product.php" >
+						<a class="nav-link" href="/admin/product/show_product.php" >
 							<i class="menu-icon mdi mdi-floor-plan"></i>
 							<span class="menu-title">Products</span>
 						</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="../product/show_category.php" >
+						<a class="nav-link" href="/admin/category/show_category.php" >
 							<i class="menu-icon mdi mdi-floor-plan"></i>
 							<span class="menu-title">Category</span>
 						</a>

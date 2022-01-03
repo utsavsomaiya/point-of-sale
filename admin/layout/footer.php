@@ -1,6 +1,6 @@
 </div>
 </div>
-<script src="/vendors/js/vendor.bundle.base.js"></script>
+<script src="/admin/vendors/js/vendor.bundle.base.js"></script>
 <script>
     <?php
     if (isset($_SESSION['msg'])) {
@@ -11,7 +11,7 @@
 <script>
     function alert_c(id1) {
         if (confirm('Are you sure?')) {
-            window.location.href='../product/delete_category.php?id='+id1;
+            window.location.href='../category/delete_category.php?id='+id1;
         }
     }
 </script>

@@ -1,6 +1,6 @@
 <?php
     session_start();
-    include 'header.php';
+    include 'layout/header.php';
 ?>
 	<div class="content-wrapper">
 		<div class="col-lg-6 grid-margin stretch-card">
@@ -12,5 +12,5 @@
 		</div>
 	</div>
 <?php
-    include 'footer.php';
+    include 'layout/footer.php';
 ?>

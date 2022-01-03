@@ -1,16 +1,8 @@
 <?php
   session_start();
+  require '../layout/db_connect.php';
   include '../layout/header.php';
   if (isset($_POST['submit'])) {
-      try {
-          $pdo =  new PDO('mysql:host=127.0.0.1;dbname=abc', 'root', '1234');
-          $pdo->setAttribute(
-              PDO::ATTR_ERRMODE,
-              PDO::ERRMODE_EXCEPTION
-          );
-      } catch (PDOException $e) {
-          die($e->getMessage());
-      }
       if (!empty($_FILES['image']['name']) && !empty($_POST['pname']) && !empty($_POST['price'])) {
           list($width, $height) = @getimagesize($_FILES['image']['name']);
           $target = "images/".basename($_FILES['image']['name']);
@@ -27,26 +19,31 @@
           } else {
               $pname = $_POST['pname'];
               $price = $_POST['price'];
+              $category =$_POST['category'];
               $name = $_FILES['image']['name'];
-              $fetch = $pdo->prepare("insert into product(name,price,image) values('$pname','$price','$name')");
+              $fetch = $pdo->prepare("insert into product(name,price,category,image) values('$pname','$price','$category','$name')");
               $result = $fetch->execute();
               if (isset($result)) {
                   $_SESSION['msg'] = "Add Successfully";
                   header('location:../product/show_product.php');
               } else {
-                  echo 'No';
+                  $_SESSION['msg'] = "Not Successfully";
               }
           }
+      } else {
+          if (empty($pname)) {
+              $name_alert = "Please enter data..";
+          }
+          if (empty($price)) {
+              $price_alert = "Please enter data";
+          }
+          if (empty($_FILES['image']['name'])) {
+              $file_alert = "Please enter data";
+          }
       }
-      if (empty($pname)) {
-          $name_alert = "Please enter data..";
-      }
-      if (empty($price)) {
-          $price_alert = "Please enter data";
-      }
-      if (empty($_FILES['image']['name'])) {
-          $file_alert = "Please enter data";
-      }
+  }
+  if (isset($_POST['cancel'])) {
+      header('location:/admin/product/show_product.php');
   }
 ?>
 <div class="main-panel">
@@ -93,18 +90,9 @@
 							</div>
                             <div class="form-group">
                                 <label for="exampleSelectGender">Select Category</label>
-                                <select class="form-control" id="exampleSelectGender">
-                                    <option>--Select Category--</option>
+                                <select class="form-control" id="exampleSelectGender" name="category" required>
+                                    <option value="">--Select Category--</option>
                                     <?php
-                                        try {
-                                            $pdo =  new PDO('mysql:host=127.0.0.1;dbname=abc', 'root', '1234');
-                                            $pdo->setAttribute(
-                                                PDO::ATTR_ERRMODE,
-                                                PDO::ERRMODE_EXCEPTION
-                                            );
-                                        } catch (PDOException $e) {
-                                            die($e->getMessage());
-                                        }
                                         $fetch = $pdo->prepare("select * from category");
                                         $fetch->execute();
                                         $res = $fetch->fetchAll();
@@ -128,7 +116,7 @@
                                 </label>
 							</div>
 							<button type="submit" class="btn btn-primary me-2" name="submit">Submit</button>
-							<button class="btn btn-light">Cancel</button>
+							<button class="btn btn-light" name="cancel">Cancel</button>
 						</form>
 					</div>
 				</div>
