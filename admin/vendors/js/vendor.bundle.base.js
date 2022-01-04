@@ -1,7 +1,7 @@
 /*! jQuery v3.5.1 | (c) JS Foundation and other contributors | jquery.org/license */
 function alert(id) {
   if (confirm('Are you sure?')) {
-      window.location.href='/product/delete_product.php?id='+id;
+      window.location.href='/admin/product/delete_product.php?id='+id;
     }
 }
 function myFunction() {

@@ -39,7 +39,7 @@
                                     if (!empty($_SESSION['name'])) {
                                         echo $_SESSION['name'];
                                     } else {
-                                        header('location:../auth/index.php');
+                                        header('location:../auth/login.php');
                                     }
                                 ?>
 							</span>
@@ -86,7 +86,7 @@
 					<li class="nav-item">
 						<a class="nav-link" href="/admin/category/show_category.php" >
 							<i class="menu-icon mdi mdi-floor-plan"></i>
-							<span class="menu-title">Category</span>
+							<span class="menu-title">Categories</span>
 						</a>
 					</li>
 				</ul>

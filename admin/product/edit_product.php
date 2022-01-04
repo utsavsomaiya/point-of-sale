@@ -97,7 +97,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputPassword1" style="margin-right: 20px;">Image</label>
-                                <img class="img-xs rounded-circle" src="<?= '/images/'.$fname ?>"><br><br>
+                                <img class="img-xs rounded-circle" src="<?= '/admin/images/'.$fname ?>"><br><br>
                                 <input type="file" class="form-control" accept="" name="image">
                             </div>
                             <button type="submit" class="btn btn-primary me-2" name="submit" onclick="myFunction()">Submit</button>
