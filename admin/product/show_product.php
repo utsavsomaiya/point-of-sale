@@ -37,7 +37,7 @@
 									<td><?= $r['name'] ?></td>
 									<td><?= "$".$r['price'] ?></td>
 									<td><?= $r['category'] ?></td>
-									<td><img src="<?= '/images/'.$r['image'] ?>"></td>
+									<td><img src="<?= '/admin/images/'.$r['image'] ?>"></td>
 									<td><a href="../product/edit_product.php?id=<?= $r['id']?>" class="btn btn-dark btn-icon-text">Edit<i class="ti-file btn-icon-append"></i></a></td>
 									<td><a href="javascript:alert(<?= $r['id']?>)" class="btn btn-outline-danger btn-fw">Delete</a>
 									</td>
