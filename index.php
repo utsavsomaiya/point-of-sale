@@ -1,4 +1,4 @@
-
+<?php require 'admin/layout/db_connect.php';?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -43,265 +43,75 @@
               <span class="text-xs">"Aashirvad", 7-Nandhinagar, Nanavati Chowk, Rajkot-360007</span>
             </div>
           </div>
-          <!-- products -->
           <div class="grid grid-cols-3 gap-4 px-5 mt-5 overflow-y-auto h-3/4">
+              <?php
+                    $fetch = $pdo->prepare("select * from product");
+                    $fetch->execute();
+                    $result = $fetch->fetchAll();
+                    foreach ($result as $product) {
+                        ?>
             <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
               <div>
-                <div class="font-bold text-gray-800">Griled corn</div>
-                <span class="font-light text-sm text-gray-400">150g</span>
+                <div class="font-bold text-gray-800"><?= $product["name"] ?></div>
+                <span class="font-light text-sm text-gray-400">
+                <?php
+                $fetch = $pdo->prepare("select name from category where id = {$product["category"]}");
+                        $fetch->execute();
+                        $result = $fetch->fetchAll();
+                        foreach ($result as $category) {
+                            if (!empty($category)) {
+                                echo $category["name"];
+                            }
+                        } ?>
+                </span>
               </div>
               <div class="flex flex-row justify-between items-center">
-                <span class="self-end font-bold text-lg text-yellow-500">$1.75</span>
-                <img src="https://source.unsplash.com/sc5sTPMrVfk/600x600" class=" h-14 w-14 object-cover rounded-md" alt="">
+                <span class="self-end font-bold text-lg text-yellow-500"><?= "$".$product["price"] ?></span>
+                <img src="<?= 'admin/images/'.$product["image"] ?>" class=" h-14 w-14 object-cover rounded-md" alt="">
               </div>
             </div>
-            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
-              <div>
-                <div class="font-bold text-gray-800">Ranch Burger</div>
-                <span class="font-light text-sm text-gray-400">150g</span>
-              </div>
-              <div class="flex flex-row justify-between items-center">
-                <span class="self-end font-bold text-lg text-yellow-500">$7.00</span>
-                <img src="https://source.unsplash.com/sc5sTPMrVfk/600x500" class=" h-14 w-14 object-cover rounded-md" alt="">
-              </div>
-            </div>
-            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
-              <div>
-                <div class="font-bold text-gray-800">Pizza Bacon</div>
-                <span class="font-light text-sm text-gray-400">150g</span>
-              </div>
-              <div class="flex flex-row justify-between items-center">
-                <span class="self-end font-bold text-lg text-yellow-500">$1.75</span>
-                <img src="https://source.unsplash.com/sc5sTPMrVfk/500x500" class=" h-14 w-14 object-cover rounded-md" alt="">
-              </div>
-            </div>
-            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
-              <div>
-                <div class="font-bold text-gray-800">Griled corn</div>
-                <span class="font-light text-sm text-gray-400">150g</span>
-              </div>
-              <div class="flex flex-row justify-between items-center">
-                <span class="self-end font-bold text-lg text-yellow-500">$1.75</span>
-                <img src="https://source.unsplash.com/MNtag_eXMKw/600x600" class=" h-14 w-14 object-cover rounded-md" alt="">
-              </div>
-            </div>
-            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
-              <div>
-                <div class="font-bold text-gray-800">Griled corn</div>
-                <span class="font-light text-sm text-gray-400">150g</span>
-              </div>
-              <div class="flex flex-row justify-between items-center">
-                <span class="self-end font-bold text-lg text-yellow-500">$1.75</span>
-                <img src="https://source.unsplash.com/MNtag_eXMKw/600x600" class=" h-14 w-14 object-cover rounded-md" alt="">
-              </div>
-            </div>
-            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
-              <div>
-                <div class="font-bold text-gray-800">Griled corn</div>
-                <span class="font-light text-sm text-gray-400">150g</span>
-              </div>
-              <div class="flex flex-row justify-between items-center">
-                <span class="self-end font-bold text-lg text-yellow-500">$1.75</span>
-                <img src="https://source.unsplash.com/MNtag_eXMKw/600x600" class=" h-14 w-14 object-cover rounded-md" alt="">
-              </div>
-            </div>
-            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
-              <div>
-                <div class="font-bold text-gray-800">Griled corn</div>
-                <span class="font-light text-sm text-gray-400">150g</span>
-              </div>
-              <div class="flex flex-row justify-between items-center">
-                <span class="self-end font-bold text-lg text-yellow-500">$1.75</span>
-                <img src="https://source.unsplash.com/MNtag_eXMKw/600x600" class=" h-14 w-14 object-cover rounded-md" alt="">
-              </div>
-            </div>
-            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
-              <div>
-                <div class="font-bold text-gray-800">Griled corn</div>
-                <span class="font-light text-sm text-gray-400">150g</span>
-              </div>
-              <div class="flex flex-row justify-between items-center">
-                <span class="self-end font-bold text-lg text-yellow-500">$1.75</span>
-                <img src="https://source.unsplash.com/MNtag_eXMKw/600x600" class=" h-14 w-14 object-cover rounded-md" alt="">
-              </div>
-            </div>
-            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
-              <div>
-                <div class="font-bold text-gray-800">Griled corn</div>
-                <span class="font-light text-sm text-gray-400">150g</span>
-              </div>
-              <div class="flex flex-row justify-between items-center">
-                <span class="self-end font-bold text-lg text-yellow-500">$1.75</span>
-                <img src="https://source.unsplash.com/MNtag_eXMKw/600x600" class=" h-14 w-14 object-cover rounded-md" alt="">
-              </div>
-            </div>
-            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
-              <div>
-                <div class="font-bold text-gray-800">Griled corn</div>
-                <span class="font-light text-sm text-gray-400">150g</span>
-              </div>
-              <div class="flex flex-row justify-between items-center">
-                <span class="self-end font-bold text-lg text-yellow-500">$1.75</span>
-                <img src="https://source.unsplash.com/MNtag_eXMKw/600x600" class=" h-14 w-14 object-cover rounded-md" alt="">
-              </div>
-            </div>
-            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
-              <div>
-                <div class="font-bold text-gray-800">Griled corn</div>
-                <span class="font-light text-sm text-gray-400">150g</span>
-              </div>
-              <div class="flex flex-row justify-between items-center">
-                <span class="self-end font-bold text-lg text-yellow-500">$1.75</span>
-                <img src="https://source.unsplash.com/MNtag_eXMKw/600x600" class=" h-14 w-14 object-cover rounded-md" alt="">
-              </div>
-            </div>
+            <?php
+                    } ?>
           </div>
         </div>
-        <!-- end left section -->
-        <!-- right section -->
         <div class="w-full lg:w-2/5">
-          <!-- header -->
           <div class="flex flex-row items-center justify-between px-5 mt-5">
             <div class="font-bold text-xl">Current Order</div>
             <div class="font-semibold">
               <span class="px-4 py-2 rounded-md bg-red-100 text-red-500">Clear All</span>
-              <span class="px-4 py-2 rounded-md bg-gray-100 text-gray-800">Setting</span>
             </div>
           </div>
-          <!-- end header -->
-          <!-- order list -->
           <div class="px-5 py-4 mt-5 overflow-y-auto h-64">
               <div class="flex flex-row justify-between items-center mb-4">
-                <div class="flex flex-row items-center w-2/5">
-                  <img src="https://source.unsplash.com/4u_nRgiLW3M/600x600" class="w-10 h-10 object-cover rounded-md" alt="">
-                  <span class="ml-4 font-semibold text-sm">Stuffed flank steak</span>
-                </div>
-                <div class="w-32 flex justify-between">
-                  <span class="px-3 py-1 rounded-md bg-gray-300 ">-</span>
-                  <span class="font-semibold mx-4">2</span>
-                  <span class="px-3 py-1 rounded-md bg-gray-300 ">+</span>
-                </div>
-                <div class="font-semibold text-lg w-16 text-center">
-                  $13.50
-                </div>
-              </div>
-              <div class="flex flex-row justify-between items-center mb-4">
-                <div class="flex flex-row items-center w-2/5">
-                  <img src="https://source.unsplash.com/sc5sTPMrVfk/600x600" class="w-10 h-10 object-cover rounded-md" alt="">
-                  <span class="ml-4 font-semibold text-sm">Grilled Corn</span>
-                </div>
-                <div class="w-32 flex justify-between">
-                  <span class="px-3 py-1 rounded-md bg-gray-300 ">-</span>
-                  <span class="font-semibold mx-4">10</span>
-                  <span class="px-3 py-1 rounded-md bg-gray-300 ">+</span>
-                </div>
-                <div class="font-semibold text-lg w-16 text-center">
-                  $3.50
-                </div>
-              </div>
-              <div class="flex flex-row justify-between items-center mb-4">
-                <div class="flex flex-row items-center w-2/5">
-                  <img src="https://source.unsplash.com/MNtag_eXMKw/600x600" class="w-10 h-10 object-cover rounded-md" alt="">
-                  <span class="ml-4 font-semibold text-sm">Grilled Corn</span>
-                </div>
-                <div class="w-32 flex justify-between">
-                  <span class="px-3 py-1 rounded-md bg-gray-300 ">-</span>
-                  <span class="font-semibold mx-4">10</span>
-                  <span class="px-3 py-1 rounded-md bg-gray-300 ">+</span>
-                </div>
-                <div class="font-semibold text-lg w-16 text-center">
-                  $3.50
-                </div>
-              </div>
-              <div class="flex flex-row justify-between items-center mb-4">
-                <div class="flex flex-row items-center w-2/5">
-                  <img src="https://source.unsplash.com/MNtag_eXMKw/600x600" class="w-10 h-10 object-cover rounded-md" alt="">
-                  <span class="ml-4 font-semibold text-sm">Grilled Corn</span>
-                </div>
-                <div class="w-32 flex justify-between">
-                  <span class="px-3 py-1 rounded-md bg-gray-300 ">-</span>
-                  <span class="font-semibold mx-4">10</span>
-                  <span class="px-3 py-1 rounded-md bg-gray-300 ">+</span>
-                </div>
-                <div class="font-semibold text-lg w-16 text-center">
-                  $3.50
-                </div>
-              </div>
-              <div class="flex flex-row justify-between items-center mb-4">
-                <div class="flex flex-row items-center w-2/5">
-                  <img src="https://source.unsplash.com/MNtag_eXMKw/600x600" class="w-10 h-10 object-cover rounded-md" alt="">
-                  <span class="ml-4 font-semibold text-sm">Ranch Burger</span>
-                </div>
-                <div class="w-32 flex justify-between">
-                  <span class="px-3 py-1 rounded-md bg-red-300 text-white">x</span>
-                  <span class="font-semibold mx-4">1</span>
-                  <span class="px-3 py-1 rounded-md bg-gray-300 ">+</span>
-                </div>
-                <div class="font-semibold text-lg w-16 text-center">
-                  $2.50
-                </div>
-              </div>
-              <div class="flex flex-row justify-between items-center mb-4">
-                <div class="flex flex-row items-center w-2/5">
-                  <img src="https://source.unsplash.com/4u_nRgiLW3M/600x600" class="w-10 h-10 object-cover rounded-md" alt="">
-                  <span class="ml-4 font-semibold text-sm">Ranch Burger</span>
-                </div>
-                <div class="w-32 flex justify-between">
-                  <span class="px-3 py-1 rounded-md bg-red-300 text-white">x</span>
-                  <span class="font-semibold mx-4">1</span>
-                  <span class="px-3 py-1 rounded-md bg-gray-300 ">+</span>
-                </div>
-                <div class="font-semibold text-lg w-16 text-center">
-                  $2.50
-                </div>
+
               </div>
           </div>
-          <!-- end order list -->
-          <!-- totalItems -->
           <div class="px-5 mt-5">
             <div class="py-4 rounded-md shadow-lg">
               <div class=" px-4 flex justify-between ">
                 <span class="font-semibold text-sm">Subtotal</span>
-                <span class="font-bold">$35.25</span>
+                <span class="font-bold">$0</span>
               </div>
               <div class=" px-4 flex justify-between ">
                 <span class="font-semibold text-sm">Discount</span>
-                <span class="font-bold">- $5.00</span>
+                <span class="font-bold">- $0</span>
               </div>
               <div class=" px-4 flex justify-between ">
                 <span class="font-semibold text-sm">Sales Tax</span>
-                <span class="font-bold">$2.25</span>
+                <span class="font-bold">$0</span>
               </div>
               <div class="border-t-2 mt-3 py-2 px-4 flex items-center justify-between">
                 <span class="font-semibold text-2xl">Total</span>
-                <span class="font-bold text-2xl">$37.50</span>
+                <span class="font-bold text-2xl">$0</span>
               </div>
             </div>
           </div>
-          <!-- end total -->
-          <!-- cash -->
-          <div class="px-5 mt-5">
-            <div class="rounded-md shadow-lg px-4 py-4">
-              <div class="flex flex-row justify-between items-center">
-                <div class="flex flex-col">
-                  <span class="uppercase text-xs font-semibold">cashless credit</span>
-                  <span class="text-xl font-bold text-yellow-500">$32.50</span>
-                  <span class=" text-xs text-gray-400 ">Available</span>
-                </div>
-                <div class="px-4 py-3 bg-gray-300 text-gray-800 rounded-md font-bold"> Cancel</div>
-              </div>
-            </div>
-          </div>
-          <!-- end cash -->
-          <!-- button pay-->
           <div class="px-5 mt-5">
             <div class="px-4 py-4 rounded-md shadow-lg text-center bg-yellow-500 text-white font-semibold">
               Pay With Cashless Credit
             </div>
           </div>
-          <!-- end button pay -->
         </div>
-        <!-- end right section -->
       </div>
     </div>
 </body>
