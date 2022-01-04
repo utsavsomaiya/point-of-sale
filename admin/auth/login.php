@@ -28,8 +28,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Star Admin2 </title>
-    <link rel="stylesheet" href="/css/vertical-layout-light/style.css">
-    <link rel="shortcut icon" href="/images/favicon.png" />
+    <link rel="stylesheet" href="/admin/css/vertical-layout-light/style.css">
+    <link rel="shortcut icon" href="/admin/images/favicon.png" />
 </head>
 
 <body>
@@ -40,7 +40,7 @@
                     <div class="col-lg-4 mx-auto">
                         <div class="auth-form-light text-left py-5 px-4 px-sm-5">
                             <div class="brand-logo">
-                                <img src="/images/logo.svg" alt="logo">
+                                <img src="/admin/images/logo.svg" alt="logo">
                             </div>
                             <h4>Hello! let's get started</h4>
                             <h6 class="fw-light">Sign in to continue.</h6>

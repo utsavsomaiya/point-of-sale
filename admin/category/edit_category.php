@@ -18,7 +18,7 @@
             $result = $fetch->execute();
             if (isset($result)) {
                 $_SESSION['msg'] = "Update Successfully";
-                header('location:../product/show_category.php');
+                header('location:../category/show_category.php');
             } else {
                 $_SESSION['msg'] = "Not Successfully";
             }

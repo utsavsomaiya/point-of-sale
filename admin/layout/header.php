@@ -1,22 +1,17 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<title>Star Admin2 </title>
+	<title>Star Admin2</title>
 	<link rel="stylesheet" href="/admin/vendors/mdi/css/materialdesignicons.min.css">
 	<link rel="stylesheet" href="/admin/vendors/mdi/css/custom_styles.css">
 	<link rel="stylesheet" href="/admin/vendors/simple-line-icons/css/simple-line-icons.css">
 	<link rel="stylesheet" href="/admin/css/vertical-layout-light/style.css">
 	<link rel="stylesheet" href="/admin/vendors/ti-icons/css/themify-icons.css">
 </head>
-
 <body>
 	<div class="container-scroller">
-		<!-- partial:partials/_navbar.html -->
 		<nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-top flex-row">
 			<div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
 				<div class="me-3">
@@ -26,11 +21,11 @@
 					</button>
 				</div>
 				<div>
-					<a class="navbar-brand brand-logo" href="index.html">
-						<img src="/images/logo.svg" alt="logo" />
+					<a class="navbar-brand brand-logo">
+						<img src="/admin/images/logo.svg" alt="logo" />
 					</a>
-					<a class="navbar-brand brand-logo-mini" href="index.html">
-						<img src="/images/logo-mini.svg" alt="logo" />
+					<a class="navbar-brand brand-logo-mini">
+						<img src="/admin/images/logo-mini.svg" alt="logo" />
 					</a>
 				</div>
 			</div>
@@ -53,11 +48,11 @@
 				</ul>
 				<ul class="navbar-nav ms-auto">
 					<li class="nav-item dropdown d-none d-lg-block user-dropdown">
-						<a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-							<img class="img-xs rounded-circle" src="/images/faces/face8.jpg" alt="Profile image"> </a>
+						<a class="nav-link" id="UserDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+							<img class="img-xs rounded-circle" src="/admin/images/faces/face8.jpg" alt="Profile image"> </a>
 						<div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
 							<div class="dropdown-header text-center">
-								<img class="img-md rounded-circle" src="/images/faces/face8.jpg" alt="Profile image">
+								<img class="img-md rounded-circle" src="/admin/images/faces/face8.jpg" alt="Profile image">
 								<p class="mb-1 mt-3 font-weight-semibold"><?php echo $_SESSION['name']; ?></p>
 								<p class="fw-light text-muted mb-0"><?php echo $_SESSION['name'].'@gmail.com'?></p>
 							</div>
@@ -73,7 +68,7 @@
 			</div>
 		</nav>
 		<div class="container-fluid page-body-wrapper">
-			<nav class="sidebar sidebar-offcanvas" id="sidebar">
+			<nav class="sidebar sidebar-offcanvas">
 				<ul class="nav">
 					<li class="nav-item">
 						<a class="nav-link" href="/admin/dashboard.php">
