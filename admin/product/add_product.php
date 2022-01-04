@@ -119,14 +119,14 @@
                                         $fetch = $pdo->prepare("select * from category");
                                         $fetch->execute();
                                         $res = $fetch->fetchAll();
-                                        foreach ($res as $r1) {
+                                        foreach ($res as $category) {
                                             ?>
-                                    <option  value="<?= $r1['id'] ?>"
+                                    <option  value="<?= $category['id'] ?>"
                                     <?php
                                     if (isset($_SESSION['category'])) {
                                         echo "selected='selected'";
                                     } ?>
-                                    ><?= $r1['name']?></option>
+                                    ><?= $category['name']?></option>
                                     <?php
                                         }
                                     ?>
