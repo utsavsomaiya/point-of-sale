@@ -2,7 +2,6 @@
   session_start();
   require '../layout/db_connect.php';
   include '../layout/header.php';
-    //print_r($_SESSION);
     if (isset($_POST['submit'])) {
         if (!empty($_FILES['image']['name']) && !empty($_POST['pname']) && !empty($_POST['price'] && !empty($_POST['category']))) {
             list($width, $height) = @getimagesize($_FILES['image']['name']);
@@ -10,16 +9,16 @@
             $imageFileType = strtolower(pathinfo($target, PATHINFO_EXTENSION));
             if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
 && $imageFileType != "gif") {
-                $_SESSION['msg_alert3'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+                $_SESSION['file_validation_error'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
                 header('location:../product/add_product.php');
             } elseif (($_FILES["image"]["size"] > 2000000)) {
-                $_SESSION['msg_alert3'] = "Image size exceeds 2MB";
+                $_SESSION['file_validation_error'] = "Image size exceeds 2MB";
                 header('location:../product/add_product.php');
             } elseif ($width >= "300" || $height >= "200") {
-                $_SESSION['msg_alert3'] = "Image dimension should be within 300X200";
+                $_SESSION['file_validation_error'] = "Image dimension should be within 300X200";
                 header('location:../product/add_product.php');
             } elseif (!is_numeric($_POST['price'])) {
-                $_SESSION['msg_alert2'] = "Enter Only Numeric Value";
+                $_SESSION['file_validation_error'] = "Enter Only Numeric Value";
                 header('location:../product/add_product.php');
             } else {
                 $pname = $_POST['pname'];
@@ -38,19 +37,19 @@
             }
         } else {
             if (empty($_POST['pname'])) {
-                $_SESSION['msg_alert1'] = "Please enter data..";
+                $_SESSION['name_validation_error'] = "Please enter data..";
                 header('location:../product/add_product.php');
             }
             if (empty($_POST['price'])) {
-                $_SESSION['msg_alert2'] = "Please enter data";
+                $_SESSION['price_validation_error'] = "Please enter data";
                 header('location:../product/add_product.php');
             }
             if (empty($_POST['category'])) {
-                $_SESSION['msg_alert4'] = "Please enter data";
+                $_SESSION['category_validation_error'] = "Please enter data";
                 header('location:../product/add_product.php');
             }
             if (empty($_FILES['image']['name'])) {
-                $_SESSION['msg_alert3'] = "Please enter data";
+                $_SESSION['file_validation_error'] = "Please enter data";
                 header('location:../product/add_product.php');
             }
         }
@@ -58,6 +57,16 @@
   if (isset($_POST['cancel'])) {
       header('location:/admin/product/show_product.php');
   }
+  if (isset($_POST['pname'])) {
+      $_SESSION['pname']= $_POST['pname'];
+  }
+  if (isset($_POST['price'])) {
+      $_SESSION['price']= $_POST['price'];
+  }
+  if (isset($_POST['category'])) {
+      $_SESSION['category']= $_POST['category'];
+  }
+
 ?>
 <div class="main-panel">
 	<div class="content-wrapper">
@@ -72,17 +81,14 @@
 								<input type="text" class="form-control" id="exampleInputUsername1"
 									placeholder="Product Name" name="pname"
                                     <?php
-                                    if (isset($_POST['pname'])) {
-                                        $_SESSION['pname']= $_POST['pname'];
-                                    }
                                     if (isset($_SESSION['pname'])) {
                                         echo "value=\"".$_SESSION['pname']."\"";
                                     }?>
-                                >
+                                required>
                                 <label style="color:red;">
                                 <?php
-                                if (isset($_SESSION['msg_alert1'])) {
-                                    echo $_SESSION['msg_alert1'];
+                                if (isset($_SESSION['name_validation_error'])) {
+                                    echo $_SESSION['name_validation_error'];
                                 }
                                 ?>
                                 </label>
@@ -92,25 +98,22 @@
 								<input type="number" class="form-control" id="exampleInputEmail1"
 									placeholder="Product Price" name="price"
                                     <?php
-                                    if (isset($_POST['price'])) {
-                                        $_SESSION['price']= $_POST['price'];
-                                    }
                                     if (isset($_SESSION['price'])) {
                                         echo "value=\"".$_SESSION['price']."\"";
                                     }
                                     ?>
-                                >
+                                required>
                                 <label style="color:red;">
                                 <?php
-                                if (isset($_SESSION['msg_alert2'])) {
-                                    echo $_SESSION['msg_alert2'];
+                                if (isset($_SESSION['price_validation_error'])) {
+                                    echo $_SESSION['price_validation_error'];
                                 }
                                 ?>
                                 </label>
 							</div>
                             <div class="form-group">
                                 <label for="exampleSelectGender">Select Category</label>
-                                <select class="form-control" id="exampleSelectGender" name="category" >
+                                <select class="form-control" id="exampleSelectGender" name="category" required>
                                     <option value="">--Select Category--</option>
                                     <?php
                                         $fetch = $pdo->prepare("select * from category");
@@ -120,12 +123,9 @@
                                             ?>
                                     <option  value="<?= $r1['id'] ?>"
                                     <?php
-                                    if (isset($_POST['category'])) {
-                                        $_SESSION['category']= $_POST['category'];
-                                    }
-                                            if (isset($_SESSION['category'])) {
-                                                echo "selected='selected'";
-                                            } ?>
+                                    if (isset($_SESSION['category'])) {
+                                        echo "selected='selected'";
+                                    } ?>
                                     ><?= $r1['name']?></option>
                                     <?php
                                         }
@@ -133,19 +133,19 @@
                                 </select>
                                 <label style="color:red;">
                                 <?php
-                                if (isset($_SESSION['msg_alert4'])) {
-                                    echo $_SESSION['msg_alert4'];
+                                if (isset($_SESSION['category_validation_error'])) {
+                                    echo $_SESSION['category_validation_error'];
                                 }
                                 ?>
                                 </label>
                             </div>
 							<div class="form-group">
 								<label for="exampleInputPassword1">Image</label>
-								<input type="file" class="form-control" accept="" name="image" >
+								<input type="file" class="form-control" accept="" name="image" required>
                                 <label style="color:red;">
                                 <?php
-                                if (isset($_SESSION['msg_alert3'])) {
-                                    echo $_SESSION['msg_alert3'];
+                                if (isset($_SESSION['file_validation_error'])) {
+                                    echo $_SESSION['file_validation_error'];
                                 }
                                 ?>
                                 </label>

@@ -24,27 +24,28 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php
-                                    require '../layout/db_connect.php';
-                                    $fetch = $pdo->prepare('select * from product');
-                                    $fetch->execute();
-                                    $result = $fetch->fetchAll();
-                                    foreach ($result as $r1) {
-                                        if (!empty($r1)) {
-                                            ?>
+							<?php
+                                require '../layout/db_connect.php';
+                                $fetch = $pdo->prepare('select * from product');
+                                $fetch->execute();
+                                $result = $fetch->fetchAll();
+                                foreach ($result as $r1) {
+                                    if (!empty($r1)) {
+                                        ?>
 								<tr>
 									<td><?= $r1['id']?></td>
 									<td><?= $r1['name'] ?></td>
 									<td><?= "$".$r1['price'] ?></td>
-									<td><?php
-                                    $fetch = $pdo->prepare("select name from category where id = {$r1['category']}");
-                                            $fetch->execute();
-                                            $result = $fetch->fetchAll();
-                                            foreach ($result as $r) {
-                                                if (!empty($r)) {
-                                                    echo $r['name'];
-                                                }
-                                            } ?>
+									<td>
+							<?php
+                                $fetch = $pdo->prepare("select name from category where id = {$r1['category']}");
+                                        $fetch->execute();
+                                        $result = $fetch->fetchAll();
+                                        foreach ($result as $r) {
+                                            if (!empty($r)) {
+                                                echo $r['name'];
+                                            }
+                                        } ?>
 									</td>
 									<td><img src="<?= '/admin/images/'.$r1['image'] ?>"></td>
 									<td><a href="../product/edit_product.php?id=<?= $r1['id']?>" class="btn btn-dark btn-icon-text">Edit<i class="ti-file btn-icon-append"></i></a></td>
@@ -52,10 +53,10 @@
 									</td>
 								</tr>
 								<?php
-                                        } else {
-                                            echo "No Record Found..";
-                                        }
+                                    } else {
+                                        echo "No Record Found..";
                                     }
+                                }
                                 ?>
 							</tbody>
 						</form>
@@ -68,7 +69,7 @@
 <?php
      if (isset($_SESSION['msg'])) {
          ?>
-        <div id="snackbar"> <?php echo $_SESSION['msg']; ?> </div>
+		<div id="snackbar"> <?php echo $_SESSION['msg']; ?> </div>
 <?php
      }
 ?>
