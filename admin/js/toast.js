@@ -4,7 +4,7 @@ function alert(id) {
     }
 }
 
-function myFunction() {
+function toast() {
     var x = document.getElementById("snackbar");
     x.className = "show";
     setTimeout(function () {
