@@ -51,7 +51,7 @@
                                     ?>
                                     </label>
                             </div>
-                            <button type="submit" class="btn btn-primary me-2" name="submit" onclick="myFunction()">Submit</button>
+                            <button type="submit" class="btn btn-primary me-2" name="submit" onclick="toast()">Submit</button>
                             <button class="btn btn-light" name="cancel">Cancel</button>
                         </form>
                     </div>
