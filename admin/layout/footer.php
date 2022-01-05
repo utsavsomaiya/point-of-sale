@@ -5,7 +5,7 @@
 <script>
     <?php
     if (isset($_SESSION['msg'])) {
-        echo "myFunction()";
+        echo "toast()";
     }
     ?>
 </script>
