@@ -34,7 +34,7 @@
     <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.0.2/dist/tailwind.min.css">
     <script type="text/javascript">
         const cart = [];
-        function add_to_cart(id) {
+        function addToCart(id) {
           const product = {
             "id": id,
             "name": document.getElementById('name-' + id).innerHTML,
@@ -42,27 +42,28 @@
             "price": document.getElementById('price-' + id).innerHTML,
             "quantity" : 1
           };
-          if (!add_to_array(cart, id)) {
-            cart.push(product);
-          } else {
-            var index = cart.findIndex((obj => obj.name == document.getElementById('name-' + id).innerHTML));
+          if (existsInArray(id)) {
+            var index = cart.findIndex((obj => obj.id == id));
             cart[index].quantity += 1;
             var price = document.getElementById('price-' + id).innerHTML;
             price = parseInt(price.slice(1));
             price *= cart[index].quantity;
             price = "$" + price;
             cart[index].price = price;
+          } else {
+            cart.push(product);
           }
-          displayCart(id);
+          displayCart();
         }
-        function add_to_array(cart,id){
-           return cart.some(function(e1){
-             return e1.name === document.getElementById('name-' + id).innerHTML;
+        function existsInArray(id){
+           return cart.some(function(element){
+             return element.id === id;
           });
         }
-        function displayCart(id) {
+        function displayCart() {
 
           document.getElementById('container').innerHTML = "";
+          id = 1;
 
           for (let i = 0; i < cart.length; i++) {
 
@@ -115,7 +116,9 @@
 
             var button_2 = document.createElement('button');
             button_2.setAttribute('class', 'px-3 py-1 rounded-md bg-gray-300');
-            button_2.setAttribute('onclick', 'plus('+product_quantity+')');
+            button_2.onclick = function(){
+              product_quantity++;
+            }
             button_2.innerHTML = "+";
             document.getElementById('div_sub_second_' + id).appendChild(button_2);
 
@@ -124,10 +127,8 @@
             div_main_sub_third.setAttribute('class', 'font-semibold text-lg w-16 text-center');
             div_main_sub_third.innerHTML = product_price;
             document.getElementById('div_main_' + id).appendChild(div_main_sub_third);
-
             id++;
           }
-          //input_value = 1;
         }
     </script>
 </head>
@@ -149,7 +150,7 @@
                     $id = 0;
                     foreach ($result as $product) {
                         $id++; ?>
-            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between" onclick="add_to_cart(<?php echo $id; ?>)">
+            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between" onclick="addToCart(<?php echo $id; ?>)">
               <div>
                 <div class="font-bold text-gray-800" id="<?= "name-".$id; ?>"><?= $product["name"] ?></div>
                 <span class="font-light text-sm text-gray-400">
