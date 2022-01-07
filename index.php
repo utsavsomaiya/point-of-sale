@@ -44,7 +44,7 @@
           };
           if (existsInArray(id)) {
             var index = cart.findIndex((obj => obj.id == id));
-            cart[index].quantity += 1;
+            cart[index].quantity +=1;
             var price = document.getElementById('price-' + id).innerHTML;
             price = parseInt(price.slice(1));
             price *= cart[index].quantity;
@@ -102,9 +102,7 @@
 
             var button_1 = document.createElement('button');
             button_1.setAttribute('class', 'px-3 py-1 rounded-md bg-gray-300');
-            button_1.onclick = function(){
-              product_quantity--;
-            }
+            button_1.setAttribute('onclick','decreaseQuantity('+id+')');
             button_1.innerHTML = "-";
             document.getElementById('div_sub_second_' + id).appendChild(button_1);
 
@@ -116,19 +114,39 @@
 
             var button_2 = document.createElement('button');
             button_2.setAttribute('class', 'px-3 py-1 rounded-md bg-gray-300');
-            button_2.onclick = function(){
-              product_quantity++;
-            }
+            button_2.setAttribute('onclick','increaseQuantity('+id+')');
             button_2.innerHTML = "+";
             document.getElementById('div_sub_second_' + id).appendChild(button_2);
 
 
             var div_main_sub_third = document.createElement('div');
             div_main_sub_third.setAttribute('class', 'font-semibold text-lg w-16 text-center');
+            div_main_sub_third.setAttribute('id','div_sub_third_'+id);
             div_main_sub_third.innerHTML = product_price;
             document.getElementById('div_main_' + id).appendChild(div_main_sub_third);
             id++;
           }
+        }
+        function increaseQuantity(id){
+          var value = parseInt(document.getElementById('input_id_'+id).value, 10);
+          value = isNaN(value) ? 0 : value;
+          value++;
+          var index = cart.findIndex((obj => obj.id == id));
+          cart[index].quantity += 1;
+          document.getElementById('input_id_'+id).value = value;
+          price = parseInt((document.getElementById('price-'+id).innerHTML).slice(1)) * value ;
+          document.getElementById('div_sub_third_'+id).innerHTML = '$'+price;
+        }
+        function decreaseQuantity(id){
+          var value = parseInt(document.getElementById('input_id_'+id).value, 10);
+          value = isNaN(value) ? 0 : value;
+          value < 1 ? value = 1 : '';
+          value--;
+          var index = cart.findIndex((obj => obj.id == id));
+          cart[index].quantity -= 1;
+          document.getElementById('input_id_'+id).value = value;
+          price = parseInt((document.getElementById('price-'+id).innerHTML).slice(1)) * value ;
+          document.getElementById('div_sub_third_'+id).innerHTML = '$'+price;
         }
     </script>
 </head>
