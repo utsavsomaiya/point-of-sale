@@ -34,7 +34,7 @@
     <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.0.2/dist/tailwind.min.css">
     <script type="text/javascript">
         const cart = [];
-        function array(id) {
+        function add_to_cart(id) {
           const product = {
             "id": id,
             "name": document.getElementById('name-' + id).innerHTML,
@@ -101,7 +101,9 @@
 
             var button_1 = document.createElement('button');
             button_1.setAttribute('class', 'px-3 py-1 rounded-md bg-gray-300');
-            button_1.setAttribute('onclick', 'minus()');
+            button_1.onclick = function(){
+              product_quantity--;
+            }
             button_1.innerHTML = "-";
             document.getElementById('div_sub_second_' + id).appendChild(button_1);
 
@@ -113,7 +115,7 @@
 
             var button_2 = document.createElement('button');
             button_2.setAttribute('class', 'px-3 py-1 rounded-md bg-gray-300');
-            button_2.setAttribute('onclick', 'plus()');
+            button_2.setAttribute('onclick', 'plus('+product_quantity+')');
             button_2.innerHTML = "+";
             document.getElementById('div_sub_second_' + id).appendChild(button_2);
 
@@ -127,7 +129,6 @@
           }
           //input_value = 1;
         }
-
     </script>
 </head>
 <body class="bg-gray-200">
@@ -148,7 +149,7 @@
                     $id = 0;
                     foreach ($result as $product) {
                         $id++; ?>
-            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between" onclick="array(<?php echo $id; ?>)">
+            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between" onclick="add_to_cart(<?php echo $id; ?>)">
               <div>
                 <div class="font-bold text-gray-800" id="<?= "name-".$id; ?>"><?= $product["name"] ?></div>
                 <span class="font-light text-sm text-gray-400">
