@@ -101,8 +101,7 @@
 
             var decreaseButton = document.createElement('button');
             decreaseButton.setAttribute('class', 'px-3 py-1 rounded-md bg-gray-300');
-            decreaseButton.setAttribute('id','decrease-button-'+id);
-            decreaseButton.setAttribute('onclick','increasingDecreasingQuantity('+productId+','+id+','+false+')');
+            decreaseButton.setAttribute('onclick','changeQuantity('+productId+','+id+','+'"decrease"'+')');
             decreaseButton.innerHTML = "-";
             document.getElementById('div-sub-second-' + id).appendChild(decreaseButton);
 
@@ -114,8 +113,7 @@
 
             var increaseButton = document.createElement('button');
             increaseButton.setAttribute('class', 'px-3 py-1 rounded-md bg-gray-300');
-            increaseButton.setAttribute('onclick','increasingDecreasingQuantity('+productId+','+id+','+true+')');
-            increaseButton.setAttribute('id', 'increase-button-'+id);
+            increaseButton.setAttribute('onclick','changeQuantity('+productId+','+id+','+'"increase"'+')');
             increaseButton.innerHTML = "+";
             document.getElementById('div-sub-second-' + id).appendChild(increaseButton);
 
@@ -128,16 +126,16 @@
             id++;
           }
         }
-          function increasingDecreasingQuantity(productId, id, checked) {
+
+          function changeQuantity(productId, id, checked) {
             var inputValue = parseInt(document.getElementById('input-id-' + id).value, 10);
             var indexOfProduct = cart.findIndex((obj => obj.id == productId));
-            if (checked == true) {
-              inputValue = isNaN(inputValue) ? 0 : inputValue;
+            inputValue = isNaN(inputValue) ? 0 : inputValue;
+            if (checked == "increase") {
               inputValue++;
               cart[indexOfProduct].quantity += 1;
             }
-            if (checked == false) {
-              inputValue = isNaN(inputValue) ? 0 : inputValue;
+            if (checked == "decrease") {
               inputValue < 1 ? inputValue = 1 : '';
               inputValue--;
               cart[indexOfProduct].quantity = isNaN(cart[indexOfProduct].quantity) ? 0 : cart[indexOfProduct].quantity;
