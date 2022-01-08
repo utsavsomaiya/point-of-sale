@@ -101,7 +101,8 @@
 
             var decreaseButton = document.createElement('button');
             decreaseButton.setAttribute('class', 'px-3 py-1 rounded-md bg-gray-300');
-            decreaseButton.setAttribute('onclick','decreaseQuantity('+productId+','+id+')');
+            decreaseButton.setAttribute('id','decrease-button-'+id);
+            decreaseButton.setAttribute('onclick','increasingDecreasingQuantity('+productId+','+id+','+false+')');
             decreaseButton.innerHTML = "-";
             document.getElementById('div-sub-second-' + id).appendChild(decreaseButton);
 
@@ -113,7 +114,8 @@
 
             var increaseButton = document.createElement('button');
             increaseButton.setAttribute('class', 'px-3 py-1 rounded-md bg-gray-300');
-            increaseButton.setAttribute('onclick','increaseQuantity('+productId+','+id+')');
+            increaseButton.setAttribute('onclick','increasingDecreasingQuantity('+productId+','+id+','+true+')');
+            increaseButton.setAttribute('id', 'increase-button-'+id);
             increaseButton.innerHTML = "+";
             document.getElementById('div-sub-second-' + id).appendChild(increaseButton);
 
@@ -123,33 +125,30 @@
             divMainSubThird.setAttribute('id','div-sub-third-'+id);
             divMainSubThird.innerHTML = productPrice;
             document.getElementById('div-main-' + id).appendChild(divMainSubThird);
-
             id++;
           }
         }
-        function increaseQuantity(productId,id){
-          var inputValue = parseInt(document.getElementById('input-id-'+id).value, 10);
-          inputValue = isNaN(inputValue) ? 0 : inputValue;
-          inputValue++;
-          var indexOfProduct = cart.findIndex((obj => obj.id == productId));
-          cart[indexOfProduct].quantity += 1;
-          document.getElementById('input-id-'+id).value = inputValue;
-          price = parseInt((document.getElementById('price-'+id).innerHTML).slice(1)) * inputValue ;
-          document.getElementById('div-sub-third-'+id).innerHTML = '$'+price;
-          cart[indexOfProduct].price = '$'+price;
-        }
-        function decreaseQuantity(productId,id){
-          var inputValue = parseInt(document.getElementById('input-id-'+id).value, 10);
-          inputValue = isNaN(inputValue) ? 0 : inputValue;
-          inputValue < 1 ? inputValue = 1 : '';
-          inputValue--;
-          var indexOfProduct = cart.findIndex((obj => obj.id == productId));
-          cart[indexOfProduct].quantity -= 1;
-          document.getElementById('input-id-'+id).value = inputValue;
-          price = parseInt((document.getElementById('price-'+id).innerHTML).slice(1)) * inputValue ;
-          document.getElementById('div-sub-third-'+id).innerHTML = '$'+price;
-          cart[indexOfProduct].price = '$'+price;
-        }
+          function increasingDecreasingQuantity(productId, id, checked) {
+            var inputValue = parseInt(document.getElementById('input-id-' + id).value, 10);
+            var indexOfProduct = cart.findIndex((obj => obj.id == productId));
+            if (checked == true) {
+              inputValue = isNaN(inputValue) ? 0 : inputValue;
+              inputValue++;
+              cart[indexOfProduct].quantity += 1;
+            }
+            if (checked == false) {
+              inputValue = isNaN(inputValue) ? 0 : inputValue;
+              inputValue < 1 ? inputValue = 1 : '';
+              inputValue--;
+              cart[indexOfProduct].quantity = isNaN(cart[indexOfProduct].quantity) ? 0 : cart[indexOfProduct].quantity;
+              cart[indexOfProduct].quantity < 1 ? cart[indexOfProduct].quantity = 1 : '';
+              cart[indexOfProduct].quantity -= 1;
+            }
+            document.getElementById('input-id-' + id).value = inputValue;
+            price = parseInt((document.getElementById('price-' + id).innerHTML).slice(1)) * inputValue;
+            document.getElementById('div-sub-third-' + id).innerHTML = '$' + price;
+            cart[indexOfProduct].price = '$' + price;
+          }
     </script>
 </head>
 <body class="bg-gray-200">
