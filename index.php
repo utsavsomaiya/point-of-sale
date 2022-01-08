@@ -63,8 +63,8 @@
         function displayCart() {
 
           document.getElementById('container').innerHTML = "";
-          id = 1;
-
+          let id = 1;
+          let subTotal = 0;
           for (let i = 0; i < cart.length; i++) {
 
             var divMain = document.createElement('div');
@@ -82,6 +82,8 @@
             var productName = cart[i].name;
             var productPrice = cart[i].price;
             var productQuantity = cart[i].quantity;
+
+            subTotal += parseInt((cart[i].price).slice(1));
 
             var imageTag = document.createElement('img');
             imageTag.src = productImg;
@@ -123,30 +125,26 @@
             divMainSubThird.setAttribute('id','div-sub-third-'+id);
             divMainSubThird.innerHTML = productPrice;
             document.getElementById('div-main-' + id).appendChild(divMainSubThird);
+
+            document.getElementById('subtotal').innerHTML = "$"+subTotal;
             id++;
           }
         }
-
-          function changeQuantity(productId, id, checked) {
-            var inputValue = parseInt(document.getElementById('input-id-' + id).value, 10);
-            var indexOfProduct = cart.findIndex((obj => obj.id == productId));
-            inputValue = isNaN(inputValue) ? 0 : inputValue;
-            if (checked == "increase") {
-              inputValue++;
-              cart[indexOfProduct].quantity += 1;
-            }
-            if (checked == "decrease") {
-              inputValue < 1 ? inputValue = 1 : '';
-              inputValue--;
-              cart[indexOfProduct].quantity = isNaN(cart[indexOfProduct].quantity) ? 0 : cart[indexOfProduct].quantity;
-              cart[indexOfProduct].quantity < 1 ? cart[indexOfProduct].quantity = 1 : '';
-              cart[indexOfProduct].quantity -= 1;
-            }
-            document.getElementById('input-id-' + id).value = inputValue;
-            price = parseInt((document.getElementById('price-' + id).innerHTML).slice(1)) * inputValue;
-            document.getElementById('div-sub-third-' + id).innerHTML = '$' + price;
-            cart[indexOfProduct].price = '$' + price;
+        function changeQuantity(productId, id, checked) {
+          var indexOfProduct = cart.findIndex((obj => obj.id == productId));
+          cart[indexOfProduct].quantity = isNaN(cart[indexOfProduct].quantity) ? 0 : cart[indexOfProduct].quantity;
+          if (checked == "increase") {
+            cart[indexOfProduct].quantity += 1;
           }
+          if (checked == "decrease") {
+            cart[indexOfProduct].quantity = isNaN(cart[indexOfProduct].quantity) ? 0 : cart[indexOfProduct].quantity;
+            cart[indexOfProduct].quantity < 1 ? cart[indexOfProduct].quantity = 1 : '';
+            cart[indexOfProduct].quantity -= 1;
+          }
+          price = parseInt((document.getElementById('price-' + id).innerHTML).slice(1)) * cart[indexOfProduct].quantity;
+          cart[indexOfProduct].price = '$' + price;
+          displayCart();
+        }
     </script>
 </head>
 <body class="bg-gray-200">
@@ -205,7 +203,7 @@
             <div class="py-4 rounded-md shadow-lg">
               <div class=" px-4 flex justify-between ">
                 <span class="font-semibold text-sm">Subtotal</span>
-                <span class="font-bold">$0</span>
+                <span class="font-bold" id="subtotal">$0</span>
               </div>
               <div class=" px-4 flex justify-between ">
                 <span class="font-semibold text-sm">Discount</span>
