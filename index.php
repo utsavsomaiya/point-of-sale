@@ -35,6 +35,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <script type="text/javascript">
         const cart = [];
+        let subTotal = 0;
         function addToCart(id) {
           const product = {
             "id": id,
@@ -49,8 +50,7 @@
             var price = document.getElementById('price-' + id).innerHTML;
             price = parseInt(price.slice(1));
             price *= cart[index].quantity;
-            price = "$" + price;
-            cart[index].price = price;
+            cart[index].price = "$" + price;
           } else {
             cart.push(product);
           }
@@ -61,11 +61,11 @@
              return element.id === id;
           });
         }
-        function displayCart() {
 
+        function displayCart() {
+          subTotal = 0;
           document.getElementById('container').innerHTML = "";
           let id = 1;
-          let subTotal = 0;
           for (let i = 0; i < cart.length; i++) {
 
             var divMain = document.createElement('div');
@@ -127,13 +127,14 @@
             divMainSubThird.innerHTML = productPrice;
             document.getElementById('div-main-' + id).appendChild(divMainSubThird);
 
+
             var deleteIcon = document.createElement('i');
             deleteIcon.setAttribute('class','material-icons');
             deleteIcon.setAttribute('onclick','removeCart('+productId+')');
             deleteIcon.innerHTML = "delete";
             document.getElementById('div-main-'+id).appendChild(deleteIcon);
 
-            document.getElementById('subtotal').innerHTML = "$"+subTotal;
+            document.getElementById('subtotal').innerHTML = "$" +subTotal;
             id++;
           }
         }
@@ -142,24 +143,27 @@
           cart[indexOfProduct].quantity = isNaN(cart[indexOfProduct].quantity) ? 0 : cart[indexOfProduct].quantity;
           if (checked == "increase") {
             cart[indexOfProduct].quantity += 1;
+            price = parseInt((document.getElementById('price-' + id).innerHTML).slice(1)) * cart[indexOfProduct].quantity;
+            cart[indexOfProduct].price = '$' + price;
           }
           if (checked == "decrease") {
             cart[indexOfProduct].quantity = isNaN(cart[indexOfProduct].quantity) ? 0 : cart[indexOfProduct].quantity;
-            if(cart[indexOfProduct].quantity <= 1){
+            if(cart[indexOfProduct].quantity > 1){
+              cart[indexOfProduct].quantity -=1;
+              price = parseInt((document.getElementById('price-' + id).innerHTML).slice(1)) * cart[indexOfProduct].quantity;
+              cart[indexOfProduct].price = '$' + price;
+            } else{
               removeCart(productId);
             }
-            cart[indexOfProduct].quantity -= 1;
           }
-          price = parseInt((document.getElementById('price-' + id).innerHTML).slice(1)) * cart[indexOfProduct].quantity;
-          cart[indexOfProduct].price = '$' + price;
           displayCart();
         }
-
         function removeCart(productId){
           var indexOfProduct = cart.findIndex((obj => obj.id == productId));
           if(indexOfProduct > -1){
             cart.splice(indexOfProduct,1);
           }
+          document.getElementById('subtotal').innerHTML = "$"+0;
           displayCart();
         }
     </script>
