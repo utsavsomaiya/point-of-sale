@@ -1,6 +1,6 @@
 <?php
-    session_start();
-    include '../layout/header.php';
+session_start();
+include '../layout/header.php';
 ?>
 <div class="main-panel">
 	<div class="content-wrapper">
@@ -19,45 +19,47 @@
 									<th>Name</th>
 									<th>Price</th>
 									<th>Category</th>
+									<th>Text</th>
 									<th>Image</th>
 									<th colspan='2'>Action</th>
 								</tr>
 							</thead>
 							<tbody>
-							<?php
-                                require '../layout/db_connect.php';
-                                $fetch = $pdo->prepare('select * from product');
-                                $fetch->execute();
-                                $result = $fetch->fetchAll();
-                                foreach ($result as $product) {
-                                    if (!empty($product)) {
-                                        ?>
-								<tr>
-									<td><?= $product['id']?></td>
-									<td><?= $product['name'] ?></td>
-									<td><?= "$".$product['price'] ?></td>
-									<td>
-							<?php
-                                $fetch = $pdo->prepare("select name from category where id = {$product['category']}");
-                                        $fetch->execute();
-                                        $result = $fetch->fetchAll();
-                                        foreach ($result as $category) {
-                                            if (!empty($category)) {
-                                                echo $category['name'];
-                                            }
-                                        } ?>
-									</td>
-									<td><img src="<?= '/admin/images/'.$product['image'] ?>"></td>
-									<td><a href="../product/edit_product.php?id=<?= $product['id']?>" class="btn btn-dark btn-icon-text">Edit<i class="ti-file btn-icon-append"></i></a></td>
-									<td><a href="javascript:alert(<?= $product['id']?>)" class="btn btn-outline-danger btn-fw">Delete</a>
-									</td>
-								</tr>
 								<?php
-                                    } else {
-                                        echo "No Record Found..";
-                                    }
-                                }
-                                ?>
+								require '../layout/db_connect.php';
+								$fetch = $pdo->prepare('select * from product');
+								$fetch->execute();
+								$result = $fetch->fetchAll();
+								foreach ($result as $product) {
+									if (!empty($product)) {
+								?>
+										<tr>
+											<td><?= $product['id'] ?></td>
+											<td><?= $product['name'] ?></td>
+											<td><?= "$" . $product['price'] ?></td>
+											<td>
+												<?php
+												$fetch = $pdo->prepare("select name from category where id = {$product['category']}");
+												$fetch->execute();
+												$result = $fetch->fetchAll();
+												foreach ($result as $category) {
+													if (!empty($category)) {
+														echo $category['name'];
+													}
+												} ?>
+											</td>
+											<td><?= $product['text'] . "%" ?></td>
+											<td><img src="<?= '/admin/images/' . $product['image'] ?>"></td>
+											<td><a href="../product/edit_product.php?id=<?= $product['id'] ?>" class="btn btn-dark btn-icon-text">Edit<i class="ti-file btn-icon-append"></i></a></td>
+											<td><a href="javascript:alert(<?= $product['id'] ?>)" class="btn btn-outline-danger btn-fw">Delete</a>
+											</td>
+										</tr>
+								<?php
+									} else {
+										echo "No Record Found..";
+									}
+								}
+								?>
 							</tbody>
 						</form>
 					</table>
@@ -67,12 +69,12 @@
 	</div>
 </div>
 <?php
-     if (isset($_SESSION['msg'])) {
-         ?>
-		<div id="snackbar"> <?php echo $_SESSION['msg']; ?> </div>
+if (isset($_SESSION['msg'])) {
+?>
+	<div id="snackbar"> <?php echo $_SESSION['msg']; ?> </div>
 <?php
-     }
+}
 ?>
 <?php include '../layout/footer.php';
-    unset($_SESSION['msg']);
+unset($_SESSION['msg']);
 ?>
