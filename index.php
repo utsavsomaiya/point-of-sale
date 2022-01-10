@@ -150,6 +150,7 @@
         document.getElementById("discount-price").innerHTML = "$" + discountPrice;
         var textPrice = subTotal * (text / 100);
         document.getElementById("sales-text-price").innerHTML = "$" + (textPrice).toFixed(2);
+
         var total = (subTotal - (subTotal * (discountPercentage / 100))) + (subTotal * (text / 100));
         document.getElementById("total").innerHTML = "$" + total;
         var textPrice = subTotal * (text / 100);
