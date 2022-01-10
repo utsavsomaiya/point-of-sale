@@ -135,6 +135,13 @@
             document.getElementById('div-main-'+id).appendChild(deleteIcon);
 
             document.getElementById('subtotal').innerHTML = "$" +subTotal;
+
+            var discountPercentage = document.getElementById("discount-percentage").innerHTML.charAt("28");
+            var discountPrice = subTotal * (discountPercentage/100);
+            document.getElementById("discount-price").innerHTML = "$"+discountPrice;
+            var total = subTotal - (subTotal * (discountPercentage/100));
+            document.getElementById("total").innerHTML = "$"+total;
+
             id++;
           }
         }
@@ -164,6 +171,7 @@
             cart.splice(indexOfProduct,1);
           }
           document.getElementById('subtotal').innerHTML = "$"+0;
+          document.getElementById('total').innerHTML = "$"+0;
           displayCart();
         }
     </script>
@@ -227,8 +235,21 @@
                 <span class="font-bold" id="subtotal">$0</span>
               </div>
               <div class=" px-4 flex justify-between ">
-                <span class="font-semibold text-sm">Discount</span>
-                <span class="font-bold">- $0</span>
+                <span class="font-semibold text-sm" id="discount-percentage">Discount(
+                  <?php
+                $fetch = $pdo->prepare("select * from discount where id = 1");
+                        $fetch->execute();
+                        $result = $fetch->fetchAll();
+                        foreach ($result as $discount) {
+                            if (!empty($discount)) {
+                                echo $discount["percentage"]."%";
+                            }
+                        }
+                  ?>
+                  )
+                </span>
+              <span class="font-bold" id="discount-price">- $0
+              </span>
               </div>
               <div class=" px-4 flex justify-between ">
                 <span class="font-semibold text-sm">Sales Tax</span>
@@ -236,7 +257,9 @@
               </div>
               <div class="border-t-2 mt-3 py-2 px-4 flex items-center justify-between">
                 <span class="font-semibold text-2xl">Total</span>
-                <span class="font-bold text-2xl">$0</span>
+                <span class="font-bold text-2xl" id="total">
+                        $0
+                </span>
               </div>
             </div>
           </div>
