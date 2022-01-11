@@ -26,7 +26,9 @@
   <meta name="twitter:description" content="template design from dribble https://dribbble.com/shots/14139155-Point-of-Sale-System-Design/attachments/5763503?mode=media" />
   <meta name="twitter:image" content="https://tailwindcomponents.com/storage/2190/temp35198.png?v=2022-01-04 10:47:18" />
   <title>Retail Shop</title>
+
   <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.0.2/dist/tailwind.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <script type="text/javascript">
     const cart = [];
 
@@ -59,12 +61,10 @@
     }
 
     function displayCart() {
-
       document.getElementById('container').innerHTML = "";
       let id = 1;
       let subTotal = 0;
       for (let i = 0; i < cart.length; i++) {
-
         var divMain = document.createElement('div');
         divMain.setAttribute('class', 'flex flex-row justify-between items-center mb-4');
         divMain.setAttribute('id', 'div-main-' + id);
@@ -78,9 +78,7 @@
         var productName = cart[i].name;
         var productPrice = cart[i].price;
         var productQuantity = cart[i].quantity;
-
         subTotal += parseInt((cart[i].price).slice(1));
-
         var imageTag = document.createElement('img');
         imageTag.src = productImg;
         imageTag.setAttribute('class', 'w-10 h-10 object-cover rounded-md');
@@ -115,6 +113,12 @@
         divMainSubThird.innerHTML = productPrice;
         document.getElementById('div-main-' + id).appendChild(divMainSubThird);
 
+        var deleteIcon = document.createElement('i');
+        deleteIcon.setAttribute('class', 'material-icons');
+        deleteIcon.setAttribute('onclick', 'removeCart(' + productId + ')');
+        deleteIcon.innerHTML = "delete";
+        document.getElementById('div-main-' + id).appendChild(deleteIcon);
+
         document.getElementById('subtotal').innerHTML = "$" + subTotal;
         id++;
       }
@@ -128,11 +132,21 @@
       }
       if (checked == "decrease") {
         cart[indexOfProduct].quantity = isNaN(cart[indexOfProduct].quantity) ? 0 : cart[indexOfProduct].quantity;
-        cart[indexOfProduct].quantity < 1 ? cart[indexOfProduct].quantity = 1 : '';
+        if (cart[indexOfProduct].quantity <= 1) {
+          removeCart(productId);
+        }
         cart[indexOfProduct].quantity -= 1;
       }
       price = parseInt((document.getElementById('price-' + id).innerHTML).slice(1)) * cart[indexOfProduct].quantity;
       cart[indexOfProduct].price = '$' + price;
+      displayCart();
+    }
+
+    function removeCart(productId) {
+      var indexOfProduct = cart.findIndex((obj => obj.id == productId));
+      if (indexOfProduct > -1) {
+        cart.splice(indexOfProduct, 1);
+      }
       displayCart();
     }
   </script>
@@ -193,7 +207,6 @@
           <div class="py-4 rounded-md shadow-lg">
             <div class=" px-4 flex justify-between ">
               <span class="font-semibold text-sm">Subtotal</span>
-              <span class="font-bold">$0</span>
               <span class="font-bold" id="subtotal">$0</span>
             </div>
             <div class=" px-4 flex justify-between ">
