@@ -124,7 +124,6 @@
         id++;
       }
     }
-
     function changeQuantity(productId, id, checked) {
       var indexOfProduct = cart.findIndex((obj => obj.id == productId));
       cart[indexOfProduct].quantity = isNaN(cart[indexOfProduct].quantity) ? 0 : cart[indexOfProduct].quantity;
@@ -214,9 +213,28 @@
               <span class="font-semibold text-sm">Subtotal</span>
               <span class="font-bold" id="subtotal">$0</span>
             </div>
-            <div class=" px-4 flex justify-between ">
-              <span class="font-semibold text-sm">Discount</span>
-              <span class="font-bold">- $0</span>
+
+          <div class="px-5 py-4 mt-5 overflow-y-auto h-64" id="container">
+
+          </div>
+          <div class="px-5 mt-5">
+            <div class="py-4 rounded-md shadow-lg">
+              <div class=" px-4 flex justify-between ">
+                <span class="font-semibold text-sm">Subtotal</span>
+                <span class="font-bold">$0</span>
+              </div>
+              <div class=" px-4 flex justify-between ">
+                <span class="font-semibold text-sm">Discount</span>
+                <span class="font-bold">- $0</span>
+              </div>
+              <div class=" px-4 flex justify-between ">
+                <span class="font-semibold text-sm">Sales Tax</span>
+                <span class="font-bold">$0</span>
+              </div>
+              <div class="border-t-2 mt-3 py-2 px-4 flex items-center justify-between">
+                <span class="font-semibold text-2xl">Total</span>
+                <span class="font-bold text-2xl">$0</span>
+              </div>
             </div>
             <div class=" px-4 flex justify-between ">
               <span class="font-semibold text-sm">Sales Tax</span>
