@@ -196,9 +196,7 @@
               <span class="font-bold">$0</span>
               <span class="font-bold" id="subtotal">$0</span>
             </div>
-            <div class=" px-4 flex justify-between ">
-              <span class="font-semibold text-sm">Discount</span>
-              <span class="font-bold">- $0</span>
+
             </div>
             <div class=" px-4 flex justify-between ">
               <span class="font-semibold text-sm">Sales Tax</span>
