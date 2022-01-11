@@ -36,6 +36,7 @@
   <script type="text/javascript">
     const cart = [];
     let subTotal = 0;
+    let text = 0;
 
     function addToCart(id) {
       const product = {
@@ -43,6 +44,7 @@
         "name": document.getElementById('name-' + id).innerHTML,
         "img": document.getElementById('image-' + id).src,
         "price": document.getElementById('price-' + id).innerHTML,
+        "text": document.getElementById('text-' + id).innerHTML,
         "quantity": 1
       };
       if (existsInArray(id)) {
@@ -66,6 +68,7 @@
 
     function displayCart() {
       subTotal = 0;
+      text = 0;
       document.getElementById('container').innerHTML = "";
       let id = 1;
       for (let i = 0; i < cart.length; i++) {
@@ -84,9 +87,11 @@
         var productImg = cart[i].img;
         var productName = cart[i].name;
         var productPrice = cart[i].price;
+        var productText = cart[i].text;
         var productQuantity = cart[i].quantity;
 
         subTotal += parseInt((cart[i].price).slice(1));
+        text += parseInt((cart[i].text).slice(0, -1));
 
         var imageTag = document.createElement('img');
         imageTag.src = productImg;
@@ -137,13 +142,15 @@
         document.getElementById('div-main-' + id).appendChild(deleteIcon);
 
         document.getElementById('subtotal').innerHTML = "$" + subTotal;
+        document.getElementById('sales-text').innerHTML = "Sales Tax(" + text + "%)";
 
         var discountPercentage = document.getElementById("discount-percentage").innerHTML.trim();
         var discountPrice = subTotal * (discountPercentage / 100);
         document.getElementById("discount-price").innerHTML = "$" + discountPrice;
-        var total = subTotal - (subTotal * (discountPercentage / 100));
+        var textPrice = subTotal * (text / 100);
+        document.getElementById("sales-text-price").innerHTML = "$" + (textPrice).toFixed(2);
+        var total = (subTotal - (subTotal * (discountPercentage / 100))) + (subTotal * (text / 100));
         document.getElementById("total").innerHTML = "$" + total;
-
         id++;
       }
     }
@@ -175,6 +182,8 @@
         cart.splice(indexOfProduct, 1);
       }
       document.getElementById('subtotal').innerHTML = "$" + 0;
+      document.getElementById('sales-text').innerHTML = "Sales tax()";
+      document.getElementById('discount-price').innerHTML = "$" + 0;
       document.getElementById('total').innerHTML = "$" + 0;
       displayCart();
     }
@@ -216,6 +225,7 @@
               </div>
               <div class="flex flex-row justify-between items-center">
                 <span class="self-end font-bold text-lg text-yellow-500" id="<?= "price-" . $id; ?>"><?= "$" . $product["price"] ?></span>
+                <span class="self-end font-bold text-small text-red-500" id="<?= "text-" . $id; ?>"><?= $product["text"] . "%" ?></span>
                 <img src="<?= 'admin/images/' . $product["image"] ?>" id="<?= "image-" . $id; ?>" class=" h-14 w-14 object-cover rounded-md" alt="">
               </div>
             </div>
@@ -240,7 +250,11 @@
               <span class="font-bold" id="subtotal">$0</span>
             </div>
             <div class=" px-4 flex justify-between ">
-              <span class="font-semibold text-sm" id="discount-percentage">Discount(
+              <span class="font-semibold text-sm" id='sales-text'>Sales Tax()</span>
+              <span class="font-bold" id='sales-text-price'>$0</span>
+            </div>
+            <div class=" px-4 flex justify-between ">
+              <span class="font-semibold text-sm">Discount(
                 <?php
                 $percentage = 0;
                 $fetch = $pdo->prepare("select * from discount where id = 1");
@@ -260,10 +274,6 @@
               </label>
               <span class="font-bold" id="discount-price">- $0
               </span>
-            </div>
-            <div class=" px-4 flex justify-between ">
-              <span class="font-semibold text-sm">Sales Tax</span>
-              <span class="font-bold">$0</span>
             </div>
             <div class="border-t-2 mt-3 py-2 px-4 flex items-center justify-between">
               <span class="font-semibold text-2xl">Total</span>
