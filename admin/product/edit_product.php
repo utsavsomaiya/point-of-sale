@@ -4,14 +4,14 @@ include '../layout/header.php';
 require '../layout/db_connect.php';
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
-    $fetch = $pdo->prepare("select * from product where id='$id'");
+    $fetch = $pdo->prepare("select * from product where id='$id' and 1=1");
     $fetch->execute();
     $result = $fetch->fetchAll();
     foreach ($result as $r) {
         $name = $r['name'];
         $price = $r['price'];
         $category = $r['category'];
-        $text = $r['text'];
+        $tax = $r['tax'];
         if (empty($_FILES['image']['name'])) {
             $fname = $r['image'];
         } else {
@@ -25,8 +25,8 @@ if (isset($_POST['submit'])) {
             $pname = $_POST['pname'];
             $price = $_POST['price'];
             $category = $_POST['category'];
-            $text = $_POST['text'];
-            $fetch = $pdo->prepare("update product set name='$pname', price='$price', category=$category, text='$text',image='$fname' where id='$id'");
+            $tax = $_POST['tax'];
+            $fetch = $pdo->prepare("update product set name='$pname', price='$price', category=$category, tax='$tax',image='$fname' where id='$id'");
             $result = $fetch->execute();
             if (isset($result)) {
                 $_SESSION['msg'] = "Update Successfully";
@@ -42,9 +42,6 @@ if (isset($_POST['submit'])) {
         $alert = "Please enter the data..";
     }
 }
-if (isset($_POST['cancel'])) {
-    header('location:/admin/product/show_product.php');
-}
 ?>
 <div class="main-panel">
     <div class="content-wrapper">
@@ -57,7 +54,7 @@ if (isset($_POST['cancel'])) {
                             <div class="form-group">
                                 <input type="hidden" name="id" value="<?= $id; ?>">
                                 <label for="exampleInputUsername1">Product Name</label>
-                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Product Name" name="pname" value="<?= $name; ?>">
+                                <input type="text" class="form-control" placeholder="Product Name" name="pname" value="<?= $name; ?>">
                                 <label style="color:red;">
                                     <?php
                                     if (isset($alert)) {
@@ -68,7 +65,7 @@ if (isset($_POST['cancel'])) {
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Product Price</label>
-                                <input type="number" class="form-control" id="exampleInputEmail1" placeholder="Product Price" name="price" value="<?= $price; ?>">
+                                <input type="number" class="form-control" placeholder="Product Price" name="price" value="<?= $price; ?>">
                                 <label style="color:red;">
                                     <?php
                                     if (isset($price_alert)) {
@@ -79,32 +76,32 @@ if (isset($_POST['cancel'])) {
                             </div>
                             <div class="form-group">
                                 <label for="exampleSelectGender">Select Category</label>
-                                <select class="form-control" id="exampleSelectGender" name="category">
+                                <select class="form-control" name="category">
                                     <option value="">--Select Category--</option>
                                     <?php
                                     $fetch = $pdo->prepare("select * from category");
                                     $fetch->execute();
                                     $res = $fetch->fetchAll();
-                                    foreach ($res as $category) {
+                                    foreach ($res as $cat) {
                                     ?>
-                                        <option value="<?= $category['name'] ?>" <?php
-                                                                                    if ($category == $category['name']) {
-                                                                                        echo "selected='selected'";
-                                                                                    } ?>><?= $category['name'] ?></option>
+                                        <option value="<?= $cat['id'] ?>" <?php
+                                                                            if ($category == $cat['id']) {
+                                                                                echo "selected='selected'";
+                                                                            } ?>><?= $cat['name'] ?></option>
                                     <?php
                                     }
                                     ?>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="exampleSelectGender">Select Product Text</label>
-                                <select class="form-control" id="exampleSelectGender" name="text">
-                                    <option value="">--Select Text--</option>
-                                    <option value="5" <?php if ($text == "5") echo 'selected="selected"'; ?>>5%</option>
-                                    <option value="10" <?php if ($text == "10") echo 'selected="selected"'; ?>>10%</option>
-                                    <option value="15" <?php if ($text == "15") echo 'selected="selected"'; ?>>15%</option>
-                                    <option value="20" <?php if ($text == "20") echo 'selected="selected"'; ?>>20%</option>
-                                    <option value="25" <?php if ($text == "25") echo 'selected="selected"'; ?>>25%</option>
+                                <label for="exampleSelectGender">Select Product Tax</label>
+                                <select class="form-control" name="tax">
+                                    <option value="">--Select Tax--</option>
+                                    <option value="5" <?php if ($tax == "5") echo 'selected="selected"'; ?>>5%</option>
+                                    <option value="10" <?php if ($tax == "10") echo 'selected="selected"'; ?>>10%</option>
+                                    <option value="15" <?php if ($tax == "15") echo 'selected="selected"'; ?>>15%</option>
+                                    <option value="20" <?php if ($tax == "20") echo 'selected="selected"'; ?>>20%</option>
+                                    <option value="25" <?php if ($tax == "25") echo 'selected="selected"'; ?>>25%</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -113,7 +110,7 @@ if (isset($_POST['cancel'])) {
                                 <input type="file" class="form-control" accept="" name="image">
                             </div>
                             <button type="submit" class="btn btn-primary me-2" name="submit" onclick="toast()">Submit</button>
-                            <button class="btn btn-light" name="cancel">Cancel</button>
+                            <a href="../product/show_product.php" class="btn btn-light">Cancel</a>
                         </form>
                     </div>
                 </div>

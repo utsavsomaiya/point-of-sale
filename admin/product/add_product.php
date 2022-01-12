@@ -3,7 +3,7 @@ session_start();
 require '../layout/db_connect.php';
 include '../layout/header.php';
 if (isset($_POST['submit'])) {
-    if (!empty($_FILES['image']['name']) && !empty($_POST['pname']) && !empty($_POST['price'] && !empty($_POST['category'])) && !empty($_POST['text'])) {
+    if (!empty($_FILES['image']['name']) && !empty($_POST['pname']) && !empty($_POST['price'] && !empty($_POST['category'])) && !empty($_POST['tax'])) {
         list($width, $height) = @getimagesize($_FILES['image']['name']);
         $target = "/admin/images/" . basename($_FILES['image']['name']);
         $imageFileType = strtolower(pathinfo($target, PATHINFO_EXTENSION));
@@ -26,9 +26,9 @@ if (isset($_POST['submit'])) {
             $pname = $_POST['pname'];
             $price = $_POST['price'];
             $category = $_POST['category'];
-            $text = $_POST['text'];
+            $tax = $_POST['tax'];
             $name = $_FILES['image']['name'];
-            $fetch = $pdo->prepare("insert into product(name,price,category,text,image) values('$pname','$price','$category','$text','$name')");
+            $fetch = $pdo->prepare("insert into product(name,price,category,tax,image) values('$pname','$price','$category','$tax','$name')");
             $result = $fetch->execute();
             if (isset($result)) {
                 $_SESSION['msg'] = "Add Successfully";
@@ -51,8 +51,8 @@ if (isset($_POST['submit'])) {
             $_SESSION['category_validation_error'] = "Please enter data";
             header('location:../product/add_product.php');
         }
-        if (empty($_POST['text'])) {
-            $_SESSION['text_validation_error'] = "Please enter data";
+        if (empty($_POST['tax'])) {
+            $_SESSION['tax_validation_error'] = "Please enter data";
             header('location:../product/add_product.php');
         }
         if (empty($_FILES['image']['name'])) {
@@ -60,9 +60,6 @@ if (isset($_POST['submit'])) {
             header('location:../product/add_product.php');
         }
     }
-}
-if (isset($_POST['cancel'])) {
-    header('location:/admin/product/show_product.php');
 }
 if (isset($_POST['pname'])) {
     $_SESSION['pname'] = $_POST['pname'];
@@ -73,8 +70,8 @@ if (isset($_POST['price'])) {
 if (isset($_POST['category'])) {
     $_SESSION['category'] = $_POST['category'];
 }
-if (isset($_POST['text'])) {
-    $_SESSION['text'] = $_POST['text'];
+if (isset($_POST['tax'])) {
+    $_SESSION['tax'] = $_POST['tax'];
 }
 ?>
 <div class="main-panel">
@@ -87,7 +84,7 @@ if (isset($_POST['text'])) {
                         <form class="forms-sample" method="post" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label for="exampleInputUsername1">Product Name</label>
-                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Product Name" name="pname" <?php if (isset($_SESSION['pname'])) echo "value=\"" . $_SESSION['pname'] . "\""; ?> required>
+                                <input type="text" class="form-control" placeholder="Product Name" name="pname" <?php if (isset($_SESSION['pname'])) echo "value=\"" . $_SESSION['pname'] . "\""; ?> required>
                                 <label style="color:red;">
                                     <?php
                                     if (isset($_SESSION['name_validation_error'])) {
@@ -98,7 +95,7 @@ if (isset($_POST['text'])) {
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Product Price</label>
-                                <input type="number" class="form-control" id="exampleInputEmail1" placeholder="Product Price" name="price" <?php if (isset($_SESSION['price'])) echo "value=\"" . $_SESSION['price'] . "\""; ?> required>
+                                <input type="number" class="form-control" placeholder="Product Price" name="price" <?php if (isset($_SESSION['price'])) echo "value=\"" . $_SESSION['price'] . "\""; ?> required>
                                 <label style="color:red;">
                                     <?php
                                     if (isset($_SESSION['price_validation_error'])) {
@@ -109,7 +106,7 @@ if (isset($_POST['text'])) {
                             </div>
                             <div class="form-group">
                                 <label for="exampleSelectGender">Select Category</label>
-                                <select class="form-control" id="exampleSelectGender" name="category" required>
+                                <select class="form-control" name="category" required>
                                     <option value="">--Select Category--</option>
                                     <?php
                                     $fetch = $pdo->prepare("select * from category");
@@ -134,9 +131,9 @@ if (isset($_POST['text'])) {
                                 </label>
                             </div>
                             <div class="form-group">
-                                <label for="exampleSelectGender">Text of the Product</label>
-                                <select class="form-control" id="exampleSelectGender" name="text" required>
-                                    <option value="">--Select Text--</option>
+                                <label for="exampleSelectGender">Tax of the Product</label>
+                                <select class="form-control" name="tax" required>
+                                    <option value="">--Select Tax--</option>
                                     <option value="5">5%</option>
                                     <option value="10">10%</option>
                                     <option value="15">15%</option>
@@ -145,8 +142,8 @@ if (isset($_POST['text'])) {
                                 </select>
                                 <label style="color:red;">
                                     <?php
-                                    if (isset($_SESSION['text_validation_error'])) {
-                                        echo $_SESSION['text_validation_error'];
+                                    if (isset($_SESSION['tax_validation_error'])) {
+                                        echo $_SESSION['tax_validation_error'];
                                     }
                                     ?>
                                 </label>
@@ -163,7 +160,7 @@ if (isset($_POST['text'])) {
                                 </label>
                             </div>
                             <button type="submit" class="btn btn-primary me-2" name="submit">Submit</button>
-                            <button class="btn btn-light" name="cancel">Cancel</button>
+                            <a href="../product/show_product.php" class="btn btn-light">Cancel</a>
                         </form>
                     </div>
                 </div>
@@ -171,8 +168,3 @@ if (isset($_POST['text'])) {
         </div>
     </div>
     <?php include '../layout/footer.php'; ?>
-    <?php
-    if (isset($_SESSION['pname'])) {
-        unset($_SESSION['pname']);
-    }
-    ?>

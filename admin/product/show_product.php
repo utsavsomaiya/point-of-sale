@@ -19,7 +19,7 @@ include '../layout/header.php';
 									<th>Name</th>
 									<th>Price</th>
 									<th>Category</th>
-									<th>Text</th>
+									<th>Tax</th>
 									<th>Image</th>
 									<th colspan='2'>Action</th>
 								</tr>
@@ -39,7 +39,7 @@ include '../layout/header.php';
 											<td><?= "$" . $product['price'] ?></td>
 											<td>
 												<?php
-												$fetch = $pdo->prepare("select name from category where id = {$product['category']}");
+												$fetch = $pdo->prepare("select name from category where id = {$product['category']} and 1=1");
 												$fetch->execute();
 												$result = $fetch->fetchAll();
 												foreach ($result as $category) {
@@ -48,7 +48,7 @@ include '../layout/header.php';
 													}
 												} ?>
 											</td>
-											<td><?= $product['text'] . "%" ?></td>
+											<td><?= $product['tax'] . "%" ?></td>
 											<td><img src="<?= '/admin/images/' . $product['image'] ?>"></td>
 											<td><a href="../product/edit_product.php?id=<?= $product['id'] ?>" class="btn btn-dark btn-icon-text">Edit<i class="ti-file btn-icon-append"></i></a></td>
 											<td><a href="javascript:alert(<?= $product['id'] ?>)" class="btn btn-outline-danger btn-fw">Delete</a>

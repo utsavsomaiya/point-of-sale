@@ -1,24 +1,24 @@
 <?php
-    session_start();
-    if (isset($_POST['s1'])) {
-        require '../layout/db_connect.php';
-        $name = $_POST['email'];
-        $password = $_POST['password'];
-        $abc = $pdo->prepare("select id from admin where name='$name' and password='$password' and 1=1");
-        $abc->execute();
+session_start();
+if (isset($_POST['s1'])) {
+    require '../layout/db_connect.php';
+    $name = $_POST['email'];
+    $password = $_POST['password'];
+    $abc = $pdo->prepare("select id from admin where name='$name' and password='$password' and 1=1");
+    $abc->execute();
 
-        $result = $abc->fetchAll();
-        if (!$result) {
-            $_SESSION['alert'] = 'User Id and Password are Wrong';
-        } else {
-            $_SESSION['name'] = $_POST['email'];
-            $_SESSION["login"] = "OK";
-            header('location:../dashboard.php');
-        }
+    $result = $abc->fetchAll();
+    if (!$result) {
+        $_SESSION['alert'] = 'User Id and Password are Wrong';
+    } else {
+        $_SESSION['name'] = $_POST['email'];
+        $_SESSION["login"] = "OK";
+        header('location:.. /dashboard.php');
     }
-    if (isset($_SESSION['login'])) {
-        header('location:/admin/dashboard.php');
-    }
+}
+if (isset($_SESSION['login'])) {
+    header('location:/admin/dashboard.php');
+}
 
 ?>
 <!DOCTYPE html>
@@ -46,23 +46,18 @@
                             <h6 class="fw-light">Sign in to continue.</h6>
                             <form class="pt-3" method="post">
                                 <div class="form-group">
-                                    <input type="text" class="form-control form-control-lg" id="exampleInputEmail1"
-                                        placeholder="Username" name="email"
-                                        value="<?php if (isset($_POST["email"])) {
-    echo $_POST["email"];
-} ?>"
-                                        >
+                                    <input type="text" class="form-control form-control-lg" id="exampleInputEmail1" placeholder="Username" name="email" value="<?php if (isset($_POST["email"])) {
+                                                                                                                                                                    echo $_POST["email"];
+                                                                                                                                                                } ?>">
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" class="form-control form-control-lg"
-                                        id="exampleInputPassword1" placeholder="Password" name="password">
+                                    <input type="password" class="form-control form-control-lg" id="exampleInputPassword1" placeholder="Password" name="password">
                                 </div>
                                 <div class="mt-3">
-                                    <input type="submit" name="s1" value="SIGN IN"
-                                        class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">
-                                        <br><br><label style="color:red;"><?php if (isset($_SESSION["alert"])) {
-    echo $_SESSION["alert"] ;
-} ?></label>
+                                    <input type="submit" name="s1" value="SIGN IN" class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">
+                                    <br><br><label style="color:red;"><?php if (isset($_SESSION["alert"])) {
+                                                                            echo $_SESSION["alert"];
+                                                                        } ?></label>
                                 </div>
                                 <div class="my-2 d-flex justify-content-between align-items-center">
                                     <a href="#" class="auth-link text-black">Forgot password?</a>
@@ -75,4 +70,5 @@
         </div>
     </div>
 </body>
+
 </html>
