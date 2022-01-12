@@ -4,7 +4,8 @@ include '../layout/header.php';
 require '../layout/db_connect.php';
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
-    $fetch = $pdo->prepare("select * from product where id='$id' and 1=1");
+    $fetch = $pdo->prepare("select * from product where id=:id");
+    $fetch->bindParam(':id', $id);
     $fetch->execute();
     $result = $fetch->fetchAll();
     foreach ($result as $r) {
@@ -26,7 +27,13 @@ if (isset($_POST['submit'])) {
             $price = $_POST['price'];
             $category = $_POST['category'];
             $tax = $_POST['tax'];
-            $fetch = $pdo->prepare("update product set name='$pname', price='$price', category=$category, tax='$tax',image='$fname' where id='$id'");
+            $fetch = $pdo->prepare("update product set name=:pname, price=:price, category=:category, tax=:tax,image=:fname where id=:id");
+            $fetch->bindParam(':pname', $pname);
+            $fetch->bindParam(':price', $price);
+            $fetch->bindParam(':category', $category);
+            $fetch->bindParam(':tax', $tax);
+            $fetch->bindParam(':fname', $fname);
+            $fetch->bindParam(':id', $id);
             $result = $fetch->execute();
             if (isset($result)) {
                 $_SESSION['msg'] = "Update Successfully";

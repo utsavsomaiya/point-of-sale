@@ -16,11 +16,12 @@ if (isset($_GET['id'])) {
         $_SESSION['msg'] = "Don't delete this Category";
         header('location:/admin/category/show_category.php');
     } else {
-        $fetch = $pdo->prepare("delete from category where id='$id' and 1=1");
+        $fetch = $pdo->prepare("delete from category where id= :id");
+        $fetch->bindParam(':id', $id);
         $res = $fetch->execute();
         if (isset($res)) {
             $_SESSION['msg'] = "Record deleted";
-            header('location:/admin/category/show_category.php');
+            header("location:/admin/category/show_category.php");
         }
     }
 }

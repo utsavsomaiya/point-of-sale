@@ -5,7 +5,8 @@ if (isset($_POST['submit'])) {
     require '../layout/db_connect.php';
     if (!empty($_POST['pname'])) {
         $pname = $_POST['pname'];
-        $fetch = $pdo->prepare("insert into category(name) values('$pname')");
+        $fetch = $pdo->prepare("insert into category(name) values(':pname')");
+        $fetch->bindParam(':pname', $pname);
         $result = $fetch->execute();
         if (isset($result)) {
             $_SESSION['msg'] = "Add Successfully";

@@ -3,8 +3,9 @@
 
 <head>
 	<meta charset="utf-8">
+	<link rel="icon" href="/admin/images/retail-store-icon-18.png" type="image/x-icon">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<title>Star Admin2</title>
+	<title>Retail Shop</title>
 	<link rel="stylesheet" href="/admin/vendors/mdi/css/materialdesignicons.min.css">
 	<link rel="stylesheet" href="/admin/vendors/mdi/css/custom_styles.css">
 	<link rel="stylesheet" href="/admin/vendors/simple-line-icons/css/simple-line-icons.css">
@@ -34,7 +35,7 @@
 																if (!empty($_SESSION['name'])) {
 																	echo $_SESSION['name'];
 																} else {
-																	header('location:../auth/login.php');
+																	header('location:/admin/auth/login.php');
 																}
 																?></span>
 						</h1>

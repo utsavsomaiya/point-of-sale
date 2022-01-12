@@ -1,13 +1,15 @@
 <?php
 session_start();
-if (isset($_POST['s1'])) {
+if (isset($_POST['submit'])) {
     require '../layout/db_connect.php';
     $name = $_POST['email'];
     $password = $_POST['password'];
-    $abc = $pdo->prepare("select id from admin where name='$name' and password='$password' and 1=1");
-    $abc->execute();
+    $result = $pdo->prepare("select id from admin where name=:name and password=:password");
+    $result->bindParam(':name', $name);
+    $result->bindParam(':password', $password);
+    $result->execute();
 
-    $result = $abc->fetchAll();
+    $result = $result->fetchAll();
     if (!$result) {
         $_SESSION['alert'] = 'User Id and Password are Wrong';
     } else {
@@ -54,7 +56,7 @@ if (isset($_SESSION['login'])) {
                                     <input type="password" class="form-control form-control-lg" placeholder="Password" name="password">
                                 </div>
                                 <div class="mt-3">
-                                    <input type="submit" name="s1" value="SIGN IN" class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">
+                                    <input type="submit" name="submit" value="SIGN IN" class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">
                                     <br><br><label style="color:red;"><?php if (isset($_SESSION["alert"])) {
                                                                             echo $_SESSION["alert"];
                                                                         } ?></label>

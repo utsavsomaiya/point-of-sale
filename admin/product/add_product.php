@@ -28,7 +28,12 @@ if (isset($_POST['submit'])) {
             $category = $_POST['category'];
             $tax = $_POST['tax'];
             $name = $_FILES['image']['name'];
-            $fetch = $pdo->prepare("insert into product(name,price,category,tax,image) values('$pname','$price','$category','$tax','$name')");
+            $fetch = $pdo->prepare("insert into product(name,price,category,tax,image) values(:pname,:price,:category,:tax,:name)");
+            $fetch->bindParam(':pname', $pname);
+            $fetch->bindParam(':price', $price);
+            $fetch->bindParam(':category', $category);
+            $fetch->bindParam(':tax', $tax);
+            $fetch->bindParam(':name', $name);
             $result = $fetch->execute();
             if (isset($result)) {
                 $_SESSION['msg'] = "Add Successfully";

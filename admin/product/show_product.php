@@ -39,7 +39,8 @@ include '../layout/header.php';
 											<td><?= "$" . $product['price'] ?></td>
 											<td>
 												<?php
-												$fetch = $pdo->prepare("select name from category where id = {$product['category']} and 1=1");
+												$fetch = $pdo->prepare("select name from category where id = :id");
+												$fetch->bindParam(':id', $product['category']);
 												$fetch->execute();
 												$result = $fetch->fetchAll();
 												foreach ($result as $category) {
