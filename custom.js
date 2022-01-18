@@ -33,7 +33,10 @@ function existsInArray(id) {
 function displayCart() {
     subTotal = 0;
     tax = 0;
+
+    document.getElementById('hidden-form').innerHTML = "";
     document.getElementById('container').innerHTML = "";
+
     let id = 1;
     for (let i = 0; i < cart.length; i++) {
 
@@ -48,14 +51,39 @@ function displayCart() {
         document.getElementById('div-main-' + id).appendChild(divMainSubFirst);
 
         var productId = cart[i].id;
+
+        var inputId = document.createElement('input');
+        inputId.setAttribute('type', 'hidden');
+        inputId.setAttribute('name','productId[]');
+        inputId.value = productId;
+        document.getElementById('hidden-form').appendChild(inputId);
+
+
+
         var productImg = cart[i].img;
         var productName = cart[i].name;
         var productPrice = cart[i].price;
-        var productTax = cart[i].tax;
+
+        var inputPrice = document.createElement('input');
+        inputPrice.setAttribute('type', 'hidden');
+        inputPrice.setAttribute('name','productPrice[]');
+        inputPrice.value = productPrice;
+        document.getElementById('hidden-form').appendChild(inputPrice);
+
+
+
+
         var productQuantity = cart[i].quantity;
+        var inputQuantity = document.createElement('input');
+        inputQuantity.setAttribute('type', 'hidden');
+        inputQuantity.setAttribute('name','productQuantity[]');
+        inputQuantity.value = productQuantity;
+        document.getElementById('hidden-form').appendChild(inputQuantity);
 
         subTotal += parseInt((cart[i].price).slice(1));
         tax += parseInt((cart[i].tax).slice(0, -1));
+
+
 
         var imageTag = document.createElement('img');
         imageTag.src = productImg;
@@ -116,6 +144,42 @@ function displayCart() {
         document.getElementById("sales-tax-price").innerHTML = "$" + (taxPrice).toFixed(2);
         var total = (subTotal - (subTotal * (discountPercentage / 100))) + (subTotal * (tax / 100));
         document.getElementById("total").innerHTML = "$" + total.toFixed(2);
+
+        var inputTax = document.createElement('input');
+        inputTax.setAttribute('type', 'hidden');
+        inputTax.setAttribute('name','productTax[]');
+        inputTax.value = cart[i].tax;
+        document.getElementById('hidden-form').appendChild(inputTax);
+
+        var inputTaxAmount = document.createElement('input');
+        inputTaxAmount.setAttribute('type', 'hidden');
+        inputTaxAmount.setAttribute('name','productTaxAmount[]');
+        inputTaxAmount.value = taxPrice;
+        document.getElementById('hidden-form').appendChild(inputTaxAmount);
+
+        var inputDiscount = document.createElement('input');
+        inputDiscount.setAttribute('type', 'hidden');
+        inputDiscount.setAttribute('name','discountOfProduct');
+        inputDiscount.value = "$" + discountPrice;
+        document.getElementById('hidden-form').appendChild(inputDiscount);
+
+        var inputSubtotal = document.createElement('input');
+        inputSubtotal.setAttribute('type', 'hidden');
+        inputSubtotal.setAttribute('name','subtotalOfProduct');
+        inputSubtotal.value = "$" + subTotal;
+        document.getElementById('hidden-form').appendChild(inputSubtotal);
+
+        var inputTotalTaxPrice = document.createElement('input');
+        inputTotalTaxPrice.setAttribute('type', 'hidden');
+        inputTotalTaxPrice.setAttribute('name','totalTaxPrice');
+        inputTotalTaxPrice.value = "$" + (taxPrice).toFixed(2);
+        document.getElementById('hidden-form').appendChild(inputTotalTaxPrice);
+
+        var inputTotal = document.createElement('input');
+        inputTotal.setAttribute('type', 'hidden');
+        inputTotal.setAttribute('name','totalOfProduct');
+        inputTotal.value = "$" + total.toFixed(2);
+        document.getElementById('hidden-form').appendChild(inputTotal);
         id++;
     }
 }
@@ -165,3 +229,4 @@ function removeCart(productId) {
     document.getElementById('total').innerHTML = "$" + 0;
     displayCart();
 }
+
