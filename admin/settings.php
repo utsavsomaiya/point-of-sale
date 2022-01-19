@@ -4,27 +4,26 @@ include 'layout/header.php';
 require 'layout/db_connect.php';
 
 if (isset($_POST['submit'])) {
-    if (is_numeric($_POST['discount'])) {
-        $discount = $_POST['discount'];
-        $fetch = $pdo->prepare('select * from discount');
-        $fetch->execute();
-        $result = $fetch->fetchAll();
-        if ($result) {
-            $fetch = $pdo->prepare("update discount set percentage='$discount' where id=1");
-            $result = $fetch->execute();
-            if (isset($result)) {
-                $_SESSION['msg'] = "Discount apply successfully";
-            }
-        } else {
-            $fetch = $pdo->prepare("insert into discount(percentage) values('$discount')");
-            $result = $fetch->execute();
-            if (isset($result)) {
-                $_SESSION['msg'] = "Discount apply successfully";
-            }
+    $discount = $_POST['discount'];
+    $fetch = $pdo->prepare('select * from discount');
+    $fetch->execute();
+    $result = $fetch->fetchAll();
+    if ($result) {
+        $fetch = $pdo->prepare("update discount set percentage='$discount' where id=1");
+        $result = $fetch->execute();
+        if (isset($result)) {
+            $_SESSION['msg'] = "Discount apply successfully";
         }
     } else {
-        $_SESSION['discountAlert'] = "Enter Only Numeric value";
+        $fetch = $pdo->prepare("insert into discount(percentage) values('$discount')");
+        $result = $fetch->execute();
+        if (isset($result)) {
+            $_SESSION['msg'] = "Discount apply successfully";
+            header('location:/admin/settings.php');
+        }
     }
+} else {
+    $_SESSION['discountAlert'] = "Enter the Discount";
 }
 ?>
 <div class="main-panel">
@@ -37,7 +36,7 @@ if (isset($_POST['submit'])) {
                         <form class="forms-sample" method="post" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label for="discount">Discount</label>
-                                <input id="discount" type="text" class="form-control" id="exampleInputUsername1" placeholder="Discount" name="discount" required>
+                                <input id="discount" type="number" class="form-control" placeholder="Discount" name="discount" required>
                                 <label style="color:red;">
                                     <?php
                                     if (isset($_SESSION['discountAlert'])) {
