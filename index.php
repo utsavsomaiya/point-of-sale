@@ -3,9 +3,9 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Retail Shop</title>
-
     <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.0.2/dist/tailwind.min.css">
     <script type="text/javascript">
         const cart = [];
@@ -126,6 +126,8 @@
             price = parseInt((document.getElementById('price-' + id).innerHTML).slice(1)) * inputValue;
             document.getElementById('div-sub-third-' + id).innerHTML = '$' + price;
             cart[indexOfProduct].price = '$' + price;
+            subTotal += price;
+            displayCart();
           }
     </script>
 </head>
