@@ -103,6 +103,10 @@
             document.getElementById('div-main-' + id).appendChild(divMainSubThird);
 
             document.getElementById('subtotal').innerHTML = "$" + subTotal;
+
+            var discountPercentage = document.getElementById("discount-percentage").innerHTML.trim();
+            var discountPrice = subTotal * (discountPercentage / 100);
+            document.getElementById("discount-price").innerHTML = "- $" + discountPrice;
             id++;
           }
         }
@@ -190,8 +194,24 @@
                 <span class="font-bold" id="subtotal">$0</span>
               </div>
               <div class=" px-4 flex justify-between ">
-                <span class="font-semibold text-sm">Discount</span>
-                <span class="font-bold">- $0</span>
+                <span class="font-semibold text-sm">Discount(
+                                <?php
+                                $percentage = 0;
+                                $fetch = $pdo->prepare("select * from discount where id = 1");
+                                $fetch->execute();
+                                $result = $fetch->fetchAll();
+                                foreach ($result as $discount) {
+                                    if (!empty($discount)) {
+                                        $percentage = $discount["percentage"];
+                                        echo $discount["percentage"] . "%";
+                                    }
+                                }
+                                ?>
+                                )</span>
+                <label hidden id="discount-percentage">
+                    <?= $percentage; ?>
+                </label>
+                <span class="font-bold" id="discount-price">- $0</span>
               </div>
               <div class=" px-4 flex justify-between ">
                 <span class="font-semibold text-sm">Sales Tax</span>
