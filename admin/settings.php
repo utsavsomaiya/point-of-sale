@@ -9,13 +9,16 @@ if (isset($_POST['submit'])) {
     $fetch->execute();
     $result = $fetch->fetchAll();
     if ($result) {
-        $fetch = $pdo->prepare("update discount set percentage='$discount' where id=1");
+        $fetch = $pdo->prepare("update discount set percentage=:discount where id=1");
+        $fetch->bindParam(':discount', $discount);
         $result = $fetch->execute();
         if (isset($result)) {
             $_SESSION['msg'] = "Discount apply successfully";
+            header('location:/admin/settings.php');
         }
     } else {
-        $fetch = $pdo->prepare("insert into discount(percentage) values('$discount')");
+        $fetch = $pdo->prepare("insert into discount(percentage) values(:discount)");
+        $fetch->bindParam(':discount', $discount);
         $result = $fetch->execute();
         if (isset($result)) {
             $_SESSION['msg'] = "Discount apply successfully";
