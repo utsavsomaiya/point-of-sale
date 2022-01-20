@@ -2,32 +2,34 @@
 session_start();
 include 'layout/header.php';
 require 'layout/db_connect.php';
-
-if (isset($_POST['submit'])) {
-    $discount = $_POST['discount'];
-    $fetch = $pdo->prepare('select * from discount');
-    $fetch->execute();
-    $result = $fetch->fetchAll();
-    if ($result) {
-        $fetch = $pdo->prepare("update discount set percentage=:discount where id=1");
-        $fetch->bindParam(':discount', $discount);
-        $result = $fetch->execute();
-        if (isset($result)) {
-            $_SESSION['msg'] = "Discount apply successfully";
-            header('location:/admin/settings.php');
-        }
-    } else {
-        $fetch = $pdo->prepare("insert into discount(percentage) values(:discount)");
-        $fetch->bindParam(':discount', $discount);
-        $result = $fetch->execute();
-        if (isset($result)) {
-            $_SESSION['msg'] = "Discount apply successfully";
+    if (isset($_POST['submit'])) {
+        if (!empty($_POST['discount'])) {
+            $discount = $_POST['discount'];
+            $fetch = $pdo->prepare('select * from discount');
+            $fetch->execute();
+            $result = $fetch->fetchAll();
+            if ($result) {
+                $fetch = $pdo->prepare("update discount set percentage=:discount where id=1");
+                $fetch->bindParam(':discount', $discount);
+                $result = $fetch->execute();
+                if (isset($result)) {
+                    $_SESSION['msg'] = "Discount apply successfully";
+                    header('location:/admin/settings.php');
+                }
+            } else {
+                $fetch = $pdo->prepare("insert into discount(percentage) values(:discount)");
+                $fetch->bindParam(':discount', $discount);
+                $result = $fetch->execute();
+                if (isset($result)) {
+                    $_SESSION['msg'] = "Discount apply successfully";
+                    header('location:/admin/settings.php');
+                }
+            }
+        } else {
+            $_SESSION['discountAlert'] = "Enter the Discount";
             header('location:/admin/settings.php');
         }
     }
-} else {
-    $_SESSION['discountAlert'] = "Enter the Discount";
-}
 ?>
 <div class="main-panel">
     <div class="content-wrapper">
@@ -53,11 +55,11 @@ if (isset($_POST['submit'])) {
                             <?php
                             if (isset($_SESSION['msg'])) {
                                 ?>
-                                <div id="snackbar"> <?php echo $_SESSION['msg']; ?> </div>
+                                <div id="snackbar"> <?php echo $_SESSION['msg'];
+                                unset($_SESSION['msg']); ?> </div>
                             <?php
                             }
                             ?>
                             <?php
                             include 'layout/footer.php';
-                            unset($_SESSION['msg']);
                             ?>
