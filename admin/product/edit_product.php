@@ -12,6 +12,7 @@ if (isset($_GET['id'])) {
         $name = $r['name'];
         $price = $r['price'];
         $category = $r['category'];
+        $tax = $r['tax'];
         if (empty($_FILES['image']['name'])) {
             $fname = $r['image'];
         } else {
@@ -24,10 +25,12 @@ if (isset($_POST['submit'])) {
         $productName = $_POST['productName'];
         $price = $_POST['price'];
         $category = $_POST['category'];
-        $fetch = $pdo->prepare("update product set name=:productName, price=:price, category_id=:category,image=:fname where id=:id");
+        $tax = $_POST['tax'];
+        $fetch = $pdo->prepare("update product set name=:productName, price=:price, category_id=:category,tax=:tax,image=:fname where id=:id");
         $fetch->bindParam(':productName', $productName);
         $fetch->bindParam(':price', $price);
         $fetch->bindParam(':category', $category);
+        $fetch->bindParam(':tax', $tax);
         $fetch->bindParam(':fname', $fname);
         $fetch->bindParam(':id', $id);
         $result = $fetch->execute();
@@ -98,6 +101,27 @@ if (isset($_POST['submit'])) {
                                     <?php
                                     }
                                     ?>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="productTax">Select Product Tax</label>
+                                <select id="productTax" class="form-control" name="tax">
+                                    <option value="">--Select Tax--</option>
+                                    <option value="5" <?php if ($tax == "5") {
+                                        echo 'selected="selected"';
+                                    } ?>>5%</option>
+                                    <option value="10" <?php if ($tax == "10") {
+                                        echo 'selected="selected"';
+                                    } ?>>10%</option>
+                                    <option value="15" <?php if ($tax == "15") {
+                                        echo 'selected="selected"';
+                                    } ?>>15%</option>
+                                    <option value="20" <?php if ($tax == "20") {
+                                        echo 'selected="selected"';
+                                    } ?>>20%</option>
+                                    <option value="25" <?php if ($tax == "25") {
+                                        echo 'selected="selected"';
+                                    } ?>>25%</option>
                                 </select>
                             </div>
                             <div class="form-group">

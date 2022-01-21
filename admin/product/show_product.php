@@ -19,6 +19,7 @@ include '../layout/header.php';
                                     <th>Name</th>
                                     <th>Price</th>
                                     <th>Category</th>
+                                    <th>Tax</th>
                                     <th>Image</th>
                                     <th colspan='2'>Action</th>
                                 </tr>
@@ -48,6 +49,7 @@ include '../layout/header.php';
                                             }
                                         } ?>
                                     </td>
+                                    <td><?= $product['tax'] . "%" ?></td>
                                     <td><img src="<?= '/admin/images/' . $product['image'] ?>"></td>
                                     <td><a href="../product/edit_product.php?id=<?= $product['id'] ?>"><img
                                                 src="/admin/images/icons8-edit.gif" /></a></td>
