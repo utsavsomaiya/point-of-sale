@@ -18,6 +18,7 @@
         "name": document.getElementById('name-' + id).innerHTML,
         "img": document.getElementById('image-' + id).src,
         "price": document.getElementById('price-' + id).innerHTML,
+        "tax": document.getElementById('tax-' + id).innerHTML,
         "quantity": 1
       };
       if (existsInArray(id)) {
@@ -42,6 +43,7 @@
 
     function displayCart() {
       subTotal = 0;
+      tax = 0;
       document.getElementById('container').innerHTML = "";
       id = 1;
 
@@ -64,6 +66,7 @@
         var productQuantity = cart[i].quantity;
 
         subTotal += parseInt((cart[i].price).slice(1));
+        tax += parseInt((cart[i].tax).slice(0, -1));
 
         var imageTag = document.createElement('img');
         imageTag.src = productImg;
@@ -107,10 +110,15 @@
         document.getElementById('div-main-' + id).appendChild(divMainSubThird);
 
         document.getElementById('subtotal').innerHTML = "$" + subTotal;
+        document.getElementById('sales-tax').innerHTML = "Sales Tax(" + tax + "%)";
 
         var discountPercentage = document.getElementById("discount-percentage").innerHTML.trim();
         var discountPrice = subTotal * (discountPercentage / 100);
         document.getElementById("discount-price").innerHTML = "- $" + discountPrice;
+        var taxPrice = subTotal * (tax / 100);
+        document.getElementById("sales-tax-price").innerHTML = "$" + (taxPrice).toFixed(2);
+        var total = (subTotal - (subTotal * (discountPercentage / 100))) + (subTotal * (tax / 100));
+        document.getElementById("total").innerHTML = "$" + total.toFixed(2);
         id++;
       }
     }
@@ -177,6 +185,8 @@
             <div class="flex flex-row justify-between items-center">
               <span class="self-end font-bold text-lg text-yellow-500"
                 id="<?= "price-".$id; ?>"><?= "$".$product["price"] ?></span>
+              <span class="self-end font-bold text-small text-red-500"
+                id="<?= "tax-" . $id; ?>"><?= $product["tax"] . "%" ?></span>
               <img src="<?= 'admin/images/'.$product["image"] ?>" id="<?= "image-".$id; ?>"
                 class=" h-14 w-14 object-cover rounded-md" alt="">
             </div>
@@ -222,12 +232,12 @@
               <span class="font-bold" id="discount-price">- $0</span>
             </div>
             <div class=" px-4 flex justify-between ">
-              <span class="font-semibold text-sm">Sales Tax</span>
-              <span class="font-bold">$0</span>
+              <span class="font-semibold text-sm" id='sales-tax'>Sales Tax()</span>
+              <span class="font-bold" id='sales-tax-price'>$0</span>
             </div>
             <div class="border-t-2 mt-3 py-2 px-4 flex items-center justify-between">
               <span class="font-semibold text-2xl">Total</span>
-              <span class="font-bold text-2xl">$0</span>
+              <span class="font-bold text-2xl" id="total">$0</span>
             </div>
           </div>
         </div>
