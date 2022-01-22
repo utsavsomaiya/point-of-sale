@@ -3,7 +3,7 @@ session_start();
 require '../layout/db_connect.php';
 include '../layout/header.php';
 if (isset($_POST['submit'])) {
-    if (!empty($_FILES['image']['name']) && !empty($_POST['productName']) && !empty($_POST['price'] && !empty($_POST['category_id']))) {
+    if (!empty($_FILES['image']['name']) && !empty($_POST['productName']) && !empty($_POST['price'] && !empty($_POST['category_id'])) && !empty($_POST['tax'])) {
         list($width, $height) = @getimagesize($_FILES['image']['name']);
         $target = "/admin/images/" . basename($_FILES['image']['name']);
         $imageFileType = strtolower(pathinfo($target, PATHINFO_EXTENSION));
@@ -21,11 +21,13 @@ if (isset($_POST['submit'])) {
             $productName = $_POST['productName'];
             $price = $_POST['price'];
             $category = $_POST['category_id'];
+            $tax = $_POST['tax'];
             $name = $_FILES['image']['name'];
-            $fetch = $pdo->prepare("insert into product(name,price,category_id,image) values(:productName,:price,:category_id,:name)");
+            $fetch = $pdo->prepare("insert into product(name,price,category_id,tax,image) values(:productName,:price,:category_id,:tax,:name)");
             $fetch->bindParam(':productName', $productName);
             $fetch->bindParam(':price', $price);
             $fetch->bindParam(':category_id', $category);
+            $fetch->bindParam(':tax', $tax);
             $fetch->bindParam(':name', $name);
             $result = $fetch->execute();
             if (isset($result)) {
@@ -49,6 +51,10 @@ if (isset($_POST['submit'])) {
             $_SESSION['category_validation_error'] = "Please enter data";
             header('location:../product/add_product.php');
         }
+        if (empty($_POST['tax'])) {
+            $_SESSION['tax_validation_error'] = "Please enter data";
+            header('location:../product/add_product.php');
+        }
         if (empty($_FILES['image']['name'])) {
             $_SESSION['file_validation_error'] = "Please enter data";
             header('location:../product/add_product.php');
@@ -63,6 +69,9 @@ if (isset($_POST['price'])) {
 }
 if (isset($_POST['category_id'])) {
     $_SESSION['category'] = $_POST['category_id'];
+}
+if (isset($_POST['tax'])) {
+    $_SESSION['tax'] = $_POST['tax'];
 }
 ?>
 <div class="main-panel">
@@ -123,6 +132,24 @@ if (isset($_POST['category_id'])) {
                                     <?php
                                     if (isset($_SESSION['category_validation_error'])) {
                                         echo $_SESSION['category_validation_error'];
+                                    }
+                                    ?>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="productTax">Tax of the Product</label>
+                                <select id="productTax" class="form-control" name="tax" required>
+                                    <option value="">--Select Tax--</option>
+                                    <option value="5">5%</option>
+                                    <option value="10">10%</option>
+                                    <option value="15">15%</option>
+                                    <option value="20">20%</option>
+                                    <option value="25">25%</option>
+                                </select>
+                                <label style="color:red;">
+                                    <?php
+                                    if (isset($_SESSION['tax_validation_error'])) {
+                                        echo $_SESSION['tax_validation_error'];
                                     }
                                     ?>
                                 </label>
