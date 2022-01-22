@@ -109,6 +109,12 @@
         divMainSubThird.innerHTML = productPrice;
         document.getElementById('div-main-' + id).appendChild(divMainSubThird);
 
+        var deleteIcon = document.createElement('span');
+        deleteIcon.setAttribute('class', 'px-3 py-1 rounded-md bg-red-300 text-white');
+        deleteIcon.setAttribute('onclick', 'removeCart(' + productId + ')');
+        deleteIcon.innerHTML = "x";
+        document.getElementById('div-main-' + id).appendChild(deleteIcon);
+
         document.getElementById('subtotal').innerHTML = "$" + subTotal;
         document.getElementById('sales-tax').innerHTML = "Sales Tax(" + tax + "%)";
 
@@ -124,26 +130,41 @@
     }
 
     function changeQuantity(productId, id, checked) {
-    var indexOfProduct = cart.findIndex((obj => obj.id == productId));
-    cart[indexOfProduct].quantity = isNaN(cart[indexOfProduct].quantity) ? 0 : cart[indexOfProduct].quantity;
-    if (checked == "increase") {
-    cart[indexOfProduct].quantity += 1;
+      var indexOfProduct = cart.findIndex((obj => obj.id == productId));
+      cart[indexOfProduct].quantity = isNaN(cart[indexOfProduct].quantity) ? 0 : cart[indexOfProduct].quantity;
+      if (checked == "increase") {
+        cart[indexOfProduct].quantity += 1;
 
-    price = parseInt((document.getElementById('price-' + productId).innerHTML).slice(1)) * cart[indexOfProduct].quantity;
-    cart[indexOfProduct].price = '$' + price;
-    }
-    if (checked == "decrease") {
-    cart[indexOfProduct].quantity = isNaN(cart[indexOfProduct].quantity) ? 0 : cart[indexOfProduct].quantity;
-    if (cart[indexOfProduct].quantity > 1) {
-    cart[indexOfProduct].quantity -= 1;
-    price = parseInt((document.getElementById('price-' + productId).innerHTML).slice(1)) * cart[indexOfProduct].quantity;
-    cart[indexOfProduct].price = '$' + price;
-    }
-    }
+        price = parseInt((document.getElementById('price-' + productId).innerHTML).slice(1)) * cart[indexOfProduct].quantity;
+        cart[indexOfProduct].price = '$' + price;
+      }
+      if (checked == "decrease") {
+        cart[indexOfProduct].quantity = isNaN(cart[indexOfProduct].quantity) ? 0 : cart[indexOfProduct].quantity;
+        if (cart[indexOfProduct].quantity > 1) {
+          cart[indexOfProduct].quantity -= 1;
+          price = parseInt((document.getElementById('price-' + productId).innerHTML).slice(1)) * cart[indexOfProduct].quantity;
+          cart[indexOfProduct].price = '$' + price;
+        } else {
+          removeCart(productId);
+        }
+      }
     subTotal += price;
     id++;
     displayCart();
     }
+
+    function removeCart(productId) {
+    var indexOfProduct = cart.findIndex((obj => obj.id == productId));
+    if (indexOfProduct > -1) {
+        cart.splice(indexOfProduct, 1);
+    }
+    document.getElementById('subtotal').innerHTML = "$" + 0;
+    document.getElementById('sales-tax').innerHTML = "Sales tax()";
+    document.getElementById('sales-tax-price').innerHTML = "$" + 0;
+    document.getElementById('discount-price').innerHTML = "$" + 0;
+    document.getElementById('total').innerHTML = "$" + 0;
+    displayCart();
+  }
   </script>
 </head>
 
