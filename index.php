@@ -46,11 +46,6 @@
       document.getElementById('container').innerHTML = "";
       id = 1;
 
-      document.getElementById('subtotal').innerHTML = "$" + 0;
-      document.getElementById('sales-tax').innerHTML = "Sales tax()";
-      document.getElementById('sales-tax-price').innerHTML = "$" + 0;
-      document.getElementById('discount-price').innerHTML = "$" + 0;
-      document.getElementById('total').innerHTML = "$" + 0;
       for (let i = 0; i < cart.length; i++) {
 
         var divMain = document.createElement('div');
@@ -119,23 +114,18 @@
         deleteIcon.innerHTML = "x";
         document.getElementById('div-main-' + id).appendChild(deleteIcon);
 
-        if(cart.length == 0){
-
-          subTotal = 0;
-          tax = 0;
-        }
-        document.getElementById('subtotal').innerHTML = "$" + subTotal;
-        document.getElementById('sales-tax').innerHTML = "Sales Tax(" + tax + "%)";
-
-        var discountPercentage = document.getElementById("discount-percentage").innerHTML.trim();
-        var discountPrice = subTotal * (discountPercentage / 100);
-        document.getElementById("discount-price").innerHTML = "- $" + discountPrice;
-        var taxPrice = subTotal * (tax / 100);
-        document.getElementById("sales-tax-price").innerHTML = "$" + (taxPrice).toFixed(2);
-        var total = (subTotal - (subTotal * (discountPercentage / 100))) + (subTotal * (tax / 100));
-        document.getElementById("total").innerHTML = "$" + total.toFixed(2);
         id++;
       }
+      document.getElementById('subtotal').innerHTML = "$" + subTotal;
+      document.getElementById('sales-tax').innerHTML = "Sales Tax(" + tax + "%)";
+
+      var discountPercentage = document.getElementById("discount-percentage").innerHTML.trim();
+      var discountPrice = subTotal * (discountPercentage / 100);
+      document.getElementById("discount-price").innerHTML = "- $" + discountPrice;
+      var taxPrice = subTotal * (tax / 100);
+      document.getElementById("sales-tax-price").innerHTML = "$" + (taxPrice).toFixed(2);
+      var total = (subTotal - (subTotal * (discountPercentage / 100))) + (subTotal * (tax / 100));
+      document.getElementById("total").innerHTML = "$" + total.toFixed(2);
     }
 
     function changeQuantity(productId, id, checked) {
