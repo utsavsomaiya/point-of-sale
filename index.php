@@ -6,12 +6,22 @@ if (isset($_POST["submit"])) {
     $productPrice = $_POST['productPrice'];
     $productQuantity = $_POST['productQuantity'];
     $productTax = $_POST['productTax'];
-    $discount = $_POST['discountOfProduct'];
-    $subtotal = $_POST['subtotalOfProduct'];
-    $total = $_POST['totalOfProduct'];
-    $tax = $_POST['totalTaxPrice'];
     $productTaxAmount = $_POST['productTaxAmount'];
+    $productDiscountPercentage = $_POST['discountOfProduct'];
+    $subtotal = 0;
+    $taxRate = 0;
+    for ($i = 0; $i < sizeof($productId); $i++) {
+        $subtotal +=  substr($productPrice[$i], 1);
+        $taxRate += substr($productTax[$i], 0, -1);
+    }
+    $tax = $subtotal * ($taxRate / 100);
+    $discount = $subtotal * ($productDiscountPercentage / 100);
+    $total = ($subtotal - ($subtotal * ($productDiscountPercentage / 100))) + ($subtotal * ($taxRate / 100));
     $fetch = $pdo->prepare("INSERT INTO `sales` (`subtotal`, `total_tax`, `discount`, `total`) VALUES (:subtotal,:total_tax,:discount,:total)");
+    $subtotal = '$'.$subtotal;
+    $tax = '$'.$tax;
+    $discount = '$'.$discount;
+    $total = '$'.$total;
     $fetch->bindParam(':subtotal', $subtotal);
     $fetch->bindParam(':total_tax', $tax);
     $fetch->bindParam(':discount', $discount);

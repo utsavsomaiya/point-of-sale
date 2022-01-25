@@ -151,31 +151,12 @@ function displayCart() {
     var total = (subTotal - (subTotal * (discountPercentage / 100))) + (subTotal * (tax / 100));
     document.getElementById("total").innerHTML = "$" + total.toFixed(2);
 
-
-
 	var inputDiscount = document.createElement('input');
 	inputDiscount.setAttribute('type', 'hidden');
 	inputDiscount.setAttribute('name','discountOfProduct');
-	inputDiscount.value = "$" + discountPrice;
+	inputDiscount.value = discountPercentage;
 	document.getElementById('hidden-form').appendChild(inputDiscount);
 
-	var inputSubtotal = document.createElement('input');
-	inputSubtotal.setAttribute('type', 'hidden');
-	inputSubtotal.setAttribute('name','subtotalOfProduct');
-	inputSubtotal.value = "$" + subTotal;
-	document.getElementById('hidden-form').appendChild(inputSubtotal);
-
-	var inputTotalTaxPrice = document.createElement('input');
-	inputTotalTaxPrice.setAttribute('type', 'hidden');
-	inputTotalTaxPrice.setAttribute('name','totalTaxPrice');
-	inputTotalTaxPrice.value = "$" + (taxPrice).toFixed(2);
-	document.getElementById('hidden-form').appendChild(inputTotalTaxPrice);
-
-	var inputTotal = document.createElement('input');
-	inputTotal.setAttribute('type', 'hidden');
-	inputTotal.setAttribute('name','totalOfProduct');
-	inputTotal.value = "$" + total.toFixed(2);
-	document.getElementById('hidden-form').appendChild(inputTotal);
 }
 
 function changeQuantity(productId, id, checked) {
