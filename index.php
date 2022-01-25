@@ -10,37 +10,37 @@ if (isset($_POST["submit"])) {
     $productDiscountPercentage = $_POST['discountOfProduct'];
     $subtotal = 0;
     $taxRate = 0;
-    for ($i = 0; $i < sizeof($productId); $i++) {
+    for ($i = 0; $i < sizeof($productIds); $i++) {
         $subtotal +=  substr($productPrices[$i], 1);
-        $taxRate += substr($productTax[$i], 0, -1);
+        $taxRate += substr($productTaxes[$i], 0, -1);
     }
     $tax = $subtotal * ($taxRate / 100);
     $discount = $subtotal * ($productDiscountPercentage / 100);
     $total = ($subtotal - ($subtotal * ($productDiscountPercentage / 100))) + ($subtotal * ($taxRate / 100));
-    if ($subtotal > 0) {
+    if ($subtotal> 0) {
         $fetch = $pdo->prepare("INSERT INTO `sales` (`subtotal`, `total_tax`, `discount`, `total`) VALUES (:subtotal,:total_tax,:discount,:total)");
-    } else {
-        $_SESSION['msg'] = "Not Successfully";
-        header('location:/');
-    }
-    $subtotal = '$'.$subtotal;
-    $tax = '$'.$tax;
-    $discount = '$'.$discount;
-    $total = '$'.$total;
-    $fetch->bindParam(':subtotal', $subtotal);
-    $fetch->bindParam(':total_tax', $tax);
-    $fetch->bindParam(':discount', $discount);
-    $fetch->bindParam(':total', $total);
-    $result = $fetch->execute();
-    if (isset($result)) {
-        $_SESSION['msg'] = "Add Successfully";
-        header('location:/');
+        $subtotal = '$'.$subtotal;
+        $tax = '$'.$tax;
+        $discount = '$'.$discount;
+        $total = '$'.$total;
+        $fetch->bindParam(':subtotal', $subtotal);
+        $fetch->bindParam(':total_tax', $tax);
+        $fetch->bindParam(':discount', $discount);
+        $fetch->bindParam(':total', $total);
+        $result = $fetch->execute();
+        if (isset($result)) {
+            $_SESSION['msg'] = "Add Successfully";
+            header('location:/');
+        } else {
+            $_SESSION['msg'] = "Not Successfully";
+            header('location:/');
+        }
     } else {
         $_SESSION['msg'] = "Not Successfully";
         header('location:/');
     }
     if ($productIds >0) {
-        for ($i = 0; $i < sizeof($productId); $i++) {
+        for ($i = 0; $i < sizeof($productIds); $i++) {
             $fetch = $pdo->prepare("INSERT INTO `sales_item` (`sales_id`,`product_id`, `product_price`, `product_quantity`, `product_tax_percentage`, `product_tax_price`) SELECT max(`id`),'$productIds[$i]','$productPrices[$i]','$productQuantities[$i]','$productTaxes[$i]','$productTaxAmounts[$i]' FROM `sales`");
             $fetch->execute();
         }
