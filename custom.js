@@ -2,14 +2,6 @@ const cart = [];
 let subTotal = 0;
 
 function addToCart(id) {
-    const product = {
-        "id": id,
-        "name": document.getElementById('name-' + id).innerHTML,
-        "img": document.getElementById('image-' + id).src,
-        "price": document.getElementById('price-' + id).innerHTML,
-        "tax": document.getElementById('tax-' + id).innerHTML,
-        "quantity": 1
-    };
     if (existsInArray(id)) {
         var index = cart.findIndex((obj => obj.id == id));
         cart[index].quantity += 1;
@@ -19,6 +11,14 @@ function addToCart(id) {
         price = "$" + price;
         cart[index].price = price;
     } else {
+        const product = {
+        "id": id,
+        "name": document.getElementById('name-' + id).innerHTML,
+        "img": document.getElementById('image-' + id).src,
+        "price": document.getElementById('price-' + id).innerHTML,
+        "tax": document.getElementById('tax-' + id).innerHTML,
+        "quantity": 1
+        };
         cart.push(product);
     }
     displayCart();
