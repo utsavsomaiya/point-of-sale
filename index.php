@@ -2,22 +2,27 @@
 require 'admin/layout/db_connect.php';
 session_start();
 if (isset($_POST["submit"])) {
-    $productId = $_POST['productId'];
-    $productPrice = $_POST['productPrice'];
-    $productQuantity = $_POST['productQuantity'];
-    $productTax = $_POST['productTax'];
-    $productTaxAmount = $_POST['productTaxAmount'];
+    $productIds = $_POST['productId'];
+    $productPrices = $_POST['productPrice'];
+    $productQuantities = $_POST['productQuantity'];
+    $productTaxes = $_POST['productTax'];
+    $productTaxAmounts = $_POST['productTaxAmount'];
     $productDiscountPercentage = $_POST['discountOfProduct'];
     $subtotal = 0;
     $taxRate = 0;
     for ($i = 0; $i < sizeof($productId); $i++) {
-        $subtotal +=  substr($productPrice[$i], 1);
+        $subtotal +=  substr($productPrices[$i], 1);
         $taxRate += substr($productTax[$i], 0, -1);
     }
     $tax = $subtotal * ($taxRate / 100);
     $discount = $subtotal * ($productDiscountPercentage / 100);
     $total = ($subtotal - ($subtotal * ($productDiscountPercentage / 100))) + ($subtotal * ($taxRate / 100));
-    $fetch = $pdo->prepare("INSERT INTO `sales` (`subtotal`, `total_tax`, `discount`, `total`) VALUES (:subtotal,:total_tax,:discount,:total)");
+    if ($subtotal > 0) {
+        $fetch = $pdo->prepare("INSERT INTO `sales` (`subtotal`, `total_tax`, `discount`, `total`) VALUES (:subtotal,:total_tax,:discount,:total)");
+    } else {
+        $_SESSION['msg'] = "Not Successfully";
+        header('location:/');
+    }
     $subtotal = '$'.$subtotal;
     $tax = '$'.$tax;
     $discount = '$'.$discount;
@@ -34,9 +39,9 @@ if (isset($_POST["submit"])) {
         $_SESSION['msg'] = "Not Successfully";
         header('location:/');
     }
-    if ($productId >0) {
+    if ($productIds >0) {
         for ($i = 0; $i < sizeof($productId); $i++) {
-            $fetch = $pdo->prepare("INSERT INTO `sales_item` (`sales_id`,`product_id`, `product_price`, `product_quantity`, `product_tax_percentage`, `product_tax_price`) SELECT max(`id`),'$productId[$i]','$productPrice[$i]','$productQuantity[$i]','$productTax[$i]','$productTaxAmount[$i]' FROM `sales`");
+            $fetch = $pdo->prepare("INSERT INTO `sales_item` (`sales_id`,`product_id`, `product_price`, `product_quantity`, `product_tax_percentage`, `product_tax_price`) SELECT max(`id`),'$productIds[$i]','$productPrices[$i]','$productQuantities[$i]','$productTaxes[$i]','$productTaxAmounts[$i]' FROM `sales`");
             $fetch->execute();
         }
     } else {
@@ -73,15 +78,15 @@ if (isset($_POST["submit"])) {
                     $fetch->execute();
                     $result = $fetch->fetchAll();
                     $id = 0;
-                    foreach ($result as $product) {
+                    foreach ($result as $products) {
                         $id++; ?>
           <div class="transform hover:scale-105 transition duration-300 px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between"
             onclick="addToCart(<?php echo $id; ?>)">
             <div>
-              <div class="font-bold text-gray-800" id="<?= "name-".$id; ?>"><?= $product["name"] ?></div>
+              <div class="font-bold text-gray-800" id="<?= "name-".$id; ?>"><?= $products["name"] ?></div>
               <span class="font-light text-sm text-gray-400">
                 <?php
-                $fetch = $pdo->prepare("select name from category where id = {$product["category_id"]}");
+                $fetch = $pdo->prepare("select name from category where id = {$products["category_id"]}");
                         $fetch->execute();
                         $result = $fetch->fetchAll();
                         foreach ($result as $category) {
@@ -93,10 +98,10 @@ if (isset($_POST["submit"])) {
             </div>
             <div class="flex flex-row justify-between items-center">
               <span class="self-end font-bold text-lg text-yellow-500"
-                id="<?= "price-".$id; ?>"><?= "$".$product["price"] ?></span>
+                id="<?= "price-".$id; ?>"><?= "$".$products["price"] ?></span>
               <span class="self-end font-bold text-small text-red-500"
-                id="<?= "tax-" . $id; ?>"><?= $product["tax"] . "%" ?></span>
-              <img src="<?= 'admin/images/'.$product["image"] ?>" id="<?= "image-".$id; ?>"
+                id="<?= "tax-" . $id; ?>"><?= $products["tax"] . "%" ?></span>
+              <img src="<?= 'admin/images/'.$products["image"] ?>" id="<?= "image-".$id; ?>"
                 class=" h-14 w-14 object-cover rounded-md" alt="">
             </div>
           </div>
