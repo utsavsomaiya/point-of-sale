@@ -8,160 +8,160 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Retail Shop</title>
   <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.0.2/dist/tailwind.min.css">
-  <script type="text/javascript">
-    const cart = [];
-    let subTotal = 0;
+</head>
+<script type="text/javascript">
+  const cart = [];
+  let subTotal = 0;
 
-    function addToCart(id) {
-      const product = {
-        "id": id,
-        "name": document.getElementById('name-' + id).innerHTML,
-        "img": document.getElementById('image-' + id).src,
-        "price": document.getElementById('price-' + id).innerHTML,
-        "tax": document.getElementById('tax-' + id).innerHTML,
-        "quantity": 1
-      };
-      if (existsInArray(id)) {
-        var index = cart.findIndex((obj => obj.id == id));
-        cart[index].quantity += 1;
-        var price = document.getElementById('price-' + id).innerHTML;
-        price = parseInt(price.slice(1));
-        price *= cart[index].quantity;
-        price = "$" + price;
-        cart[index].price = price;
-      } else {
-        cart.push(product);
-      }
-      displayCart();
-    }
-
-    function existsInArray(id) {
-      return cart.some(function (element) {
-        return element.id === id;
-      });
-    }
-    function displayCart() {
-      subTotal = 0;
-      tax = 0;
-      document.getElementById('container').innerHTML = "";
-      id = 1;
-
-      for (let i = 0; i < cart.length; i++) {
-
-        var divMain = document.createElement('div');
-        divMain.setAttribute('class', 'flex flex-row justify-between items-center mb-4');
-        divMain.setAttribute('id', 'div-main-' + id);
-        document.getElementById('container').appendChild(divMain);
-
-        var divMainSubFirst = document.createElement('div');
-        divMainSubFirst.setAttribute('class', 'flex flex-row items-center w-2/5');
-        divMainSubFirst.setAttribute('id', 'div-sub-first-' + id);
-        document.getElementById('div-main-' + id).appendChild(divMainSubFirst);
-
-        var productId = cart[i].id;
-        var productImg = cart[i].img;
-        var productName = cart[i].name;
-        var productPrice = cart[i].price;
-        var productQuantity = cart[i].quantity;
-
-        subTotal += parseInt((cart[i].price).slice(1));
-        tax += parseInt((cart[i].tax).slice(0, -1));
-
-        var imageTag = document.createElement('img');
-        imageTag.src = productImg;
-        imageTag.setAttribute('class', 'w-10 h-10 object-cover rounded-md');
-        imageTag.setAttribute('alt', productName);
-        document.getElementById('div-sub-first-' + id).appendChild(imageTag);
-
-        var spanTag = document.createElement('span');
-        spanTag.setAttribute('class', 'ml-4 font-semibold text-sm');
-        spanTag.innerHTML = productName;
-        document.getElementById('div-sub-first-' + id).appendChild(spanTag);
-
-        var divMainSubSecond = document.createElement('div');
-        divMainSubSecond.setAttribute('class', 'w-32 flex justify-between');
-        divMainSubSecond.setAttribute('id', 'div-sub-second-' + id);
-        document.getElementById('div-main-' + id).appendChild(divMainSubSecond);
-
-        var decreaseButton = document.createElement('button');
-        decreaseButton.setAttribute('class', 'px-3 py-1 rounded-md bg-gray-300');
-        decreaseButton.setAttribute('onclick', 'changeQuantity(' + productId + ',' + id + ',' + '"decrease"' + ')');
-        decreaseButton.innerHTML = "-";
-        document.getElementById('div-sub-second-' + id).appendChild(decreaseButton);
-
-        var inputTag = document.createElement('input');
-        inputTag.setAttribute('class', 'mx-2 border text-center w-8');
-        inputTag.setAttribute('id', 'input-id-' + id);
-        inputTag.setAttribute('value', productQuantity);
-        document.getElementById('div-sub-second-' + id).appendChild(inputTag);
-
-        var increaseButton = document.createElement('button');
-        increaseButton.setAttribute('class', 'px-3 py-1 rounded-md bg-gray-300');
-        increaseButton.setAttribute('onclick', 'changeQuantity(' + productId + ',' + id + ',' + '"increase"' + ')');
-        increaseButton.innerHTML = "+";
-        document.getElementById('div-sub-second-' + id).appendChild(increaseButton);
-
-
-        var divMainSubThird = document.createElement('div');
-        divMainSubThird.setAttribute('class', 'font-semibold text-lg w-16 text-center');
-        divMainSubThird.setAttribute('id', 'div-sub-third-' + id);
-        divMainSubThird.innerHTML = productPrice;
-        document.getElementById('div-main-' + id).appendChild(divMainSubThird);
-
-        var deleteIcon = document.createElement('span');
-        deleteIcon.setAttribute('class', 'px-3 py-1 rounded-md bg-red-300 text-white');
-        deleteIcon.setAttribute('onclick', 'removeFromCart(' + productId + ')');
-        deleteIcon.innerHTML = "x";
-        document.getElementById('div-main-' + id).appendChild(deleteIcon);
-
-        id++;
-      }
-      document.getElementById('subtotal').innerHTML = "$" + subTotal;
-      document.getElementById('sales-tax').innerHTML = "Sales Tax(" + tax + "%)";
-
-      var discountPercentage = document.getElementById("discount-percentage").innerHTML.trim();
-      var discountPrice = subTotal * (discountPercentage / 100);
-      document.getElementById("discount-price").innerHTML = "- $" + discountPrice;
-      var taxPrice = subTotal * (tax / 100);
-      document.getElementById("sales-tax-price").innerHTML = "$" + (taxPrice).toFixed(2);
-      var total = (subTotal - (subTotal * (discountPercentage / 100))) + (subTotal * (tax / 100));
-      document.getElementById("total").innerHTML = "$" + total.toFixed(2);
-    }
-
-    function changeQuantity(productId, id, checked) {
-      var indexOfProduct = cart.findIndex((obj => obj.id == productId));
-      cart[indexOfProduct].quantity = isNaN(cart[indexOfProduct].quantity) ? 0 : cart[indexOfProduct].quantity;
-      if (checked == "increase") {
-        cart[indexOfProduct].quantity += 1;
-        price = parseInt((document.getElementById('price-' + productId).innerHTML).slice(1)) * cart[indexOfProduct].quantity;
-        cart[indexOfProduct].price = '$' + price;
-        subTotal += price;
-      }
-      if (checked == "decrease") {
-        cart[indexOfProduct].quantity = isNaN(cart[indexOfProduct].quantity) ? 0 : cart[indexOfProduct].quantity;
-        if (cart[indexOfProduct].quantity > 1) {
-          cart[indexOfProduct].quantity -= 1;
-          price = parseInt((document.getElementById('price-' + productId).innerHTML).slice(1)) * cart[indexOfProduct].quantity;
-          cart[indexOfProduct].price = '$' + price;
-          subTotal += price;
-        } else {
-          removeFromCart(productId);
-        }
-      }
-    id++;
-    displayCart();
-    }
-
-    function removeFromCart(productId) {
-    var indexOfProduct = cart.findIndex((obj => obj.id == productId));
-    if (indexOfProduct > -1) {
-        cart.splice(indexOfProduct, 1);
+  function addToCart(id) {
+    const product = {
+      "id": id,
+      "name": document.getElementById('name-' + id).innerHTML,
+      "img": document.getElementById('image-' + id).src,
+      "price": document.getElementById('price-' + id).innerHTML,
+      "tax": document.getElementById('tax-' + id).innerHTML,
+      "quantity": 1
+    };
+    if (existsInArray(id)) {
+      var index = cart.findIndex((obj => obj.id == id));
+      cart[index].quantity += 1;
+      var price = document.getElementById('price-' + id).innerHTML;
+      price = parseInt(price.slice(1));
+      price *= cart[index].quantity;
+      price = "$" + price;
+      cart[index].price = price;
+    } else {
+      cart.push(product);
     }
     displayCart();
   }
-  </script>
-</head>
 
+  function existsInArray(id) {
+    return cart.some(function (element) {
+      return element.id === id;
+    });
+  }
+
+  function displayCart() {
+    subTotal = 0;
+    tax = 0;
+    document.getElementById('container').innerHTML = "";
+    id = 1;
+
+    for (let i = 0; i < cart.length; i++) {
+
+      var divMain = document.createElement('div');
+      divMain.setAttribute('class', 'flex flex-row justify-between items-center mb-4');
+      divMain.setAttribute('id', 'div-main-' + id);
+      document.getElementById('container').appendChild(divMain);
+
+      var divMainSubFirst = document.createElement('div');
+      divMainSubFirst.setAttribute('class', 'flex flex-row items-center w-2/5');
+      divMainSubFirst.setAttribute('id', 'div-sub-first-' + id);
+      document.getElementById('div-main-' + id).appendChild(divMainSubFirst);
+
+      var productId = cart[i].id;
+      var productImg = cart[i].img;
+      var productName = cart[i].name;
+      var productPrice = cart[i].price;
+      var productQuantity = cart[i].quantity;
+
+      subTotal += parseInt((cart[i].price).slice(1));
+      tax += parseInt((cart[i].tax).slice(0, -1));
+
+      var imageTag = document.createElement('img');
+      imageTag.src = productImg;
+      imageTag.setAttribute('class', 'w-10 h-10 object-cover rounded-md');
+      imageTag.setAttribute('alt', productName);
+      document.getElementById('div-sub-first-' + id).appendChild(imageTag);
+
+      var spanTag = document.createElement('span');
+      spanTag.setAttribute('class', 'ml-4 font-semibold text-sm');
+      spanTag.innerHTML = productName;
+      document.getElementById('div-sub-first-' + id).appendChild(spanTag);
+
+      var divMainSubSecond = document.createElement('div');
+      divMainSubSecond.setAttribute('class', 'w-32 flex justify-between');
+      divMainSubSecond.setAttribute('id', 'div-sub-second-' + id);
+      document.getElementById('div-main-' + id).appendChild(divMainSubSecond);
+
+      var decreaseButton = document.createElement('button');
+      decreaseButton.setAttribute('class', 'px-3 py-1 rounded-md bg-gray-300');
+      decreaseButton.setAttribute('onclick', 'changeQuantity(' + productId + ',' + id + ',' + '"decrease"' + ')');
+      decreaseButton.innerHTML = "-";
+      document.getElementById('div-sub-second-' + id).appendChild(decreaseButton);
+
+      var inputTag = document.createElement('input');
+      inputTag.setAttribute('class', 'mx-2 border text-center w-8');
+      inputTag.setAttribute('id', 'input-id-' + id);
+      inputTag.setAttribute('value', productQuantity);
+      document.getElementById('div-sub-second-' + id).appendChild(inputTag);
+
+      var increaseButton = document.createElement('button');
+      increaseButton.setAttribute('class', 'px-3 py-1 rounded-md bg-gray-300');
+      increaseButton.setAttribute('onclick', 'changeQuantity(' + productId + ',' + id + ',' + '"increase"' + ')');
+      increaseButton.innerHTML = "+";
+      document.getElementById('div-sub-second-' + id).appendChild(increaseButton);
+
+
+      var divMainSubThird = document.createElement('div');
+      divMainSubThird.setAttribute('class', 'font-semibold text-lg w-16 text-center');
+      divMainSubThird.setAttribute('id', 'div-sub-third-' + id);
+      divMainSubThird.innerHTML = productPrice;
+      document.getElementById('div-main-' + id).appendChild(divMainSubThird);
+
+      var deleteIcon = document.createElement('span');
+      deleteIcon.setAttribute('class', 'px-3 py-1 rounded-md bg-red-300 text-white');
+      deleteIcon.setAttribute('onclick', 'removeFromCart(' + productId + ')');
+      deleteIcon.innerHTML = "x";
+      document.getElementById('div-main-' + id).appendChild(deleteIcon);
+
+      id++;
+    }
+    document.getElementById('subtotal').innerHTML = "$" + subTotal;
+    document.getElementById('sales-tax').innerHTML = "Sales Tax(" + tax + "%)";
+
+    var discountPercentage = document.getElementById("discount-percentage").innerHTML.trim();
+    var discountPrice = subTotal * (discountPercentage / 100);
+    document.getElementById("discount-price").innerHTML = "- $" + discountPrice;
+    var taxPrice = subTotal * (tax / 100);
+    document.getElementById("sales-tax-price").innerHTML = "$" + (taxPrice).toFixed(2);
+    var total = (subTotal - (subTotal * (discountPercentage / 100))) + (subTotal * (tax / 100));
+    document.getElementById("total").innerHTML = "$" + total.toFixed(2);
+  }
+
+  function changeQuantity(productId, id, checked) {
+    var indexOfProduct = cart.findIndex((obj => obj.id == productId));
+    cart[indexOfProduct].quantity = isNaN(cart[indexOfProduct].quantity) ? 0 : cart[indexOfProduct].quantity;
+    if (checked == "increase") {
+      cart[indexOfProduct].quantity += 1;
+      price = parseInt((document.getElementById('price-' + productId).innerHTML).slice(1)) * cart[indexOfProduct].quantity;
+      cart[indexOfProduct].price = '$' + price;
+      subTotal += price;
+      displayCart();
+    }
+    if (checked == "decrease") {
+      cart[indexOfProduct].quantity = isNaN(cart[indexOfProduct].quantity) ? 0 : cart[indexOfProduct].quantity;
+      if (cart[indexOfProduct].quantity > 1) {
+        cart[indexOfProduct].quantity -= 1;
+        price = parseInt((document.getElementById('price-' + productId).innerHTML).slice(1)) * cart[indexOfProduct].quantity;
+        cart[indexOfProduct].price = '$' + price;
+        subTotal += price;
+        displayCart();
+      } else {
+        removeFromCart(productId);
+      }
+    }
+  }
+
+  function removeFromCart(productId) {
+    var indexOfProduct = cart.findIndex((obj => obj.id == productId));
+    if (indexOfProduct > -1) {
+      cart.splice(indexOfProduct, 1);
+      displayCart();
+    }
+}
+</script>
 <body class="bg-gray-200">
   <div class="container mx-auto px-5 bg-white">
     <div class="flex lg:flex-row flex-col-reverse shadow-lg">
@@ -180,7 +180,7 @@
                     $id = 0;
                     foreach ($result as $product) {
                         $id++; ?>
-          <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between"
+          <div class="transform hover:scale-105 transition duration-300 px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between"
             onclick="addToCart(<?php echo $id; ?>)">
             <div>
               <div class="font-bold text-gray-800" id="<?= "name-".$id; ?>"><?= $product["name"] ?></div>
@@ -246,12 +246,12 @@
               <span class="font-bold" id="discount-price">- $0</span>
             </div>
             <div class=" px-4 flex justify-between ">
-              <span class="font-semibold text-sm" id='sales-tax'>Sales Tax()</span>
-              <span class="font-bold" id='sales-tax-price'>$0</span>
+              <span class="font-semibold text-sm" id='sales-tax'>Sales Tax(0%)</span>
+              <span class="font-bold" id='sales-tax-price'>$0.00</span>
             </div>
             <div class="border-t-2 mt-3 py-2 px-4 flex items-center justify-between">
               <span class="font-semibold text-2xl">Total</span>
-              <span class="font-bold text-2xl" id="total">$0</span>
+              <span class="font-bold text-2xl" id="total">$0.00</span>
             </div>
           </div>
         </div>
