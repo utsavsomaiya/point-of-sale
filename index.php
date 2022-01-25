@@ -34,9 +34,14 @@ if (isset($_POST["submit"])) {
         $_SESSION['msg'] = "Not Successfully";
         header('location:/');
     }
-    for ($i = 0; $i < sizeof($productId); $i++) {
-        $fetch = $pdo->prepare("INSERT INTO `sales_item` (`sales_id`,`product_id`, `product_price`, `product_quantity`, `product_tax_percentage`, `product_tax_price`) SELECT max(`id`),'$productId[$i]','$productPrice[$i]','$productQuantity[$i]','$productTax[$i]','$productTaxAmount[$i]' FROM `sales`");
-        $fetch->execute();
+    if ($productId >0) {
+        for ($i = 0; $i < sizeof($productId); $i++) {
+            $fetch = $pdo->prepare("INSERT INTO `sales_item` (`sales_id`,`product_id`, `product_price`, `product_quantity`, `product_tax_percentage`, `product_tax_price`) SELECT max(`id`),'$productId[$i]','$productPrice[$i]','$productQuantity[$i]','$productTax[$i]','$productTaxAmount[$i]' FROM `sales`");
+            $fetch->execute();
+        }
+    } else {
+        $_SESSION['msg'] = "Not Successfully";
+        header('location:/');
     }
 }
 ?>
