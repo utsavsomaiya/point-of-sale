@@ -4,7 +4,7 @@ let subTotal = 0;
 function addToCart(id) {
     if (existsInArray(id)) {
         var index = cart.findIndex((obj => obj.id == id));
-        cart[index].quantity += 1;
+        cart[index].quantity = parseInt(cart[index].quantity) + 1;
         var price = document.getElementById('price-' + id).innerHTML;
         price = parseInt(price.slice(1));
         price *= cart[index].quantity;
