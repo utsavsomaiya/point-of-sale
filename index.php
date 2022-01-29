@@ -61,6 +61,13 @@ if (isset($_POST["submit"])) {
   <title>Retail Shop</title>
   <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.0.2/dist/tailwind.min.css">
   <link rel="stylesheet" href="/admin/vendors/mdi/css/custom_styles.css">
+  <style>
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  </style>
 </head>
 <body class="bg-gray-200">
   <div class="container mx-auto px-5 bg-white">
