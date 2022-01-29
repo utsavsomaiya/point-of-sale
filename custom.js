@@ -109,6 +109,8 @@ function displayCart() {
         var inputTag = document.createElement('input');
         inputTag.setAttribute('class', 'mx-2 border text-center w-8');
         inputTag.setAttribute('id', 'input-id-' + id);
+        inputTag.setAttribute('type','number');
+        inputTag.setAttribute('onchange', 'inputQuantity(' + productId + ',' + id + ')');
         inputTag.setAttribute('value', productQuantity);
         document.getElementById('div-sub-second-' + id).appendChild(inputTag);
 
@@ -158,7 +160,13 @@ function displayCart() {
 	document.getElementById('hidden-form').appendChild(inputDiscount);
 
 }
-
+function inputQuantity(productId, id) {
+    var indexOfProduct = cart.findIndex((obj => obj.id == productId));
+    cart[indexOfProduct].quantity = document.getElementById('input-id-' + id).value;
+    price = parseInt((document.getElementById('price-' + productId).innerHTML).slice(1)) * cart[indexOfProduct].quantity;
+    cart[indexOfProduct].price = '$' + price;
+    displayCart();
+}
 function changeQuantity(productId, id, checked) {
     var indexOfProduct = cart.findIndex((obj => obj.id == productId));
     cart[indexOfProduct].quantity = isNaN(cart[indexOfProduct].quantity) ? 0 : cart[indexOfProduct].quantity;
