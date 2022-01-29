@@ -171,7 +171,7 @@ function changeQuantity(productId, id, checked) {
     var indexOfProduct = cart.findIndex((obj => obj.id == productId));
     cart[indexOfProduct].quantity = isNaN(cart[indexOfProduct].quantity) ? 0 : cart[indexOfProduct].quantity;
     if (checked == "increase") {
-        cart[indexOfProduct].quantity += 1;
+        cart[indexOfProduct].quantity = parseInt(cart[indexOfProduct].quantity) + 1;
         price = parseInt((document.getElementById('price-' + productId).innerHTML).slice(1)) * cart[indexOfProduct].quantity;
         cart[indexOfProduct].price = '$' + price;
         subTotal += price;
@@ -180,7 +180,7 @@ function changeQuantity(productId, id, checked) {
     if (checked == "decrease") {
         cart[indexOfProduct].quantity = isNaN(cart[indexOfProduct].quantity) ? 0 : cart[indexOfProduct].quantity;
         if (cart[indexOfProduct].quantity > 1) {
-            cart[indexOfProduct].quantity -= 1;
+            cart[indexOfProduct].quantity = parseInt(cart[indexOfProduct].quantity) - 1;
             price = parseInt((document.getElementById('price-' + productId).innerHTML).slice(1)) * cart[indexOfProduct].quantity;
             cart[indexOfProduct].price = '$' + price;
             subTotal += price;
