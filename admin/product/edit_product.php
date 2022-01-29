@@ -11,7 +11,7 @@ if (isset($_GET['id'])) {
     foreach ($result as $r) {
         $name = $r['name'];
         $price = $r['price'];
-        $category = $r['category'];
+        $category = $r['category_id'];
         $tax = $r['tax'];
         if (empty($_FILES['image']['name'])) {
             $fname = $r['image'];
