@@ -13,6 +13,7 @@ function addToCart(id) {
     } else {
         const product = {
         "id": id,
+        "productId" : document.getElementById('id-' + id).innerHTML,
         "name": document.getElementById('name-' + id).innerHTML,
         "img": document.getElementById('image-' + id).src,
         "price": document.getElementById('price-' + id).innerHTML,
@@ -54,7 +55,7 @@ function displayCart() {
         var inputId = document.createElement('input');
 	    inputId.setAttribute('type', 'hidden');
 	    inputId.setAttribute('name','productId[]');
-	    inputId.value = productId;
+	    inputId.value = cart[i].productId;
         document.getElementById('hidden-form').appendChild(inputId);
 
         var productImg = cart[i].img;

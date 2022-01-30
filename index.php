@@ -41,7 +41,7 @@ if (isset($_POST["submit"])) {
     }
     if ($productIds >0) {
         for ($i = 0; $i < sizeof($productIds); $i++) {
-            $fetch = $pdo->prepare("INSERT INTO `sales_item` (`sales_id`,`product_id`, `product_price`, `product_quantity`, `product_tax_percentage`, `product_tax_price`) SELECT max(`id`),'$productIds[$i]','$productPrices[$i]','$productQuantities[$i]','$productTaxes[$i]','$productTaxAmounts[$i]' FROM `sales`");
+            $fetch = $pdo->prepare("INSERT INTO `sales_item` (`sales_id`, `product_id`, `product_price`, `product_quantity`, `product_tax_percentage`, `product_tax_price`) SELECT max(`id`),'$productIds[$i]','$productPrices[$i]','$productQuantities[$i]','$productTaxes[$i]','$productTaxAmounts[$i]' FROM `sales`");
             $fetch->execute();
         }
     } else {
@@ -90,6 +90,7 @@ if (isset($_POST["submit"])) {
           <div class="transform hover:scale-105 transition duration-300 px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between"
             onclick="addToCart(<?php echo $id; ?>)">
             <div>
+              <label hidden id="<?= "id-".$id; ?>"><?= $products["id"] ?></label>
               <div class="font-bold text-gray-800" id="<?= "name-".$id; ?>"><?= $products["name"] ?></div>
               <span class="font-light text-sm text-gray-400">
                 <?php
