@@ -8,7 +8,8 @@ include 'layout/header.php';
             <div class="col-lg-6 grid-margin stretch-card">
                 <div class="card-body">
                     <h4 class="card-title">
-                        <span style="margin-right:80px;">Sales Products</span>
+                        <span style="margin-right:80px;">Sales Bill</span>
+                        <a style="margin-right:80px;" href="/admin/sales_item.php">Sales Item</a>
                     </h4>
                     <table class="table">
                         <form method="post">
