@@ -3,7 +3,7 @@ session_start();
 require '../layout/db_connect.php';
 include '../layout/header.php';
 if (isset($_POST['submit'])) {
-    if (!empty($_FILES['image']['name']) && !empty($_POST['productName']) && !empty($_POST['price'] && !empty($_POST['category_id'])) && !empty($_POST['tax'])) {
+    if (!empty($_FILES['image']['name']) && !empty($_POST['productName']) && !empty($_POST['price'] && !empty($_POST['category_id'])) && !empty($_POST['tax']) && !empty($_POST['stock'])) {
         list($width, $height) = @getimagesize($_FILES['image']['name']);
         $target = "/admin/images/" . basename($_FILES['image']['name']);
         $imageFileType = strtolower(pathinfo($target, PATHINFO_EXTENSION));
@@ -22,12 +22,14 @@ if (isset($_POST['submit'])) {
             $price = $_POST['price'];
             $category = $_POST['category_id'];
             $tax = $_POST['tax'];
+            $stock = $_POST['stock'];
             $name = $_FILES['image']['name'];
-            $fetch = $pdo->prepare("insert into product(name,price,category_id,tax,image) values(:productName,:price,:category_id,:tax,:name)");
+            $fetch = $pdo->prepare("insert into product(name,price,category_id,tax,stock,image) values(:productName,:price,:category_id,:tax,:stock,:name)");
             $fetch->bindParam(':productName', $productName);
             $fetch->bindParam(':price', $price);
             $fetch->bindParam(':category_id', $category);
             $fetch->bindParam(':tax', $tax);
+            $fetch->bindParam(':stock', $stock);
             $fetch->bindParam(':name', $name);
             $result = $fetch->execute();
             if (isset($result)) {
@@ -55,6 +57,10 @@ if (isset($_POST['submit'])) {
             $_SESSION['tax_validation_error'] = "Please enter data";
             header('location:../product/add_product.php');
         }
+        if (empty($_POST['stock'])) {
+            $_SESSION['stock_validation_error'] = "Please enter data";
+            header('location:../product/add_product.php');
+        }
         if (empty($_FILES['image']['name'])) {
             $_SESSION['file_validation_error'] = "Please enter data";
             header('location:../product/add_product.php');
@@ -72,6 +78,9 @@ if (isset($_POST['category_id'])) {
 }
 if (isset($_POST['tax'])) {
     $_SESSION['tax'] = $_POST['tax'];
+}
+if (isset($_POST['stock'])) {
+    $_SESSION['stock'] = $_POST['stock'];
 }
 ?>
 <div class="main-panel">
@@ -150,6 +159,20 @@ if (isset($_POST['tax'])) {
                                     <?php
                                     if (isset($_SESSION['tax_validation_error'])) {
                                         echo $_SESSION['tax_validation_error'];
+                                    }
+                                    ?>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="productStock">Product Stock</label>
+                                <input id="productStock" type="number" class="form-control" placeholder="Product Stock"
+                                    name="stock" <?php if (isset($_SESSION['stock'])) {
+                                        echo "value=\"" . $_SESSION['stock'] . "\"";
+                                    } ?> required>
+                                <label style="color:red;">
+                                    <?php
+                                    if (isset($_SESSION['stock_validation_error'])) {
+                                        echo $_SESSION['stock_validation_error'];
                                     }
                                     ?>
                                 </label>
