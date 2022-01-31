@@ -1,6 +1,7 @@
 <?php
 session_start();
 include 'layout/header.php';
+$salesId = $_GET['id'];
 ?>
 <div class="main-panel">
     <div class="content-wrapper">
@@ -8,11 +9,9 @@ include 'layout/header.php';
             <div class="col-lg-6 grid-margin stretch-card">
                 <div class="card-body">
                     <h4 class="card-title">
-                        <span style="margin-right:80px;">Sales Items</span>
+                        <span style="margin-right:80px;">Sales Details</span>
                     </h4>
                     <table class="table">
-                        <form method="post">
-                            <thead>
                                 <tr>
                                     <th>Id</th>
                                     <th>Sales_id</th>
@@ -22,11 +21,10 @@ include 'layout/header.php';
                                     <th>Product_Quantity</th>
                                     <th>Product_tax_percentage</th>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                <?php
+                            <?php
                                 require 'layout/db_connect.php';
-                                $fetch = $pdo->prepare('select * from sales_item');
+                                $fetch = $pdo->prepare('select * from sales_item where sales_id =:sales_id');
+                                $fetch->bindParam(':sales_id', $salesId);
                                 $fetch->execute();
                                 $result = $fetch->fetchAll();
                                 foreach ($result as $salesItem) {
@@ -37,32 +35,30 @@ include 'layout/header.php';
                                     <td><?= $salesItem['sales_id'] ?></td>
                                     <td><?= $salesItem['product_id'] ?></td>
                                     <?php
-                                        $productId = $salesItem['product_id'];
-                                        $fetch = $pdo->prepare("select name,image from product where id =:id");
-                                        $fetch->bindParam(':id', $productId);
+                                        $fetch = $pdo->prepare('select name,image from product where id=:id');
+                                        $fetch->bindParam(':id', $salesItem['product_id']);
                                         $fetch->execute();
                                         $result = $fetch->fetchAll();
-                                        foreach ($result as $product) {
-                                            if (!empty($salesItem)) {
+                                        foreach ($result as $productItem) {
+                                            if (!empty($productItem)) {
                                                 ?>
-                                    <td><?= $product['name'] ?></td>
-                                    <td><img src="<?= '/admin/images/' . $product['image'] ?>"></td>
+                                    <td><?= $productItem['name'] ?></td>
+                                    <td><img src="<?= '/admin/images/' . $productItem['image'] ?>"></td>
                                     <?php
                                             } else {
                                                 echo "No Record Found..";
                                             }
                                         } ?>
-                                    <td><?= $salesItem['product_quantity'] ?></td>
+                                    <td><?= $salesItem['product_price'] ?></td>
                                     <td><?= $salesItem['product_tax_percentage'] ?></td>
                                 </tr>
                                 <?php
                                     } else {
                                         echo "No Record Found..";
                                     }
-                                }
-                                ?>
-                            </tbody>
-                        </form>
+                                } ?>
+                            </td>
+                        </tr>
                     </table>
                 </div>
             </div>

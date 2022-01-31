@@ -9,10 +9,8 @@ include 'layout/header.php';
                 <div class="card-body">
                     <h4 class="card-title">
                         <span style="margin-right:80px;">Sales Bill</span>
-                        <a style="margin-right:80px;" href="/admin/sales_item.php">Sales Item</a>
                     </h4>
                     <table class="table">
-                        <form method="post">
                             <thead>
                                 <tr>
                                     <th>Id</th>
@@ -31,7 +29,7 @@ include 'layout/header.php';
                                 foreach ($result as $salesRecord) {
                                     if (!empty($salesRecord)) {
                                         ?>
-                                <tr>
+                                <tr onclick="window.location = '/admin/sales_item.php?id=<?= $salesRecord['id'] ?>'">
                                     <td><?= $salesRecord['id'] ?></td>
                                     <td><?= $salesRecord['subtotal'] ?></td>
                                     <td><?= $salesRecord['total_tax'] ?></td>
@@ -45,7 +43,6 @@ include 'layout/header.php';
                                 }
                                 ?>
                             </tbody>
-                        </form>
                     </table>
                 </div>
             </div>
