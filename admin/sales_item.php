@@ -17,36 +17,25 @@ $salesId = $_GET['id'];
                                     <th>Product_Name</th>
                                     <th>Product_Image</th>
                                     <th>Product_Quantity</th>
+                                    <th>Product_Price</th>
                                     <th>Product_tax_percentage</th>
                                 </tr>
                             <?php
                                 require 'layout/db_connect.php';
-                                $fetch = $pdo->prepare('select * from sales_item where sales_id =:sales_id');
+                                $fetch = $pdo->prepare('SELECT sales_item.product_id, product.name, product.image, sales_item.product_quantity, sales_item.product_price, sales_item.product_tax_percentage FROM sales_item JOIN product ON sales_item.product_id = product.id AND sales_item.sales_id = :sales_id');
                                 $fetch->bindParam(':sales_id', $salesId);
                                 $fetch->execute();
                                 $result = $fetch->fetchAll();
-                                foreach ($result as $salesItem) {
-                                    if (!empty($salesItem)) {
+                                foreach ($result as $salesDetails) {
+                                    if (!empty($salesDetails)) {
                                         ?>
                                 <tr>
-                                    <td><?= $salesItem['product_id'] ?></td>
-                                    <?php
-                                        $fetch = $pdo->prepare('select name,image from product where id=:id');
-                                        $fetch->bindParam(':id', $salesItem['product_id']);
-                                        $fetch->execute();
-                                        $result = $fetch->fetchAll();
-                                        foreach ($result as $productItem) {
-                                            if (!empty($productItem)) {
-                                                ?>
-                                    <td><?= $productItem['name'] ?></td>
-                                    <td><img src="<?= '/admin/images/' . $productItem['image'] ?>"></td>
-                                    <?php
-                                            } else {
-                                                echo "No Record Found..";
-                                            }
-                                        } ?>
-                                    <td><?= $salesItem['product_quantity'] ?></td>
-                                    <td><?= $salesItem['product_tax_percentage'] ?></td>
+                                    <td><?= $salesDetails['product_id'] ?></td>
+                                    <td><?= $salesDetails['name'] ?></td>
+                                    <td><img src="<?= '/admin/images/' . $salesDetails['image'] ?>"></td>
+                                    <td><?= $salesDetails['product_quantity'] ?></td>
+                                    <td><?= $salesDetails['product_price'] ?></td>
+                                    <td><?= $salesDetails['product_tax_percentage'] ?></td>
                                 </tr>
                                 <?php
                                     } else {
