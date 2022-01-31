@@ -13,8 +13,6 @@ $salesId = $_GET['id'];
                     </h4>
                     <table class="table">
                                 <tr>
-                                    <th>Id</th>
-                                    <th>Sales_id</th>
                                     <th>Product_id</th>
                                     <th>Product_Name</th>
                                     <th>Product_Image</th>
@@ -31,8 +29,6 @@ $salesId = $_GET['id'];
                                     if (!empty($salesItem)) {
                                         ?>
                                 <tr>
-                                    <td><?= $salesItem['id'] ?></td>
-                                    <td><?= $salesItem['sales_id'] ?></td>
                                     <td><?= $salesItem['product_id'] ?></td>
                                     <?php
                                         $fetch = $pdo->prepare('select name,image from product where id=:id');
@@ -49,7 +45,7 @@ $salesId = $_GET['id'];
                                                 echo "No Record Found..";
                                             }
                                         } ?>
-                                    <td><?= $salesItem['product_price'] ?></td>
+                                    <td><?= $salesItem['product_quantity'] ?></td>
                                     <td><?= $salesItem['product_tax_percentage'] ?></td>
                                 </tr>
                                 <?php
