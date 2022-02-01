@@ -2,27 +2,34 @@ const cart = [];
 let subTotal = 0;
 
 function addToCart(id) {
-    if (existsInArray(id)) {
-        var index = cart.findIndex((obj => obj.id == id));
-        cart[index].quantity = parseInt(cart[index].quantity) + 1;
-        var price = document.getElementById('price-' + id).innerHTML;
-        price = parseInt(price.slice(1));
-        price *= cart[index].quantity;
-        price = "$" + price;
-        cart[index].price = price;
+    if (document.getElementById('stock-' + id).innerHTML > 0) {
+        if (existsInArray(id)) {
+            var index = cart.findIndex((obj => obj.id == id));
+            if (document.getElementById('stock-' + id).innerHTML > cart[index].quantity) {
+                cart[index].quantity = parseInt(cart[index].quantity) + 1;
+            }
+            var price = document.getElementById('price-' + id).innerHTML;
+            price = parseInt(price.slice(1));
+            price *= cart[index].quantity;
+            price = "$" + price;
+            cart[index].price = price;
+        } else {
+            const product = {
+                "id": id,
+                "productId": document.getElementById('id-' + id).innerHTML,
+                "name": document.getElementById('name-' + id).innerHTML,
+                "img": document.getElementById('image-' + id).src,
+                "price": document.getElementById('price-' + id).innerHTML,
+                "tax": document.getElementById('tax-' + id).innerHTML,
+                "stock" : document.getElementById('stock-' + id).innerHTML,
+                "quantity": 1
+            };
+            cart.push(product);
+        }
+        displayCart();
     } else {
-        const product = {
-        "id": id,
-        "productId" : document.getElementById('id-' + id).innerHTML,
-        "name": document.getElementById('name-' + id).innerHTML,
-        "img": document.getElementById('image-' + id).src,
-        "price": document.getElementById('price-' + id).innerHTML,
-        "tax": document.getElementById('tax-' + id).innerHTML,
-        "quantity": 1
-        };
-        cart.push(product);
+        alert('Stock is not available');
     }
-    displayCart();
 }
 
 function existsInArray(id) {
@@ -69,6 +76,7 @@ function displayCart() {
         document.getElementById('hidden-form').appendChild(inputPrice);
 
         var productQuantity = cart[i].quantity;
+        var productStock = cart[i].stock;
 
         var inputQuantity = document.createElement('input');
 	    inputQuantity.setAttribute('type', 'hidden');
@@ -110,7 +118,8 @@ function displayCart() {
         var inputTag = document.createElement('input');
         inputTag.setAttribute('class', 'mx-2 border text-center w-8');
         inputTag.setAttribute('id', 'input-id-' + id);
-        inputTag.setAttribute('type','number');
+        inputTag.setAttribute('type', 'number');
+        inputTag.setAttribute('max', productStock);
         inputTag.setAttribute('onchange', 'inputQuantity(' + productId + ',' + id + ')');
         inputTag.setAttribute('value', productQuantity);
         document.getElementById('div-sub-second-' + id).appendChild(inputTag);
@@ -163,7 +172,12 @@ function displayCart() {
 }
 function inputQuantity(productId, id) {
     var indexOfProduct = cart.findIndex((obj => obj.id == productId));
-    cart[indexOfProduct].quantity = document.getElementById('input-id-' + id).value;
+    if (document.getElementById('stock-' + productId).innerHTML > document.getElementById('input-id-' + id).value) {
+        cart[indexOfProduct].quantity = document.getElementById('input-id-' + id).value;
+    } else {
+        document.getElementById('input-id-' + id).value = document.getElementById('stock-' + productId).innerHTML;
+        cart[indexOfProduct].quantity = document.getElementById('input-id-' + id).value;
+    }
     price = parseInt((document.getElementById('price-' + productId).innerHTML).slice(1)) * cart[indexOfProduct].quantity;
     cart[indexOfProduct].price = '$' + price;
     displayCart();
@@ -172,7 +186,9 @@ function changeQuantity(productId, id, checked) {
     var indexOfProduct = cart.findIndex((obj => obj.id == productId));
     cart[indexOfProduct].quantity = isNaN(cart[indexOfProduct].quantity) ? 0 : cart[indexOfProduct].quantity;
     if (checked == "increase") {
-        cart[indexOfProduct].quantity = parseInt(cart[indexOfProduct].quantity) + 1;
+        if (document.getElementById('stock-' + productId).innerHTML > cart[indexOfProduct].quantity) {
+            cart[indexOfProduct].quantity = parseInt(cart[indexOfProduct].quantity) + 1;
+        }
         price = parseInt((document.getElementById('price-' + productId).innerHTML).slice(1)) * cart[indexOfProduct].quantity;
         cart[indexOfProduct].price = '$' + price;
         subTotal += price;
