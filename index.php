@@ -91,6 +91,7 @@ if (isset($_POST["submit"])) {
             onclick="addToCart(<?php echo $id; ?>)">
             <div>
               <label hidden id="<?= "id-".$id; ?>"><?= $products["id"] ?></label>
+              <label hidden id="<?= "stock-".$id; ?>"><?= $products["stock"] ?></label>
               <div class="font-bold text-gray-800" id="<?= "name-".$id; ?>"><?= $products["name"] ?></div>
               <span class="font-light text-sm text-gray-400">
                 <?php

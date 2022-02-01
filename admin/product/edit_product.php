@@ -8,30 +8,33 @@ if (isset($_GET['id'])) {
     $fetch->bindParam(':id', $id);
     $fetch->execute();
     $result = $fetch->fetchAll();
-    foreach ($result as $r) {
-        $name = $r['name'];
-        $price = $r['price'];
-        $category = $r['category_id'];
-        $tax = $r['tax'];
+    foreach ($result as $product) {
+        $name = $product['name'];
+        $price = $product['price'];
+        $category = $product['category_id'];
+        $tax = $product['tax'];
+        $stock = $product['stock'];
         if (empty($_FILES['image']['name'])) {
-            $fname = $r['image'];
+            $fileName = $product['image'];
         } else {
-            $fname = $_FILES['image']['name'];
+            $fileName = $_FILES['image']['name'];
         }
     }
 }
 if (isset($_POST['submit'])) {
-    if (!empty($_POST['productName']) && !empty($_POST['price'])) {
+    if (!empty($_POST['productName']) && !empty($_POST['price'])&& !empty($_POST['stock'])) {
         $productName = $_POST['productName'];
         $price = $_POST['price'];
         $category = $_POST['category'];
         $tax = $_POST['tax'];
-        $fetch = $pdo->prepare("update product set name=:productName, price=:price, category_id=:category,tax=:tax,image=:fname where id=:id");
+        $stock = $_POST['stock'];
+        $fetch = $pdo->prepare("update product set name=:productName, price=:price, category_id=:category,tax=:tax,stock =:stock,image=:fname where id=:id");
         $fetch->bindParam(':productName', $productName);
         $fetch->bindParam(':price', $price);
         $fetch->bindParam(':category', $category);
         $fetch->bindParam(':tax', $tax);
-        $fetch->bindParam(':fname', $fname);
+        $fetch->bindParam(':stock', $stock);
+        $fetch->bindParam(':fname', $fileName);
         $fetch->bindParam(':id', $id);
         $result = $fetch->execute();
         if (isset($result)) {
@@ -47,6 +50,9 @@ if (isset($_POST['submit'])) {
         }
         if (empty($_POST['price'])) {
             $price_alert = "Please enter the data..";
+        }
+        if (empty($_POST['stock'])) {
+            $stock_alert = "Please enter the data..";
         }
     }
 }
@@ -125,9 +131,21 @@ if (isset($_POST['submit'])) {
                                 </select>
                             </div>
                             <div class="form-group">
+                                <label for="productStock">Product Stock</label>
+                                <input id="productStock" type="number" class="form-control" placeholder="Product Stock"
+                                    name="stock" value="<?= $stock; ?>">
+                                <label style="color:red;">
+                                    <?php
+                                    if (isset($stock_alert)) {
+                                        echo $stock_alert;
+                                    }
+                                    ?>
+                                </label>
+                            </div>
+                            <div class="form-group">
                                 <label for="productImage" style="margin-right: 20px;">Image</label>
                                 <img id="productImage" class="img-xs rounded-circle"
-                                    src="<?= '/admin/images/' . $fname ?>"><br><br>
+                                    src="<?= '/admin/images/' . $fileName ?>"><br><br>
                                 <input type="file" class="form-control" accept="" name="image">
                             </div>
                             <button type="submit" class="btn btn-primary me-2" name="submit"
