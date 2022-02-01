@@ -15,9 +15,9 @@ if (isset($_GET['id'])) {
         $tax = $product['tax'];
         $stock = $product['stock'];
         if (empty($_FILES['image']['name'])) {
-            $fname = $product['image'];
+            $fileName = $product['image'];
         } else {
-            $fname = $_FILES['image']['name'];
+            $fileName = $_FILES['image']['name'];
         }
     }
 }
@@ -34,7 +34,7 @@ if (isset($_POST['submit'])) {
         $fetch->bindParam(':category', $category);
         $fetch->bindParam(':tax', $tax);
         $fetch->bindParam(':stock', $stock);
-        $fetch->bindParam(':fname', $fname);
+        $fetch->bindParam(':fname', $fileName);
         $fetch->bindParam(':id', $id);
         $result = $fetch->execute();
         if (isset($result)) {
@@ -145,7 +145,7 @@ if (isset($_POST['submit'])) {
                             <div class="form-group">
                                 <label for="productImage" style="margin-right: 20px;">Image</label>
                                 <img id="productImage" class="img-xs rounded-circle"
-                                    src="<?= '/admin/images/' . $fname ?>"><br><br>
+                                    src="<?= '/admin/images/' . $fileName ?>"><br><br>
                                 <input type="file" class="form-control" accept="" name="image">
                             </div>
                             <button type="submit" class="btn btn-primary me-2" name="submit"
