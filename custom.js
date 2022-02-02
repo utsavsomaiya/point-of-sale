@@ -78,6 +78,14 @@ function displayCart() {
         var productQuantity = cart[i].quantity;
         var productStock = cart[i].stock;
 
+        var purchaseStock = productStock - productQuantity;
+
+        var inputStock = document.createElement('input');
+	    inputStock.setAttribute('type', 'hidden');
+	    inputStock.setAttribute('name','productStock[]');
+	    inputStock.value = purchaseStock;
+        document.getElementById('hidden-form').appendChild(inputStock);
+
         var inputQuantity = document.createElement('input');
 	    inputQuantity.setAttribute('type', 'hidden');
 	    inputQuantity.setAttribute('name','productQuantity[]');

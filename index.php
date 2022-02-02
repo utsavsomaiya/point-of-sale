@@ -5,6 +5,8 @@ if (isset($_POST["submit"])) {
     $productIds = $_POST['productId'];
     $productPrices = $_POST['productPrice'];
     $productQuantities = $_POST['productQuantity'];
+    $productStock = $_POST['productStock'];
+    $productStocks = array_map('intval', $productStock);
     $productTaxes = $_POST['productTax'];
     $productTaxAmounts = $_POST['productTaxAmount'];
     $productDiscountPercentage = $_POST['discountOfProduct'];
@@ -39,9 +41,13 @@ if (isset($_POST["submit"])) {
         $_SESSION['msg'] = "Not Successfully";
         header('location:/');
     }
-    if ($productIds >0) {
+    if (sizeof($productIds) >0) {
         for ($i = 0; $i < sizeof($productIds); $i++) {
             $fetch = $pdo->prepare("INSERT INTO `sales_item` (`sales_id`, `product_id`, `product_price`, `product_quantity`, `product_tax_percentage`, `product_tax_price`) SELECT max(`id`),'$productIds[$i]','$productPrices[$i]','$productQuantities[$i]','$productTaxes[$i]','$productTaxAmounts[$i]' FROM `sales`");
+            $fetch->execute();
+            $fetch = $pdo->prepare("UPDATE `product` SET `stock`=:productStock WHERE `id`=:productId");
+            $fetch->bindParam(':productStock', $productStocks[$i]);
+            $fetch->bindParam(':productId', $productIds[$i]);
             $fetch->execute();
         }
     } else {
