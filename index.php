@@ -58,7 +58,7 @@ if (isset($_POST["submit"])) {
         for ($i = 0; $i < sizeof($productIds); $i++) {
             $fetch = $pdo->prepare("INSERT INTO `sales_item` (`sales_id`, `product_id`, `product_price`, `product_quantity`, `product_tax_percentage`, `product_tax_price`) SELECT max(`id`),'$productIds[$i]','$productPrices[$i]','$productQuantities[$i]','$productTaxes[$i]','$productTaxAmounts[$i]' FROM `sales`");
             $result = $fetch->execute();
-            $fetch = $pdo->prepare("UPDATE `product` INNER JOIN (SELECT `stock` FROM `product` WHERE `id` = :productId) AS `p2` SET product.stock = p2.stock - :productQuantity WHERE `id` = :productId");
+            $fetch = $pdo->prepare("UPDATE `product` SET `stock` = `stock` - :productQuantity WHERE `id` = :productId");
             $fetch->bindParam(':productQuantity', $productQuantities[$i]);
             $fetch->bindParam(':productId', $productIds[$i]);
             $result = $fetch->execute();
