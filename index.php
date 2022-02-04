@@ -3,16 +3,38 @@ require 'admin/layout/db_connect.php';
 session_start();
 if (isset($_POST["submit"])) {
     $productIds = $_POST['productId'];
-    $productPrices = $_POST['productPrice'];
     $productQuantities = $_POST['productQuantity'];
-    $productTaxes = $_POST['productTax'];
-    $productTaxAmounts = $_POST['productTaxAmount'];
-    $productDiscountPercentage = $_POST['discountOfProduct'];
+    $productPrices[] = array();
+    $productTaxes[] = array();
+    $productTaxAmounts[] = array();
+    $result = "";
     $subtotal = 0;
     $taxRate = 0;
     for ($i = 0; $i < sizeof($productIds); $i++) {
-        $subtotal +=  substr($productPrices[$i], 1);
-        $taxRate += substr($productTaxes[$i], 0, -1);
+        $fetch = $pdo->prepare("SELECT `price`,`tax` FROM `product` WHERE `id` = :productId");
+        $fetch->bindParam(':productId', $productIds[$i]);
+        $fetch->execute();
+        $result = $fetch->fetchAll();
+        foreach ($result as $product) {
+            if (!empty($product)) {
+                $productPrice = (int) $product['price'];
+                $productTax = (int) $product['tax'];
+            }
+        }
+        $productPrices[$i] = $productPrice;
+        $productTaxes[$i] = $productTax;
+        $subtotal +=  ($productPrices[$i] * $productQuantities[$i]) ;
+        $productTaxAmounts[$i] = $subtotal * ($productTaxes[$i]/100);
+        $taxRate += $productTaxes[$i];
+    }
+
+    $fetch = $pdo->prepare("SELECT `percentage` FROM `discount`");
+    $fetch->execute();
+    $result = $fetch->fetchAll();
+    foreach ($result as $discount) {
+        if (!empty($discount)) {
+            $productDiscountPercentage = (int) $discount['percentage'];
+        }
     }
     $tax = $subtotal * ($taxRate / 100);
     $discount = $subtotal * ($productDiscountPercentage / 100);
@@ -28,21 +50,25 @@ if (isset($_POST["submit"])) {
         $fetch->bindParam(':discount', $discount);
         $fetch->bindParam(':total', $total);
         $result = $fetch->execute();
-        if (isset($result)) {
-            $_SESSION['msg'] = "Add Successfully";
-            header('location:/');
-        } else {
-            $_SESSION['msg'] = "Not Successfully";
-            header('location:/');
-        }
     } else {
         $_SESSION['msg'] = "Not Successfully";
         header('location:/');
     }
-    if ($productIds >0) {
+    if (sizeof($productIds) >0) {
         for ($i = 0; $i < sizeof($productIds); $i++) {
             $fetch = $pdo->prepare("INSERT INTO `sales_item` (`sales_id`, `product_id`, `product_price`, `product_quantity`, `product_tax_percentage`, `product_tax_price`) SELECT max(`id`),'$productIds[$i]','$productPrices[$i]','$productQuantities[$i]','$productTaxes[$i]','$productTaxAmounts[$i]' FROM `sales`");
-            $fetch->execute();
+            $result = $fetch->execute();
+            $fetch = $pdo->prepare("UPDATE `product` SET `stock` = `stock` - :productQuantity WHERE `id` = :productId");
+            $fetch->bindParam(':productQuantity', $productQuantities[$i]);
+            $fetch->bindParam(':productId', $productIds[$i]);
+            $result = $fetch->execute();
+            if (isset($result)) {
+                $_SESSION['msg'] = "Add Successfully";
+                header('location:/');
+            } else {
+                $_SESSION['msg'] = "Not Successfully";
+                header('location:/');
+            }
         }
     } else {
         $_SESSION['msg'] = "Not Successfully";
@@ -50,7 +76,6 @@ if (isset($_POST["submit"])) {
     }
 }
 ?>
-<?php require 'admin/layout/db_connect.php';?>
 <!doctype html>
 <html lang="en">
 
