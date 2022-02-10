@@ -113,7 +113,9 @@ if (isset($_POST["submit"])) {
                     foreach ($result as $products) {
                         $id++; ?>
           <div class="transform hover:scale-105 transition duration-300 px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between"
-            onclick="addToCart(<?php echo $id; ?>)">
+            onclick="addToCart(<?php echo $id; ?>)" style="<?php if ($products['stock'] <=0) {
+                            echo "opacity:0.5";
+                        } ?>">
             <div>
               <label hidden id="<?= "id-".$id; ?>"><?= $products["id"] ?></label>
               <label hidden id="<?= "stock-".$id; ?>"><?= $products["stock"] ?></label>

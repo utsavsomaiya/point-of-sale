@@ -9,7 +9,7 @@
 
         $result = $abc->fetchAll();
         if (!$result) {
-            $_SESSION['alert'] = 'User Id and Password are Wrong';
+            $_SESSION['alert'] = 'Incorrect credentials';
         } else {
             $_SESSION['name'] = $_POST['email'];
             $_SESSION["login"] = "OK";
@@ -63,9 +63,6 @@
                                         <br><br><label style="color:red;"><?php if (isset($_SESSION["alert"])) {
     echo $_SESSION["alert"] ;
 } ?></label>
-                                </div>
-                                <div class="my-2 d-flex justify-content-between align-items-center">
-                                    <a href="#" class="auth-link text-black">Forgot password?</a>
                                 </div>
                             </form>
                         </div>
