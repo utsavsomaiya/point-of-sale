@@ -10,6 +10,13 @@
 	<link rel="stylesheet" href="/admin/css/vertical-layout-light/style.css">
 	<link rel="stylesheet" href="/admin/vendors/ti-icons/css/themify-icons.css">
 </head>
+<style>
+	input::-webkit-outer-spin-button,
+	input::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+</style>
 <body>
 	<div class="container-scroller">
 		<nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-top flex-row">

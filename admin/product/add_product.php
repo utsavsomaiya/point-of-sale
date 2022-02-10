@@ -149,20 +149,30 @@ if (isset($_POST['stock'])) {
                                 <label for="productTax">Tax of the Product</label>
                                 <select id="productTax" class="form-control" name="tax" required>
                                     <option value="">--Select Tax--</option>
-                                    <option value="5" <?php if ($_SESSION['tax'] == "5") {
-                                        echo 'selected="selected"';
+                                    <option value="5" <?php if (isset($_SESSION['tax'])) {
+                                        if ($_SESSION['tax'] == "5") {
+                                            echo 'selected="selected"';
+                                        }
                                     } ?>>5%</option>
-                                    <option value="10" <?php if ($_SESSION['tax'] == "10") {
-                                        echo 'selected="selected"';
+                                    <option value="10" <?php if (isset($_SESSION['tax'])) {
+                                        if ($_SESSION['tax'] == "10") {
+                                            echo 'selected="selected"';
+                                        }
                                     } ?>>10%</option>
-                                    <option value="15" <?php if ($_SESSION['tax'] == "15") {
-                                        echo 'selected="selected"';
+                                    <option value="15" <?php if (isset($_SESSION['tax'])) {
+                                        if ($_SESSION['tax'] == "15") {
+                                            echo 'selected="selected"';
+                                        }
                                     } ?>>15%</option>
-                                    <option value="20" <?php if ($_SESSION['tax'] == "20") {
-                                        echo 'selected="selected"';
+                                    <option value="20" <?php if (isset($_SESSION['tax'])) {
+                                        if ($_SESSION['tax'] == "20") {
+                                            echo 'selected="selected"';
+                                        }
                                     } ?>>20%</option>
-                                    <option value="25" <?php if ($_SESSION['tax'] == "25") {
-                                        echo 'selected="selected"';
+                                    <option value="25" <?php if (isset($_SESSION['tax'])) {
+                                        if ($_SESSION['tax'] == "25") {
+                                            echo 'selected="selected"';
+                                        }
                                     } ?>>25%</option>
                                 </select>
                                 <label style="color:red;">
