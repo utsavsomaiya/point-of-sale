@@ -89,5 +89,17 @@
 							<span class="menu-title">Categories</span>
 						</a>
 					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/admin/settings.php" >
+							<i class="menu-icon mdi mdi-floor-plan"></i>
+							<span class="menu-title">Discount</span>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/admin/sales.php" >
+							<i class="menu-icon mdi mdi-floor-plan"></i>
+							<span class="menu-title">Sales</span>
+						</a>
+					</li>
 				</ul>
 			</nav>
