@@ -20,10 +20,11 @@ $salesId = $_GET['id'];
                                 <th>Product Quantity</th>
                                 <th>Product tax percentage</th>
                                 <th>Product Price</th>
+                                <th>Product total price</th>
                             </tr>
                             <?php
                                 require 'layout/db_connect.php';
-                                $fetch = $pdo->prepare('SELECT sales_item.product_id, product.name, product.image, sales_item.product_quantity, sales_item.product_price, sales_item.product_tax_percentage FROM sales_item JOIN product ON sales_item.product_id = product.id AND sales_item.sales_id = :sales_id');
+                                $fetch = $pdo->prepare('SELECT sales_item.product_id, product.name, product.image, sales_item.product_quantity, sales_item.product_price, sales_item.product_total_price, sales_item.product_tax_percentage FROM sales_item JOIN product ON sales_item.product_id = product.id AND sales_item.sales_id = :sales_id');
                                 $fetch->bindParam(':sales_id', $salesId);
                                 $fetch->execute();
                                 $result = $fetch->fetchAll();
@@ -37,6 +38,7 @@ $salesId = $_GET['id'];
                                 <td><?= $salesDetails['product_quantity'] ?></td>
                                 <td><?= $salesDetails['product_tax_percentage'] ?></td>
                                 <td><?= $salesDetails['product_price'] ?></td>
+                                <td><?=   $salesDetails['product_total_price'] ?></td>
                             </tr>
                             <?php
                                     } else {
