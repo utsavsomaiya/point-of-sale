@@ -24,6 +24,9 @@ if (isset($_POST['submit'])) {
             $tax = $_POST['tax'];
             $stock = $_POST['stock'];
             $name = $_FILES['image']['name'];
+            $destination_path = "../images/";
+            $target_path = $destination_path . basename($_FILES["image"]["name"]);
+            move_uploaded_file($_FILES['image']['tmp_name'], $target_path);
             $fetch = $pdo->prepare("insert into product(name,price,category_id,tax,stock,image) values(:productName,:price,:category_id,:tax,:stock,:name)");
             $fetch->bindParam(':productName', $productName);
             $fetch->bindParam(':price', $price);

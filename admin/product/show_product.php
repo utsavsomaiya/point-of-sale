@@ -12,7 +12,6 @@ include '../layout/header.php';
                         <a href="add_product.php">Add New Product</a>
                     </h4>
                     <table class="table">
-                        <form method="post">
                             <thead>
                                 <tr>
                                     <th>Id</th>
@@ -40,7 +39,7 @@ include '../layout/header.php';
                                     <td><?= "$" . $product['price'] ?></td>
                                     <td>
                                         <?php
-                                                $fetch = $pdo->prepare("select name from category where id = :id");
+                                        $fetch = $pdo->prepare("select name from category where id = :id");
                                         $fetch->bindParam(':id', $product['category_id']);
                                         $fetch->execute();
                                         $result = $fetch->fetchAll();
@@ -54,9 +53,8 @@ include '../layout/header.php';
                                     <td><?= $product['stock'] ?></td>
                                     <td><img src="<?= '/admin/images/' . $product['image'] ?>"></td>
                                     <td><a href="../product/edit_product.php?id=<?= $product['id'] ?>"><img
-                                                src="/admin/images/icons8-edit.gif" /></a></td>
-                                    <td><a href="javascript:alert(<?= $product['id'] ?>)"><img
-                                                src="https://img.icons8.com/ios-glyphs/30/000000/filled-trash.png" /></a>
+                                                src="/admin/images/1.png" /></a></td>
+                                    <td><a href="javascript:alert(<?= $product['id'] ?>)"><i class="fa fa-trash-o" style="font-size:24px"></i></a>
                                     </td>
                                 </tr>
                                 <?php
@@ -73,13 +71,6 @@ include '../layout/header.php';
         </div>
     </div>
 </div>
-<?php
-if (isset($_SESSION['msg'])) {
-                                    ?>
-<div id="snackbar"> <?php echo $_SESSION['msg']; ?> </div>
-<?php
-                                }
-?>
 <?php include '../layout/footer.php';
 unset($_SESSION['msg']);
 ?>

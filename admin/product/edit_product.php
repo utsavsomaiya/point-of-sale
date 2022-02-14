@@ -18,6 +18,9 @@ if (isset($_GET['id'])) {
             $fileName = $product['image'];
         } else {
             $fileName = $_FILES['image']['name'];
+            $destination_path = '../images/';
+            $target_path = $destination_path . basename($_FILES["image"]["name"]);
+            move_uploaded_file($_FILES['image']['tmp_name'], $target_path);
         }
     }
 }

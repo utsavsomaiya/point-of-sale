@@ -1,15 +1,18 @@
 <?php
 require 'admin/layout/db_connect.php';
 session_start();
+$FLAT_DISCOUNT = 2;
+$PERCENTAGE_DISCOUNT = 1;
 if (isset($_POST["submit"])) {
     $productIds = $_POST['productId'];
     $productQuantities = $_POST['productQuantity'];
-    $productPrices[] = array();
-    $productTaxes[] = array();
-    $productTaxAmounts[] = array();
+    $productPrices = [];
+    $productTaxes = [];
+    $productsTax = [];
+    $productTaxablePrice = [];
+    $productDiscount = [];
     $result = "";
     $subtotal = 0;
-    $taxRate = 0;
     for ($i = 0; $i < sizeof($productIds); $i++) {
         $fetch = $pdo->prepare("SELECT `price`,`tax` FROM `product` WHERE `id` = :productId");
         $fetch->bindParam(':productId', $productIds[$i]);
@@ -24,31 +27,39 @@ if (isset($_POST["submit"])) {
         $productPrices[$i] = $productPrice;
         $productTaxes[$i] = $productTax;
         $subtotal +=  ($productPrices[$i] * $productQuantities[$i]) ;
-        $productTaxAmounts[$i] = $subtotal * ($productTaxes[$i]/100);
-        $taxRate += $productTaxes[$i];
     }
-
-    $fetch = $pdo->prepare("SELECT `percentage` FROM `discount`");
+    $fetch = $pdo->prepare("SELECT `type`,`digit` FROM `discount`");
     $fetch->execute();
     $result = $fetch->fetchAll();
     foreach ($result as $discount) {
         if (!empty($discount)) {
-            $productDiscountPercentage = (int) $discount['percentage'];
+            $discountType = (int) $discount['type'];
+            $productsDiscount = (int) $discount['digit'];
         }
     }
-    $tax = $subtotal * ($taxRate / 100);
-    $discount = $subtotal * ($productDiscountPercentage / 100);
-    $total = ($subtotal - ($subtotal * ($productDiscountPercentage / 100))) + ($subtotal * ($taxRate / 100));
+    $totalDiscount = 0;
+    $totalTax = 0;
+    if ($subtotal >= $productsDiscount) {
+        if ($discountType == $FLAT_DISCOUNT) {
+            $discountPrice =  $productsDiscount;
+        } else {
+            $discountPrice = ($subtotal * $productsDiscount) / 100;
+        }
+        for ($i = 0; $i < sizeof($productIds); $i++) {
+            $productDiscount[$i] = round((($productPrices[$i] * $productQuantities[$i] * $discountPrice)/$subtotal), 2);
+            $totalDiscount += $productDiscount[$i];
+            $productTaxablePrice[$i] = $productPrices[$i] * $productQuantities[$i] - $productDiscount[$i];
+            $productsTax[$i] = ($productTaxablePrice[$i] * $productTaxes[$i])/100;
+            $totalTax += $productsTax[$i];
+        }
+    }
+    $grandTotal = $subtotal - $totalDiscount + $totalTax;
     if ($subtotal> 0) {
         $fetch = $pdo->prepare("INSERT INTO `sales` (`subtotal`, `total_tax`, `discount`, `total`) VALUES (:subtotal,:total_tax,:discount,:total)");
-        $subtotal = '$'.$subtotal;
-        $tax = '$'.$tax;
-        $discount = '$'.$discount;
-        $total = '$'.$total;
         $fetch->bindParam(':subtotal', $subtotal);
-        $fetch->bindParam(':total_tax', $tax);
-        $fetch->bindParam(':discount', $discount);
-        $fetch->bindParam(':total', $total);
+        $fetch->bindParam(':total_tax', round($totalTax, 2));
+        $fetch->bindParam(':discount', $totalDiscount);
+        $fetch->bindParam(':total', $grandTotal);
         $result = $fetch->execute();
     } else {
         $_SESSION['msg'] = "Not Successfully";
@@ -56,7 +67,7 @@ if (isset($_POST["submit"])) {
     }
     if (sizeof($productIds) >0) {
         for ($i = 0; $i < sizeof($productIds); $i++) {
-            $fetch = $pdo->prepare("INSERT INTO `sales_item` (`sales_id`, `product_id`, `product_price`, `product_quantity`, `product_tax_percentage`, `product_tax_price`) SELECT max(`id`),'$productIds[$i]','$productPrices[$i]','$productQuantities[$i]','$productTaxes[$i]','$productTaxAmounts[$i]' FROM `sales`");
+            $fetch = $pdo->prepare("INSERT INTO `sales_item` (`sales_id`, `product_id`, `product_price`, `product_quantity`, `product_total_price`, `product_discount`, `product_tax_percentage`, `product_taxable_price`, `product_tax_amount`) SELECT max(`id`),'$productIds[$i]','$productPrices[$i]','$productQuantities[$i]',$productPrices[$i] * $productQuantities[$i],'$productDiscount[$i]','$productTaxes[$i]','$productTaxablePrice[$i]','$productsTax[$i]' FROM `sales`");
             $result = $fetch->execute();
             $fetch = $pdo->prepare("UPDATE `product` SET `stock` = `stock` - :productQuantity WHERE `id` = :productId");
             $fetch->bindParam(':productQuantity', $productQuantities[$i]);
@@ -149,7 +160,7 @@ if (isset($_POST["submit"])) {
         <div class="flex flex-row items-center justify-between px-5 mt-5">
           <div class="font-bold text-xl">Current Order</div>
           <div class="font-semibold">
-            <span class="px-4 py-2 rounded-md bg-red-100 text-red-500">Clear All</span>
+            <span class="px-4 py-2 rounded-md bg-red-100 text-red-500" onclick="containerClean()">Clear All</span>
           </div>
         </div>
         <div class="px-5 py-4 mt-5 overflow-y-auto h-64" id="container">
@@ -162,28 +173,34 @@ if (isset($_POST["submit"])) {
               <span class="font-bold" id="subtotal">$0</span>
             </div>
             <div class=" px-4 flex justify-between ">
-              <span class="font-semibold text-sm">Discount(
+              <span class="font-semibold text-sm">Discount
                 <?php
                                 $percentage = 0;
-                                $fetch = $pdo->prepare("select * from discount where id = 1");
+                                $fetch = $pdo->prepare("SELECT `type`,`digit` FROM `discount` where id = 1");
                                 $fetch->execute();
                                 $result = $fetch->fetchAll();
                                 foreach ($result as $discount) {
                                     if (!empty($discount)) {
-                                        $percentage = $discount["percentage"];
-                                        echo $discount["percentage"] . "%";
+                                        $discountDigit = $discount["digit"];
+                                        $discountType = $discount['type'];
                                     }
                                 }
                                 ?>
-                )</span>
-              <label hidden id="discount-percentage">
-                <?= $percentage; ?>
+                </span>
+              <label hidden id="discount-digit">
+                <?php
+                    echo $discountDigit; ?>
+              </label>
+              <label hidden id="discount-type">
+                <?php
+                    echo $discountType;
+                ?>
               </label>
               <span class="font-bold" id="discount-price">- $0</span>
             </div>
             <div class=" px-4 flex justify-between ">
-              <span class="font-semibold text-sm" id='sales-tax'>Sales Tax(0%)</span>
-              <span class="font-bold" id='sales-tax-price'>$0.00</span>
+              <span class="font-semibold text-sm">Sales Tax</span>
+              <span class="font-bold" id='sales-tax'>$0.00</span>
             </div>
             <div class="border-t-2 mt-3 py-2 px-4 flex items-center justify-between">
               <span class="font-semibold text-2xl">Total</span>
@@ -221,7 +238,6 @@ if (isset($_POST["submit"])) {
             <?php
               if (isset($_SESSION["msg"])) {
                   echo "toast()";
-                  //unset($_SESSION["msg"]);
               }
             ?>
           </script>

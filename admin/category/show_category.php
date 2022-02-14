@@ -32,8 +32,9 @@
 								<tr>
 									<td><?= $r['id']?></td>
 									<td><?= $r['name'] ?></td>
-									<td><a href="../category/edit_category.php?id=<?= $r['id']?>" class="btn btn-dark btn-icon-text">Edit<i class="ti-file btn-icon-append"></i></a></td>
-									<td><a href="javascript:alert_c(<?= $r['id']?>)" class="btn btn-outline-danger btn-fw">Delete</a>
+									<td><a href="../category/edit_category.php?id=<?= $r['id']?>"><img
+                                                src="/admin/images/1.png" /></a></a></td>
+									<td><a href="javascript:alert_c(<?= $r['id']?>)"><i class="fa fa-trash-o" style="font-size:24px"></i></a>
 									</td>
 								</tr>
 								<?php
@@ -50,13 +51,6 @@
 		</div>
 	</div>
 </div>
-<?php
-     if (isset($_SESSION['msg'])) {
-         ?>
-        <div id="snackbar"> <?php echo $_SESSION['msg']; ?> </div>
-<?php
-     }
-?>
 <?php include '../layout/footer.php';
     unset($_SESSION['msg']);
 ?>
