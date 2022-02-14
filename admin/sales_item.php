@@ -6,10 +6,9 @@ $salesId = $_GET['id'];
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="row">
-            <div class="col-lg-6 grid-margin stretch-card">
-                <div class="card-body">
+                <div class="card-body" style="Overflow-x:scroll;">
                     <h4 class="card-title">
-                        <span style="margin-right:80px;">Invoice</span>
+                        <span>Invoice</span>
                     </h4>
                     <table class="table">
                         <tbody>
@@ -48,6 +47,14 @@ $salesId = $_GET['id'];
                             </td>
                             </tr>
                         </tbody>
+                        </table>
+                </div>
+                <div>
+                    <span style="
+    padding-left: 50px;
+    padding-top: 100px;
+    padding-bottom: 100px;
+    padding-right: 50px;">Thank You!</spn>
                         <?php
                             $fetch = $pdo->prepare('SELECT `subtotal`,`discount`,`total_tax`,`total` from `sales` WHERE `id` = :id');
                             $fetch->bindParam(':id', $salesId);
@@ -56,45 +63,28 @@ $salesId = $_GET['id'];
                             foreach ($result as $sales) {
                                 if (!empty($sales)) {
                                     ?>
-                        <tfoot>
-                            <tr>
-                                <th colspan="4"></th>
-                                <th>=================</th>
-                            </tr>
-                            <tr>
-                                <th colspan="4"></th>
-                                <th>SUBTOTAL</th>
-                                <th><?= $sales['subtotal']; ?></th>
-                            </tr>
-                            <tr>
-                                <th colspan="4"></th>
-                                <th>TAX</th>
-                                <th><?= $sales['total_tax']; ?></th>
-                            </tr>
-                            <tr>
-                                <th colspan="4"></th>
-                                <th>Discount</th>
-                                <th><?= $sales['discount']; ?></th>
-                            </tr>
-                            <tr>
-                                <th>Thank you!</th>
-                                <th colspan="3"></th>
-                                <th>GRAND TOTAL</th>
-                                <th><?= $sales['total']; ?></th>
-                            </tr>
-                        </tfoot>
+                               <div style="padding-left: 750px;padding-top: 20px;">
+                                   <b>
+                                       <span style="padding-right: 30px;">SUBTOTAL = </span>
+                                       <?= $sales['subtotal']; ?><br>
+                                       <span style="padding-right: 80px;">TAX = </span>
+                                       <?= "+".$sales['total_tax']; ?><br>
+                                       <span style="padding-right: 40px;">Discount = </span>
+                                       <?= "-".$sales['discount']; ?><br><br>
+                                       <span>===============</span><br>
+                                       <span style="padding-right: 10px;">GRAND TOTAL = </span>
+                                       <?= $sales['total']; ?><br>
+                                   </b>
+                               </div>
                         <?php
                                 } else {
                                     echo "No Record Found..";
                                 }
                             }
                         ?>
-                    </table>
 
-                </div>
             </div>
         </div>
-        <table>
     </div>
 </div>
 <?php include 'layout/footer.php';?>
