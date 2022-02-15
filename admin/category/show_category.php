@@ -33,7 +33,7 @@
 									<td><?= $r['id']?></td>
 									<td><?= $r['name'] ?></td>
 									<td><a href="../category/edit_category.php?id=<?= $r['id']?>"><img
-                                                src="/admin/image/1.png" /></a></a></td>
+                                                src="/admin/image/edit-icon.png" /></a></a></td>
 									<td><a href="javascript:alert_c(<?= $r['id']?>)"><i class="fa fa-trash-o" style="font-size:24px"></i></a>
 									</td>
 								</tr>

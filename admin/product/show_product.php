@@ -53,7 +53,7 @@ include '../layout/header.php';
                                     <td><?= $product['stock'] ?></td>
                                     <td><img src="<?= '/admin/images/' . $product['image'] ?>"></td>
                                     <td><a href="../product/edit_product.php?id=<?= $product['id'] ?>"><img
-                                                src="/admin/image/1.png" /></a></td>
+                                                src="/admin/image/edit-icon.png" /></a></td>
                                     <td><a href="javascript:alert(<?= $product['id'] ?>)"><i class="fa fa-trash-o" style="font-size:24px"></i></a>
                                     </td>
                                 </tr>
