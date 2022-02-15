@@ -1,7 +1,7 @@
 <?php
 require 'admin/layout/db_connect.php';
 session_start();
-define("discount", [
+define("DISCOUNT", [
 "flat"=>2,
 "percentage"=>1]);
 if (isset($_POST["submit"])) {
@@ -41,7 +41,7 @@ if (isset($_POST["submit"])) {
     $totalDiscount = 0;
     $totalTax = 0;
     if ($subtotal >= $productsDiscount) {
-        if ($discountType == discount["flat"]) {
+        if ($discountType == DISCOUNT["flat"]) {
             $discountPrice =  $productsDiscount;
         } else {
             $discountPrice = ($subtotal * $productsDiscount) / 100;
