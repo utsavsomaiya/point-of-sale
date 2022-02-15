@@ -1,7 +1,6 @@
 <?php
 session_start();
 require '../layout/db_connect.php';
-include '../layout/header.php';
 if (isset($_POST['submit'])) {
     if (!empty($_FILES['image']['name']) && !empty($_POST['productName']) && !empty($_POST['price'] && !empty($_POST['category_id'])) && !empty($_POST['tax']) && !empty($_POST['stock'])) {
         list($width, $height) = @getimagesize($_FILES['image']['name']);
@@ -86,6 +85,7 @@ if (isset($_POST['stock'])) {
     $_SESSION['stock'] = $_POST['stock'];
 }
 ?>
+<?php include '../layout/header.php'; ?>
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="row">

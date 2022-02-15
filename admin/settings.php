@@ -1,6 +1,5 @@
 <?php
 session_start();
-include 'layout/header.php';
 require 'layout/db_connect.php';
 $fetch = $pdo->prepare('SELECT `type`,`digit` FROM `discount` WHERE `id` = 1');
 $fetch->execute();
@@ -78,7 +77,7 @@ foreach ($result as $discount) {
     }
 }
 ?>
-
+<?php  include 'layout/header.php';?>
 <div class="main-panel">
     <div class="content-wrapper">
             <div class="col-md-6 grid-margin stretch-card">
@@ -129,14 +128,6 @@ foreach ($result as $discount) {
                             </div>
                         </div>
                             <button type="submit" class="btn btn-primary me-2" name="submit">Submit</button>
-                            <?php
-                            if (isset($_SESSION['msg'])) {
-                                ?>
-                                <div id="snackbar"> <?php echo $_SESSION['msg'];
-                                unset($_SESSION['msg']); ?> </div>
-                            <?php
-                            }
-                            ?>
                             <?php
                             include 'layout/footer.php';
                             ?>

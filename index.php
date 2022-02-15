@@ -1,8 +1,9 @@
 <?php
 require 'admin/layout/db_connect.php';
 session_start();
-$FLAT_DISCOUNT = 2;
-$PERCENTAGE_DISCOUNT = 1;
+define("discount", [
+"flat"=>2,
+"percentage"=>1]);
 if (isset($_POST["submit"])) {
     $productIds = $_POST['productId'];
     $productQuantities = $_POST['productQuantity'];
@@ -40,7 +41,7 @@ if (isset($_POST["submit"])) {
     $totalDiscount = 0;
     $totalTax = 0;
     if ($subtotal >= $productsDiscount) {
-        if ($discountType == $FLAT_DISCOUNT) {
+        if ($discountType == discount["flat"]) {
             $discountPrice =  $productsDiscount;
         } else {
             $discountPrice = ($subtotal * $productsDiscount) / 100;
@@ -97,6 +98,7 @@ if (isset($_POST["submit"])) {
   <title>Retail Shop</title>
   <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.0.2/dist/tailwind.min.css">
   <link rel="stylesheet" href="/admin/vendors/mdi/css/custom_styles.css">
+  <link rel = "icon" href ="/admin/image/retail-store-icon-18.png" type = "image/x-icon">
   <style>
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {

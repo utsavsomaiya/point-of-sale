@@ -1,6 +1,5 @@
 <?php
   session_start();
-  include '../layout/header.php';
   if (isset($_POST['submit'])) {
       require '../layout/db_connect.php';
       if (!empty($_POST['pname'])) {
@@ -23,6 +22,7 @@
   }
 
 ?>
+<?php include '../layout/header.php'; ?>
 <div class="main-panel">
 	<div class="content-wrapper">
 		<div class="row">
