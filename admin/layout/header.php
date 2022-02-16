@@ -71,10 +71,10 @@
 				</div>
 				<div>
 					<a class="navbar-brand brand-logo">
-						<img src="/admin/images/logo.svg" alt="logo" />
+						<img src="/admin/image/logo.svg" alt="logo" />
 					</a>
 					<a class="navbar-brand brand-logo-mini">
-						<img src="/admin/images/logo-mini.svg" alt="logo" />
+						<img src="/admin/image/logo-mini.svg" alt="logo" />
 					</a>
 				</div>
 			</div>
