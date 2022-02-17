@@ -8,19 +8,19 @@ include 'layout/header.php';
             <div class="col-lg-6 grid-margin stretch-card">
                 <div class="card-body">
                     <h4 class="card-title">
-                        <span style="margin-right:80px;">Sales Bill</span>
+                        <span>Sales Bill</span>
                     </h4>
                     <table class="table">
                             <thead>
-                                <tr>
+                                <tr class="hvr-underline-from-center">
                                     <th>Id</th>
                                     <th>Subtotal</th>
-                                    <th>Total_tax</th>
+                                    <th>Total tax</th>
                                     <th>Discount</th>
                                     <th>Total</th>
                                 </tr>
-                            </thead>
-                            <tbody>
+
+
                                 <?php
                                 require 'layout/db_connect.php';
                                 $fetch = $pdo->prepare('select * from sales');
@@ -29,7 +29,7 @@ include 'layout/header.php';
                                 foreach ($result as $salesRecord) {
                                     if (!empty($salesRecord)) {
                                         ?>
-                                <tr onclick="window.location = '/admin/sales_item.php?id=<?= $salesRecord['id'] ?>'">
+                                <tr onclick="window.location = '/admin/sales_item.php?id=<?= $salesRecord['id'] ?>'"    class="hvr-underline-from-center">
                                     <td><?= $salesRecord['id'] ?></td>
                                     <td><?= $salesRecord['subtotal'] ?></td>
                                     <td><?= $salesRecord['total_tax'] ?></td>
@@ -42,7 +42,7 @@ include 'layout/header.php';
                                     }
                                 }
                                 ?>
-                            </tbody>
+                        </thead>
                     </table>
                 </div>
             </div>

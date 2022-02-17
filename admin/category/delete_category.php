@@ -3,7 +3,7 @@
     require '../layout/db_connect.php';
     if (isset($_GET['id'])) {
         $id = $_GET['id'];
-        $res = $pdo->prepare("select id from category where name in(select category from product)");
+        $res = $pdo->prepare("SELECT `id` FROM `category` where `id` in(SELECT `category_id` FROM `product`)");
         $res->execute();
         $res = $res->fetchAll();
         foreach ($res as $r) {
@@ -13,7 +13,7 @@
             }
         }
         if ($found == 1) {
-            $_SESSION['msg'] = "Don't delete this Category";
+            $_SESSION['msg'] = "Cannot delete this category as it is used by one ore more products.";
             header('location:/admin/category/show_category.php');
         } else {
             $fetch = $pdo->prepare("delete from category where id='$id'");

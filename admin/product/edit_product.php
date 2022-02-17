@@ -1,6 +1,5 @@
 <?php
 session_start();
-include '../layout/header.php';
 require '../layout/db_connect.php';
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
@@ -18,11 +17,14 @@ if (isset($_GET['id'])) {
             $fileName = $product['image'];
         } else {
             $fileName = $_FILES['image']['name'];
+            $destination_path = '../images/';
+            $target_path = $destination_path . basename($_FILES["image"]["name"]);
+            move_uploaded_file($_FILES['image']['tmp_name'], $target_path);
         }
     }
 }
 if (isset($_POST['submit'])) {
-    if (!empty($_POST['productName']) && !empty($_POST['price'])&& !empty($_POST['stock'])) {
+    if (!empty($_POST['productName']) && !empty($_POST['price'])&& !empty($_POST['stock']) && !empty($_POST['category'])) {
         $productName = $_POST['productName'];
         $price = $_POST['price'];
         $category = $_POST['category'];
@@ -51,11 +53,17 @@ if (isset($_POST['submit'])) {
         if (empty($_POST['price'])) {
             $price_alert = "Please enter the data..";
         }
+        if (empty($_POST['category'])) {
+            $category_alert = "Please enter the data..";
+        }
         if (empty($_POST['stock'])) {
             $stock_alert = "Please enter the data..";
         }
     }
 }
+?>
+<?php
+ include '../layout/header.php';
 ?>
 <div class="main-panel">
     <div class="content-wrapper">
@@ -108,6 +116,13 @@ if (isset($_POST['submit'])) {
                                     }
                                     ?>
                                 </select>
+                                <label style="color:red;">
+                                    <?php
+                                    if (isset($stock_alert)) {
+                                        echo $stock_alert;
+                                    }
+                                    ?>
+                                </label>
                             </div>
                             <div class="form-group">
                                 <label for="productTax">Select Product Tax</label>

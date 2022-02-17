@@ -1,6 +1,15 @@
 const cart = [];
 let subTotal = 0;
 
+function containerClean() {
+    document.getElementById('container').innerHTML = "";
+    document.getElementById('hidden-form').innerHTML = "";
+    document.getElementById('subtotal').innerHTML = "$0";
+    document.getElementById('discount-price').innerHTML = "$0";
+    document.getElementById('sales-tax').innerHTML = "$0";
+    document.getElementById('total').innerHTML = "$0";
+}
+
 function addToCart(id) {
     if (document.getElementById('stock-' + id).innerHTML > 0) {
         if (existsInArray(id)) {
@@ -39,10 +48,14 @@ function existsInArray(id) {
 
 function displayCart() {
     subTotal = 0;
-    tax = 0;
+    totalDiscount = 0;
+    totalTax = 0;
     document.getElementById('container').innerHTML = "";
     document.getElementById('hidden-form').innerHTML = "";
     id = 1;
+    digit = document.getElementById('discount-digit').innerHTML.trim();
+    let discount = new Array(cart.length);
+    let tax = new Array(cart.length);
 
     for (let i = 0; i < cart.length; i++) {
 
@@ -59,9 +72,9 @@ function displayCart() {
         var productId = cart[i].id;
 
         var inputId = document.createElement('input');
-	    inputId.setAttribute('type', 'hidden');
-	    inputId.setAttribute('name','productId[]');
-	    inputId.value = cart[i].productId;
+        inputId.setAttribute('type', 'hidden');
+        inputId.setAttribute('name', 'productId[]');
+        inputId.value = cart[i].productId;
         document.getElementById('hidden-form').appendChild(inputId);
 
         var productImg = cart[i].img;
@@ -70,13 +83,12 @@ function displayCart() {
         var productQuantity = cart[i].quantity;
 
         var inputQuantity = document.createElement('input');
-	    inputQuantity.setAttribute('type', 'hidden');
-	    inputQuantity.setAttribute('name','productQuantity[]');
-	    inputQuantity.value = productQuantity;
+        inputQuantity.setAttribute('type', 'hidden');
+        inputQuantity.setAttribute('name', 'productQuantity[]');
+        inputQuantity.value = productQuantity;
         document.getElementById('hidden-form').appendChild(inputQuantity);
 
         subTotal += parseInt((cart[i].price).slice(1));
-        tax += parseInt((cart[i].tax).slice(0, -1));
 
         var imageTag = document.createElement('img');
         imageTag.src = productImg;
@@ -130,25 +142,26 @@ function displayCart() {
 
         id++;
     }
-
+    if (subTotal >= digit) {
+        if (document.getElementById('discount-type').innerHTML.trim() == "2") {
+            discountPrice = digit;
+        } else {
+            discountPrice = (subTotal * digit) / 100;
+        }
+        for (let i = 0; i < cart.length; i++) {
+            discount[i] = (parseInt((cart[i].price).slice(1)) * discountPrice) / subTotal;
+            totalDiscount += discount[i];
+            tax[i] = ((parseInt((cart[i].price).slice(1)) - discount[i]) * parseInt(cart[i].tax.slice(0, 2)) / 100);
+            totalTax += tax[i];
+        }
+    }
+    grandTotal = subTotal - totalDiscount + totalTax;
     document.getElementById('subtotal').innerHTML = "$" + subTotal;
-    document.getElementById('sales-tax').innerHTML = "Sales Tax(" + tax + "%)";
-
-    var discountPercentage = document.getElementById("discount-percentage").innerHTML.trim();
-    var discountPrice = subTotal * (discountPercentage / 100);
-    document.getElementById("discount-price").innerHTML = "- $" + discountPrice.toFixed(2);
-    var taxPrice = subTotal * (tax / 100);
-    document.getElementById("sales-tax-price").innerHTML = "$" + (taxPrice).toFixed(2);
-    var total = (subTotal - (subTotal * (discountPercentage / 100))) + (subTotal * (tax / 100));
-    document.getElementById("total").innerHTML = "$" + total.toFixed(2);
-
-	var inputDiscount = document.createElement('input');
-	inputDiscount.setAttribute('type', 'hidden');
-	inputDiscount.setAttribute('name','discountOfProduct');
-	inputDiscount.value = discountPercentage;
-	document.getElementById('hidden-form').appendChild(inputDiscount);
-
+    document.getElementById('sales-tax').innerHTML = "+ $" + (totalTax).toFixed(2);
+    document.getElementById('discount-price').innerHTML = "- $" + (totalDiscount).toFixed(2);
+    document.getElementById('total').innerHTML = "$" + (grandTotal).toFixed(2);
 }
+
 function inputQuantity(productId, id) {
     var indexOfProduct = cart.findIndex((obj => obj.id == productId));
     if (document.getElementById('stock-' + productId).innerHTML > document.getElementById('input-id-' + id).value) {
@@ -161,6 +174,7 @@ function inputQuantity(productId, id) {
     cart[indexOfProduct].price = '$' + price;
     displayCart();
 }
+
 function changeQuantity(productId, id, checked) {
     var indexOfProduct = cart.findIndex((obj => obj.id == productId));
     cart[indexOfProduct].quantity = isNaN(cart[indexOfProduct].quantity) ? 0 : cart[indexOfProduct].quantity;

@@ -1,7 +1,6 @@
 <?php
 session_start();
 require '../layout/db_connect.php';
-include '../layout/header.php';
 if (isset($_POST['submit'])) {
     if (!empty($_FILES['image']['name']) && !empty($_POST['productName']) && !empty($_POST['price'] && !empty($_POST['category_id'])) && !empty($_POST['tax']) && !empty($_POST['stock'])) {
         list($width, $height) = @getimagesize($_FILES['image']['name']);
@@ -24,6 +23,9 @@ if (isset($_POST['submit'])) {
             $tax = $_POST['tax'];
             $stock = $_POST['stock'];
             $name = $_FILES['image']['name'];
+            $destination_path = "../images/";
+            $target_path = $destination_path . basename($_FILES["image"]["name"]);
+            move_uploaded_file($_FILES['image']['tmp_name'], $target_path);
             $fetch = $pdo->prepare("insert into product(name,price,category_id,tax,stock,image) values(:productName,:price,:category_id,:tax,:stock,:name)");
             $fetch->bindParam(':productName', $productName);
             $fetch->bindParam(':price', $price);
@@ -83,6 +85,7 @@ if (isset($_POST['stock'])) {
     $_SESSION['stock'] = $_POST['stock'];
 }
 ?>
+<?php include '../layout/header.php'; ?>
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="row">
@@ -149,11 +152,31 @@ if (isset($_POST['stock'])) {
                                 <label for="productTax">Tax of the Product</label>
                                 <select id="productTax" class="form-control" name="tax" required>
                                     <option value="">--Select Tax--</option>
-                                    <option value="5">5%</option>
-                                    <option value="10">10%</option>
-                                    <option value="15">15%</option>
-                                    <option value="20">20%</option>
-                                    <option value="25">25%</option>
+                                    <option value="5" <?php if (isset($_SESSION['tax'])) {
+                                        if ($_SESSION['tax'] == "5") {
+                                            echo 'selected="selected"';
+                                        }
+                                    } ?>>5%</option>
+                                    <option value="10" <?php if (isset($_SESSION['tax'])) {
+                                        if ($_SESSION['tax'] == "10") {
+                                            echo 'selected="selected"';
+                                        }
+                                    } ?>>10%</option>
+                                    <option value="15" <?php if (isset($_SESSION['tax'])) {
+                                        if ($_SESSION['tax'] == "15") {
+                                            echo 'selected="selected"';
+                                        }
+                                    } ?>>15%</option>
+                                    <option value="20" <?php if (isset($_SESSION['tax'])) {
+                                        if ($_SESSION['tax'] == "20") {
+                                            echo 'selected="selected"';
+                                        }
+                                    } ?>>20%</option>
+                                    <option value="25" <?php if (isset($_SESSION['tax'])) {
+                                        if ($_SESSION['tax'] == "25") {
+                                            echo 'selected="selected"';
+                                        }
+                                    } ?>>25%</option>
                                 </select>
                                 <label style="color:red;">
                                     <?php

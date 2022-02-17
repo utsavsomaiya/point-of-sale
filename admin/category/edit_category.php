@@ -1,6 +1,5 @@
 <?php
     session_start();
-    include '../layout/header.php';
     require '../layout/db_connect.php';
     if (isset($_GET['id'])) {
         $id = $_GET['id'];
@@ -30,6 +29,7 @@
         header('location:/admin/category/show_category.php');
     }
 ?>
+<?php include '../layout/header.php'; ?>
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="row">
