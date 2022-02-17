@@ -27,7 +27,7 @@ include '../layout/header.php';
                             <tbody>
                                 <?php
                                 require '../layout/db_connect.php';
-                                $fetch = $pdo->prepare('select * from product');
+                                $fetch = $pdo->prepare('SELECT * FROM `product` ORDER BY `id` DESC');
                                 $fetch->execute();
                                 $result = $fetch->fetchAll();
                                 foreach ($result as $product) {
