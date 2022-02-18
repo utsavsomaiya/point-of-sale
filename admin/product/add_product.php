@@ -7,9 +7,14 @@ $fetch->execute();
 $result = $fetch->fetchAll();
 $i = 0;
 if (isset($_POST['submit'])) {
+    $destination_path = "../images/";
+    $target_path = $destination_path . basename($_FILES["image"]["name"]);
+    move_uploaded_file($_FILES['image']['tmp_name'], $target_path);
     if (!empty($_FILES['image']['name']) && !empty($_POST['productName']) && !empty($_POST['price'] && !empty($_POST['category_id'])) && !empty($_POST['tax']) && !empty($_POST['stock'])) {
-        list($width, $height) = @getimagesize($_FILES['image']['name']);
+        list($width, $height) = getimagesize($_FILES['image']['name']);
         $target = "/admin/images/" . basename($_FILES['image']['name']);
+        var_dump($width);
+        die();
         $imageFileType = strtolower(pathinfo($target, PATHINFO_EXTENSION));
         if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif"
         ) {
@@ -37,9 +42,6 @@ if (isset($_POST['submit'])) {
             $tax = $_POST['tax'];
             $stock = $_POST['stock'];
             $name = $_FILES['image']['name'];
-            $destination_path = "../images/";
-            $target_path = $destination_path . basename($_FILES["image"]["name"]);
-            move_uploaded_file($_FILES['image']['tmp_name'], $target_path);
             $fetch = $pdo->prepare("insert into product(name,price,category_id,tax,stock,image) values(:productName,:price,:category_id,:tax,:stock,:name)");
             $fetch->bindParam(':productName', $productName);
             $fetch->bindParam(':price', $price);
