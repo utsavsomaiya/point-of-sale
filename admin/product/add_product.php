@@ -7,14 +7,12 @@ $fetch->execute();
 $result = $fetch->fetchAll();
 $i = 0;
 if (isset($_POST['submit'])) {
-    $destination_path = "../images/";
-    $target_path = $destination_path . basename($_FILES["image"]["name"]);
-    move_uploaded_file($_FILES['image']['tmp_name'], $target_path);
     if (!empty($_FILES['image']['name']) && !empty($_POST['productName']) && !empty($_POST['price'] && !empty($_POST['category_id'])) && !empty($_POST['tax']) && !empty($_POST['stock'])) {
-        list($width, $height) = getimagesize($_FILES['image']['name']);
+        $imageInfo = @getimagesize($_FILES['image']['tmp_name']);
+        $destination_path = "../images/";
+        $target_path = $destination_path . basename($_FILES["image"]["name"]);
+        move_uploaded_file($_FILES['image']['tmp_name'], $target_path);
         $target = "/admin/images/" . basename($_FILES['image']['name']);
-        var_dump($width);
-        die();
         $imageFileType = strtolower(pathinfo($target, PATHINFO_EXTENSION));
         if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif"
         ) {
@@ -23,7 +21,7 @@ if (isset($_POST['submit'])) {
         } elseif (($_FILES["image"]["size"] > 2000000)) {
             $_SESSION['file_validation_error'] = "Image size exceeds 2MB";
             header('location:../product/add_product.php');
-        } elseif ($width <= "100" || $height <= "100") {
+        } elseif ($imageInfo[0] < 100 || $imageInfo[1] < 100) {
             $_SESSION['file_validation_error'] = "Image dimension should be within 100X100";
             header('location:../product/add_product.php');
         } else {
