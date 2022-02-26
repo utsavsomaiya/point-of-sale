@@ -29,7 +29,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Star Admin2 </title>
     <link rel="stylesheet" href="/admin/css/vertical-layout-light/style.css">
-    <link rel="shortcut icon" href="/admin/images/favicon.png" />
+    <link rel="shortcut icon" href="/admin/image/favicon.png" />
 </head>
 
 <body>
