@@ -21,7 +21,7 @@ if (isset($_POST['submit'])) {
         } elseif (($_FILES["image"]["size"] > 2000000)) {
             $_SESSION['file_validation_error'] = "Image size exceeds 2MB";
             header('location:../product/add_product.php');
-        } elseif ($imageInfo[0] < 100 || $imageInfo[1] < 100) {
+        } elseif ($imageInfo[0] != 100 && $imageInfo[1] != 100) {
             $_SESSION['file_validation_error'] = "Image dimension should be within 100X100";
             header('location:../product/add_product.php');
         } else {
