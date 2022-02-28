@@ -3,7 +3,10 @@ session_start();
 require '../layout/db_connect.php';
 if (isset($_POST['submit'])) {
     if (!empty($_FILES['image']['name']) && !empty($_POST['productName']) && !empty($_POST['price'] && !empty($_POST['category_id'])) && !empty($_POST['tax']) && !empty($_POST['stock'])) {
-        list($width, $height) = @getimagesize($_FILES['image']['name']);
+        $imageInfo = @getimagesize($_FILES['image']['tmp_name']);
+        $destination_path = "../images/";
+        $target_path = $destination_path . basename($_FILES["image"]["name"]);
+        move_uploaded_file($_FILES['image']['tmp_name'], $target_path);
         $target = "/admin/images/" . basename($_FILES['image']['name']);
         $imageFileType = strtolower(pathinfo($target, PATHINFO_EXTENSION));
         if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif"
@@ -13,19 +16,25 @@ if (isset($_POST['submit'])) {
         } elseif (($_FILES["image"]["size"] > 2000000)) {
             $_SESSION['file_validation_error'] = "Image size exceeds 2MB";
             header('location:../product/add_product.php');
-        } elseif ($width >= "300" || $height >= "200") {
-            $_SESSION['file_validation_error'] = "Image dimension should be within 300X200";
+        } elseif ($imageInfo[0] != 100 || $imageInfo[1] != 100) {
+            $_SESSION['file_validation_error'] = "Image dimension should be within 100X100";
             header('location:../product/add_product.php');
         } else {
             $productName = $_POST['productName'];
+            $fetch = $pdo->prepare('SELECT `name` FROM `product` WHERE `name` = :productName LIMIT 1');
+            $fetch->bindParam(':productName', $productName);
+            $fetch->execute();
+            $count = $fetch->rowCount();
+            if ($count == 1) {
+                $_SESSION['name_validation_error'] = "Already taken this name";
+                header('location:../product/add_product.php');
+                exit();
+            }
             $price = $_POST['price'];
             $category = $_POST['category_id'];
             $tax = $_POST['tax'];
             $stock = $_POST['stock'];
             $name = $_FILES['image']['name'];
-            $destination_path = "../images/";
-            $target_path = $destination_path . basename($_FILES["image"]["name"]);
-            move_uploaded_file($_FILES['image']['tmp_name'], $target_path);
             $fetch = $pdo->prepare("insert into product(name,price,category_id,tax,stock,image) values(:productName,:price,:category_id,:tax,:stock,:name)");
             $fetch->bindParam(':productName', $productName);
             $fetch->bindParam(':price', $price);

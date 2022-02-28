@@ -119,7 +119,7 @@ if (isset($_POST["submit"])) {
         </div>
         <div class="grid grid-cols-3 gap-4 px-5 mt-5 overflow-y-auto h-3/4">
           <?php
-                    $fetch = $pdo->prepare("select * from product");
+                    $fetch = $pdo->prepare("SELECT * FROM `product` ORDER BY `name` ASC");
                     $fetch->execute();
                     $result = $fetch->fetchAll();
                     $id = 0;
