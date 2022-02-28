@@ -142,7 +142,7 @@ function displayCart() {
 
         id++;
     }
-    if (subTotal >= digit) {
+    if (subTotal > digit) {
         if (document.getElementById('discount-type').innerHTML.trim() == "2") {
             discountPrice = digit;
         } else {

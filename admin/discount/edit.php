@@ -21,30 +21,19 @@
           } else {
               $digit = $_POST['digit'];
               $type = $_POST['type'];
-              $fetch = $pdo->prepare('SELECT `type`,`digit` FROM `discount` WHERE `type` = :type AND `digit` = :digit LIMIT 1');
+              $status = $_POST['status'];
+              $fetch = $pdo->prepare("UPDATE `discount` SET `type`=:type, `digit`=:digit, `status`=:status WHERE `id` = :id ");
               $fetch->bindParam(':type', $type);
               $fetch->bindParam(':digit', $digit);
-              $fetch->execute();
-              $count = $fetch->rowCount();
-              if ($count == 1) {
-                  $_SESSION['digit_alert'] = "Already taken this discount";
-                  header('location:../discount/edit.php');
-                  exit();
+              $fetch->bindParam(':status', $status);
+              $fetch->bindParam(':id', $id);
+              $result = $fetch->execute();
+              if (isset($result)) {
+                  $_SESSION['msg'] = "Update Successfully";
+                  header('location:../discount/list.php');
               } else {
-                  $status = $_POST['status'];
-                  $fetch = $pdo->prepare("UPDATE `discount` SET `type`=:type, `digit`=:digit, `status`=:status WHERE `id` = :id ");
-                  $fetch->bindParam(':type', $type);
-                  $fetch->bindParam(':digit', $digit);
-                  $fetch->bindParam(':status', $status);
-                  $fetch->bindParam(':id', $id);
-                  $result = $fetch->execute();
-                  if (isset($result)) {
-                      $_SESSION['msg'] = "Update Successfully";
-                      header('location:../discount/list.php');
-                  } else {
-                      $_SESSION['msg'] = "Not Successfully";
-                      header('location:../discount/add.php');
-                  }
+                  $_SESSION['msg'] = "Not Successfully";
+                  header('location:../discount/add.php');
               }
           }
       }
