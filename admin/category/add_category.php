@@ -30,10 +30,10 @@
 				<div class="card">
 					<div class="card-body">
 						<h4 class="card-title">Add new Category</h4>
-						<form class="forms-sample" method="post" enctype="multipart/form-data">
+						<form class="forms-sample" method="post">
 							<div class="form-group">
-								<label for="exampleInputUsername1">Category Name</label>
-								<input type="text" class="form-control" id="exampleInputUsername1"
+								<label for="categoryName">Category Name</label>
+								<input type="text" class="form-control" id="categoryName"
 									placeholder="Category Name" name="pname"
                                     <?php
                                     if (isset($_POST['pname'])) {

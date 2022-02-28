@@ -1,6 +1,6 @@
-function alert(id) {
+function alert(productId) {
     if (confirm('Are you sure?')) {
-        window.location.href = '/admin/product/delete_product.php?id=' + id;
+        window.location.href = '/admin/product/delete_product.php?id=' + productId;
     }
 }
 
@@ -12,8 +12,14 @@ function toast() {
     }, 3000);
 }
 
-function alert_c(id1) {
+function alert_c(categoryId) {
     if (confirm('Are you sure?')) {
-        window.location.href = '../category/delete_category.php?id=' + id1;
+        window.location.href = '../category/delete_category.php?id=' + categoryId;
+    }
+}
+
+function alert_d(discountId) {
+    if (confirm('Are you sure?')) {
+        window.location.href = '../discount/delete.php?id=' + discountId;
     }
 }
