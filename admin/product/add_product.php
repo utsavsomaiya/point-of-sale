@@ -1,11 +1,6 @@
 <?php
 session_start();
 require '../layout/db_connect.php';
-$name = [];
-$fetch = $pdo->prepare('SELECT `name` FROM `product`');
-$fetch->execute();
-$result = $fetch->fetchAll();
-$i = 0;
 if (isset($_POST['submit'])) {
     if (!empty($_FILES['image']['name']) && !empty($_POST['productName']) && !empty($_POST['price'] && !empty($_POST['category_id'])) && !empty($_POST['tax']) && !empty($_POST['stock'])) {
         $imageInfo = @getimagesize($_FILES['image']['tmp_name']);
@@ -21,19 +16,19 @@ if (isset($_POST['submit'])) {
         } elseif (($_FILES["image"]["size"] > 2000000)) {
             $_SESSION['file_validation_error'] = "Image size exceeds 2MB";
             header('location:../product/add_product.php');
-        } elseif ($imageInfo[0] != 100 && $imageInfo[1] != 100) {
+        } elseif ($imageInfo[0] != 100 || $imageInfo[1] != 100) {
             $_SESSION['file_validation_error'] = "Image dimension should be within 100X100";
             header('location:../product/add_product.php');
         } else {
             $productName = $_POST['productName'];
-            foreach ($result as $product) {
-                $name[$i] = $product['name'];
-                if ($productName == $name[$i]) {
-                    $_SESSION['name_validation_error'] = "Already Taken this name";
-                    header('location:../product/add_product.php');
-                    die();
-                }
-                $i++;
+            $fetch = $pdo->prepare('SELECT `name` FROM `product` WHERE `name` = :productName LIMIT 1');
+            $fetch->bindParam(':productName', $productName);
+            $fetch->execute();
+            $count = $fetch->rowCount();
+            if ($count == 1) {
+                $_SESSION['name_validation_error'] = "Already taken this name";
+                header('location:../product/add_product.php');
+                exit();
             }
             $price = $_POST['price'];
             $category = $_POST['category_id'];
