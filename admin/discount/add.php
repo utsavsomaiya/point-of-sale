@@ -29,51 +29,50 @@
                   $_SESSION['msg'] = "Add Successfully";
                   header('location:../discount/list.php');
               } else {
-                  $_SESSION['msg'] = "Not Successfully";
+                  $_SESSION['msg'] = "Something went wrong.";
                   header('location:../discount/add.php');
               }
           }
-      }
-      if (empty($_POST['digit'])) {
-          $_SESSION['digit_alert'] = "Please enter data..";
-          header('location:../discount/add.php');
-      }
-      if (empty($_POST['type'])) {
-          $_SESSION['type_alert'] = "Please enter data..";
-          header('location:../discount/add.php');
-      }
-      if (empty($_POST['status'])) {
-          $_SESSION['status_alert'] = "Please enter data..";
-          header('location:../discount/add.php');
+      } else {
+          if (empty($_POST['digit'])) {
+              $_SESSION['digit_alert'] = "Please enter data..";
+              header('location:../discount/add.php');
+          }
+          if (empty($_POST['type'])) {
+              $_SESSION['type_alert'] = "Please enter data..";
+              header('location:../discount/add.php');
+          }
+          if (empty($_POST['status'])) {
+              $_SESSION['status_alert'] = "Please enter data..";
+              header('location:../discount/add.php');
+          }
       }
   }
 ?>
 <?php include '../layout/header.php'; ?>
 <div class="main-panel">
-	<div class="content-wrapper">
-		<div class="row">
-			<div class="col-md-6 grid-margin stretch-card">
-				<div class="card">
-					<div class="card-body">
-						<h4 class="card-title">Add new Discount</h4>
-						<form class="forms-sample" method="post">
-							<div class="form-group">
-								<label for="discountDigit">Discount digit</label>
-								<input type="number" class="form-control" id="discountDigit"
-									placeholder="Discount digit" name="digit"
-                                    <?php
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Add new Discount</h4>
+                        <form class="forms-sample" method="post">
+                            <div class="form-group">
+                                <label for="discountDigit">Discount digit</label>
+                                <input type="number" class="form-control" id="discountDigit"
+                                    placeholder="Discount digit" name="digit" <?php
                                     if (isset($_POST['digit'])) {
                                         echo "value=\"".$_POST['digit']."\"";
-                                    }?>
-                                required>
+                                    }?> required>
                                 <label style="color:red;">
-                                <?php
+                                    <?php
                                 if (isset($_SESSION['digit_alert'])) {
                                     echo $_SESSION['digit_alert'];
                                 }
                                 ?>
                                 </label>
-							</div>
+                            </div>
                             <div class="form-group">
                                 <label for="discountType">Type Of Discount</label>
                                 <select id="discountType" class="form-control" name="type" required>
@@ -120,12 +119,12 @@
                                     ?>
                                 </label>
                             </div>
-							<button type="submit" class="btn btn-primary me-2" name="submit">Submit</button>
-							<a href="../discount/list.php" class="btn btn-light">Cancel</a>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+                            <button type="submit" class="btn btn-primary me-2" name="submit">Submit</button>
+                            <a href="../discount/list.php" class="btn btn-light">Cancel</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 <?php include '../layout/footer.php'; ?>

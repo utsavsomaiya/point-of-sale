@@ -1,7 +1,8 @@
 </div>
 </div>
+</div>
 <script src="/admin/vendors/js/vendor.bundle.base.js"></script>
-<script src="/admin/js/toast.js"></script>
+<script src="/admin/js/delete_alert.js"></script>
 <?php
 if (isset($_SESSION['msg'])) {
     ?>

@@ -17,7 +17,6 @@
 	<link rel="stylesheet" href="/admin/vendors/ti-icons/css/themify-icons.css">
 	<link rel="stylesheet" href="/admin/css/custom.css">
 	<link rel = "icon" href ="/admin/image/retail-store-icon-18.png" type = "image/x-icon">
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <style>
@@ -102,21 +101,21 @@
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="/admin/category/show_category.php" >
-							<i class="menu-icon mdi mdi-floor-plan"></i>
+							<img src="/images/categories.png" style="width: 20px; margin-right: 10px;">
 							<span class="menu-title">Categories</span>
 						</a>
 					</li>
 					<li class="nav-item nav-category">Discounts</li>
 					<li class="nav-item">
 						<a class="nav-link" href="/admin/discount/list.php" >
-							<i class="menu-icon mdi mdi-floor-plan"></i>
+							<img src="/images/discount.png" style="width: 20px; margin-right: 10px;">
 							<span class="menu-title">Discount</span>
 						</a>
 					</li>
 					<li class="nav-item nav-category">Sales Details</li>
 					<li class="nav-item">
 						<a class="nav-link" href="/admin/sales.php" >
-							<i class="menu-icon mdi mdi-floor-plan"></i>
+							<img src="/images/sales.png" style="width: 20px; margin-right: 10px;">
 							<span class="menu-title">Sales</span>
 						</a>
 					</li>

@@ -1,6 +1,10 @@
 <?php
     session_start();
     include '../layout/header.php';
+    require '../layout/db_connect.php';
+    $fetch = $pdo->prepare('SELECT * FROM `category`');
+    $fetch->execute();
+    $result = $fetch->fetchAll();
 ?>
 <div class="main-panel">
 	<div class="content-wrapper">
@@ -11,6 +15,9 @@
 						<span style="margin-right:80px;">Products Category</span>
 						<a href="add_category.php">Add New Category</a>
 					</h4>
+					<?php
+                        if (sizeof($result)>0) {
+                            ?>
 					<table class="table">
 						<form method="post">
 							<thead>
@@ -22,30 +29,26 @@
 							</thead>
 							<tbody>
 								<?php
-                                    require '../layout/db_connect.php';
-                                    $fetch = $pdo->prepare('select * from category');
-                                    $fetch->execute();
-                                    $result = $fetch->fetchAll();
-                                    foreach ($result as $r) {
-                                        if (!empty($r)) {
-                                            ?>
+                                    foreach ($result as $category) {
+                                        ?>
 								<tr>
-									<td><?= $r['id']?></td>
-									<td><?= $r['name'] ?></td>
-									<td><a href="../category/edit_category.php?id=<?= $r['id']?>"><img
+									<td><?= $category['id']?></td>
+									<td><?= $category['name'] ?></td>
+									<td><a href="../category/edit_category.php?id=<?= $category['id']?>"><img
                                                 src="/admin/image/edit-icon.png" /></a></a></td>
-									<td><a href="javascript:alert_c(<?= $r['id']?>)"><i class="fa fa-trash-o" style="font-size:24px"></i></a>
+									<td><a href="javascript:deleteCategory(<?= $category['id']?>)"><i class="fa fa-trash-o" style="font-size:24px"></i></a>
 									</td>
 								</tr>
 								<?php
-                                        } else {
-                                            echo "No Record Found..";
-                                        }
-                                    }
-                                ?>
+                                    } ?>
 							</tbody>
 						</form>
 					</table>
+					<?php
+                        } else {
+                            echo "No Record Found..";
+                        }
+                    ?>
 				</div>
 			</div>
 		</div>
