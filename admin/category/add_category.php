@@ -1,26 +1,27 @@
 <?php
-  session_start();
-  if (isset($_POST['submit'])) {
-      require '../layout/db_connect.php';
-      if (!empty($_POST['pname'])) {
-          $pname = $_POST['pname'];
-          $fetch = $pdo->prepare("insert into category(name) values('$pname')");
-          $result = $fetch->execute();
-          if (isset($result)) {
-              $_SESSION['msg'] = "Add Successfully";
-              header('location:/admin/category/show_category.php');
-          } else {
-              echo 'No';
-          }
-      }
-      if (empty($pname)) {
-          $name_alert = "Please enter data..";
-      }
-  }
-  if (isset($_POST['cancel'])) {
-      header('location:/admin/category/show_category.php');
-  }
-
+    session_start();
+    if (isset($_POST['submit'])) {
+        if (empty($_POST['category_name'])) {
+            $_SESSION['name_alert'] = "Please Enter Data..";
+            header('location:/admin/category/add_category.php');
+            exit;
+        }
+        require '../layout/db_connect.php';
+        $categoryName = $_POST['category_name'];
+        $_SESSION['category_name'] = $categoryName;
+        $insertCategory = $pdo->prepare("INSERT INTO `category`(`name`) VALUES(:categoryName)");
+        $insertCategory->bindParam('categoryName', $categoryName);
+        $isExecuted = $insertCategory->execute();
+        if ($isExecuted) {
+            $_SESSION['msg'] = "Add Successfully";
+            header('location:/admin/category/show_category.php');
+            exit;
+        } else {
+            $_SESSION['msg'] = "Something went wrong";
+            header('location:/admin/category/add_category.php');
+            exit;
+        }
+    }
 ?>
 <?php include '../layout/header.php'; ?>
 <div class="main-panel">
@@ -32,28 +33,31 @@
 						<h4 class="card-title">Add new Category</h4>
 						<form class="forms-sample" method="post">
 							<div class="form-group">
-								<label for="categoryName">Category Name</label>
-								<input type="text" class="form-control" id="categoryName"
-									placeholder="Category Name" name="pname"
+								<label for="category-name">Category Name</label>
+								<input type="text" class="form-control" id="category-name"
+									placeholder="Category Name" name="category_name"
                                     <?php
-                                    if (isset($_POST['pname'])) {
-                                        echo "value=\"".$_POST['pname']."\"";
+                                    if (isset($_SESSION['category_name'])) {
+                                        echo "value=\"".$_SESSION['category_name']."\"";
+                                        unset($_SESSION['category_name']);
                                     }?>
                                 required>
                                 <label style="color:red;">
                                 <?php
-                                if (isset($name_alert)) {
-                                    echo $name_alert;
+                                if (isset($_SESSION['name_alert'])) {
+                                    echo $_SESSION['name_alert'];
+                                    unset($_SESSION['name_alert']);
                                 }
                                 ?>
                                 </label>
 							</div>
 							<button type="submit" class="btn btn-primary me-2" name="submit">Submit</button>
-							<button class="btn btn-light" name="cancel">Cancel</button>
+							<a href="/admin/category/show_category.php" class="btn btn-light" name="cancel">Cancel</a>
 						</form>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+</div>
 <?php include '../layout/footer.php'; ?>

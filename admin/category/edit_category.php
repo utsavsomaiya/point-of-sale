@@ -2,31 +2,35 @@
     session_start();
     require '../layout/db_connect.php';
     if (isset($_GET['id'])) {
-        $id = $_GET['id'];
-        $fetch = $pdo->prepare("select * from category where id='$id'");
-        $fetch->execute();
-        $result = $fetch->fetchAll();
-        foreach ($result as $r) {
-            $name = $r['name'];
+        $categoryId = $_GET['id'];
+        $fetchCategory = $pdo->prepare("SELECT `name` FROM `category` WHERE `id` = :id");
+        $fetchCategory->bindParam(':id', $categoryId);
+        $fetchCategory->execute();
+        $categories = $fetchCategory->fetchAll();
+        foreach ($categories as $category) {
+            $categoryName = $category['name'];
         }
     }
     if (isset($_POST['submit'])) {
-        if (!empty($_POST['pname'])) {
-            $pname = $_POST['pname'];
-            $fetch = $pdo->prepare("update category set name='$pname' where id='$id'");
-            $result = $fetch->execute();
-            if (isset($result)) {
-                $_SESSION['msg'] = "Update Successfully";
-                header('location:../category/show_category.php');
-            } else {
-                $_SESSION['msg'] = "Not Successfully";
-            }
-        } else {
-            $alert = "Please enter the data..";
+        if (empty($_POST['category_name'])) {
+            $_SESSION['name_alert'] = "Please Enter Data..";
+            header("location:/admin/category/edit_category.php?id=$categoryId");
+            exit;
         }
-    }
-    if (isset($_POST['cancel'])) {
-        header('location:/admin/category/show_category.php');
+        $categoryName = $_POST['category_name'];
+        $updateCategory = $pdo->prepare("UPDATE `category` set `name` = :name WHERE `id` = :id");
+        $updateCategory->bindParam(':name', $categoryName);
+        $updateCategory->bindParam(':id', $_SESSION['category_id']);
+        $isExecuted = $updateCategory->execute();
+        if ($isExecuted) {
+            $_SESSION['msg'] = "Update Successfully";
+            header('location:../category/show_category.php');
+            exit;
+        } else {
+            $_SESSION['msg'] = "Something went wrong..";
+            header("location:../category/edit_category.php?id=$categoryId");
+            exit;
+        }
     }
 ?>
 <?php include '../layout/header.php'; ?>
@@ -37,22 +41,28 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Edit category</h4>
-                        <form class="forms-sample" method="post" enctype="multipart/form-data">
+                        <form class="forms-sample" method="post">
                             <div class="form-group">
-                                <input type="hidden" name="id" value="<?= $id; ?>">
-                                <label for="exampleInputUsername1">Category Name</label>
-                                <input type="text" class="form-control" id="exampleInputUsername1"
-                                    placeholder="Category Name" name="pname" value="<?= $name; ?>">
-                                    <label style="color:red;">
+                                <label for="category-name">Category Name</label>
+                                <input type="text" class="form-control" id="category-name"
+                                    placeholder="Category Name" name="category_name" required
                                     <?php
-                                    if (isset($alert)) {
-                                        echo $alert;
-                                    }
+                                        if (isset($categoryName)) {
+                                            echo "value=\"".$categoryName."\"";
+                                        }
                                     ?>
-                                    </label>
+                                >
+                                <label style="color:red;">
+                                <?php
+                                    if (isset($_SESSION['name_alert'])) {
+                                        echo $_SESSION['name_alert'];
+                                        unset($_SESSION['name_alert']);
+                                    }
+                                ?>
+                                </label>
                             </div>
                             <button type="submit" class="btn btn-primary me-2" name="submit" onclick="toast()">Submit</button>
-                            <button class="btn btn-light" name="cancel">Cancel</button>
+                            <a href="/admin/category/show_category.php" class="btn btn-light" name="cancel">Cancel</a>
                         </form>
                     </div>
                 </div>
