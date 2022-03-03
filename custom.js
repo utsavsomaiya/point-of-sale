@@ -5,9 +5,9 @@ function containerClean() {
     document.getElementById('container').innerHTML = "";
     document.getElementById('hidden-form').innerHTML = "";
     document.getElementById('subtotal').innerHTML = "$0";
-    document.getElementById('discount-price').innerHTML = "$0";
-    document.getElementById('sales-tax').innerHTML = "$0";
-    document.getElementById('total').innerHTML = "$0";
+    document.getElementById('discount-price').innerHTML = "- $0";
+    document.getElementById('sales-tax').innerHTML = "$0.00";
+    document.getElementById('total').innerHTML = "$0.00";
 }
 
 function addToCart(id) {
@@ -53,9 +53,16 @@ function displayCart() {
     document.getElementById('container').innerHTML = "";
     document.getElementById('hidden-form').innerHTML = "";
     id = 1;
-    digit = document.getElementById('discount-digit').innerHTML.trim();
+    digit = document.getElementById('discount-selection').value.trim();
     let discount = new Array(cart.length);
     let tax = new Array(cart.length);
+    if (digit.substr(digit.length - 1) == "%") {
+        discountType = 1;
+    } else {
+        discountType = 2;
+    }
+    digit = parseInt(digit.replace(/[$%]/, ''));
+    console.log(digit);
 
     for (let i = 0; i < cart.length; i++) {
 
@@ -108,7 +115,7 @@ function displayCart() {
 
         var decreaseButton = document.createElement('button');
         decreaseButton.setAttribute('class', 'px-3 py-1 rounded-md bg-gray-300');
-        decreaseButton.setAttribute('onclick', 'changeQuantity(' + productId + ',' + id + ',' + '"decrease"' + ')');
+        decreaseButton.setAttribute('onclick', 'changeQuantity(' + productId + ',' + '"decrease"' + ')');
         decreaseButton.innerHTML = "-";
         document.getElementById('div-sub-second-' + id).appendChild(decreaseButton);
 
@@ -123,7 +130,7 @@ function displayCart() {
 
         var increaseButton = document.createElement('button');
         increaseButton.setAttribute('class', 'px-3 py-1 rounded-md bg-gray-300');
-        increaseButton.setAttribute('onclick', 'changeQuantity(' + productId + ',' + id + ',' + '"increase"' + ')');
+        increaseButton.setAttribute('onclick', 'changeQuantity(' + productId + ',' + '"increase"' + ')');
         increaseButton.innerHTML = "+";
         document.getElementById('div-sub-second-' + id).appendChild(increaseButton);
 
@@ -143,7 +150,7 @@ function displayCart() {
         id++;
     }
     if (subTotal > digit) {
-        if (document.getElementById('discount-type').innerHTML.trim() == "2") {
+        if (discountType == "2") {
             discountPrice = digit;
         } else {
             discountPrice = (subTotal * digit) / 100;
@@ -175,7 +182,7 @@ function inputQuantity(productId, id) {
     displayCart();
 }
 
-function changeQuantity(productId, id, checked) {
+function changeQuantity(productId, checked) {
     var indexOfProduct = cart.findIndex((obj => obj.id == productId));
     cart[indexOfProduct].quantity = isNaN(cart[indexOfProduct].quantity) ? 0 : cart[indexOfProduct].quantity;
     if (checked == "increase") {
@@ -207,4 +214,23 @@ function removeFromCart(productId) {
         cart.splice(indexOfProduct, 1);
         displayCart();
     }
+}
+
+function toggleModal(modalID) {
+    document.getElementById(modalID).classList.toggle("hidden");
+    document.getElementById(modalID + "-backdrop").classList.toggle("hidden");
+    document.getElementById(modalID).classList.toggle("flex");
+    document.getElementById(modalID + "-backdrop").classList.toggle("flex");
+}
+
+function toast() {
+    var x = document.getElementById("snackbar");
+    x.className = "show";
+    setTimeout(function() {
+        x.className = x.className.replace("show", "");
+    }, 3000);
+}
+
+function discountApply() {
+    displayCart();
 }
