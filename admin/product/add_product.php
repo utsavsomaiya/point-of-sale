@@ -1,98 +1,94 @@
 <?php
-session_start();
-require '../layout/db_connect.php';
-if (isset($_POST['submit'])) {
-    if (!empty($_FILES['image']['name']) && !empty($_POST['productName']) && !empty($_POST['price'] && !empty($_POST['category_id'])) && !empty($_POST['tax']) && !empty($_POST['stock'])) {
-        $imageInfo = @getimagesize($_FILES['image']['tmp_name']);
-        $destination_path = "../images/";
-        $target_path = $destination_path . basename($_FILES["image"]["name"]);
-        move_uploaded_file($_FILES['image']['tmp_name'], $target_path);
-        $target = "/admin/images/" . basename($_FILES['image']['name']);
-        $imageFileType = strtolower(pathinfo($target, PATHINFO_EXTENSION));
-        if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif"
-        ) {
-            $_SESSION['file_validation_error'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+    session_start();
+    require '../layout/db_connect.php';
+    if (isset($_POST['submit'])) {
+        if (empty($_POST['product_name'])) {
+            $_SESSION['name_alert'] = "Please enter data..";
+        }
+        if (empty($_POST['product_price'])) {
+            $_SESSION['price_alert'] = "Please enter data";
+        }
+        if (empty($_POST['product_category_id'])) {
+            $_SESSION['category_alert'] = "Please enter data";
+        }
+        if (empty($_POST['product_tax'])) {
+            $_SESSION['tax_alert'] = "Please enter data";
+        }
+        if (empty($_POST['product_stock'])) {
+            $_SESSION['stock_alert'] = "Please enter data";
+        }
+        if (empty($_FILES['product_image']['name'])) {
+            $_SESSION['file_alert'] = "Please enter data";
+        }
+        if (empty($_POST['product_name']) || empty($_POST['product_price']) || empty($_POST['product_category_id']) || empty($_POST['product_tax']) || empty($_POST['product_stock']) || empty($_FILES['product_image']['name'])) {
             header('location:../product/add_product.php');
-        } elseif (($_FILES["image"]["size"] > 2000000)) {
-            $_SESSION['file_validation_error'] = "Image size exceeds 2MB";
+            exit;
+        }
+
+        $productName = $_POST['product_name'];
+        $_SESSION['product_name'] = $productName;
+        $fetchProduct = $pdo->prepare('SELECT `name` FROM `product` WHERE `name` = :product_name LIMIT 1');
+        $fetchProduct->bindParam(':product_name', $productName);
+        $fetchProduct->execute();
+        $count = $fetchProduct->rowCount();
+        if ($count > 0) {
+            $_SESSION['name_alert'] = "Already taken this name";
             header('location:../product/add_product.php');
-        } elseif ($imageInfo[0] != 100 || $imageInfo[1] != 100) {
+            exit;
+        }
+
+        $productImage = $_FILES['product_image']['name'];
+        $imageExtension = pathinfo($productImage, PATHINFO_EXTENSION);
+        if ($imageExtension != "jpg" && $imageExtension != "png" && $imageExtension != "jpeg" && $imageExtension != "gif") {
+            $_SESSION['file_alert'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+            header('location:../product/add_product.php');
+            exit;
+        }
+        if (($_FILES["product_image"]["size"] > 1000000)) {
+            $_SESSION['file_alert'] = "Image size exceeds 1MB";
+            header('location:../product/add_product.php');
+            exit;
+        }
+        $imageInfo = @getimagesize($_FILES['product_image']['tmp_name']);
+        if ($imageInfo[0] != 100 || $imageInfo[1] != 100) {
             $_SESSION['file_validation_error'] = "Image dimension should be within 100X100";
             header('location:../product/add_product.php');
-        } else {
-            $productName = $_POST['productName'];
-            $fetch = $pdo->prepare('SELECT `name` FROM `product` WHERE `name` = :productName LIMIT 1');
-            $fetch->bindParam(':productName', $productName);
-            $fetch->execute();
-            $count = $fetch->rowCount();
-            if ($count == 1) {
-                $_SESSION['name_validation_error'] = "Already taken this name";
-                header('location:../product/add_product.php');
-                exit();
-            }
-            $price = $_POST['price'];
-            $category = $_POST['category_id'];
-            $tax = $_POST['tax'];
-            $stock = $_POST['stock'];
-            $name = $_FILES['image']['name'];
-            $fetch = $pdo->prepare("insert into product(name,price,category_id,tax,stock,image) values(:productName,:price,:category_id,:tax,:stock,:name)");
-            $fetch->bindParam(':productName', $productName);
-            $fetch->bindParam(':price', $price);
-            $fetch->bindParam(':category_id', $category);
-            $fetch->bindParam(':tax', $tax);
-            $fetch->bindParam(':stock', $stock);
-            $fetch->bindParam(':name', $name);
-            $result = $fetch->execute();
-            if (isset($result)) {
-                $_SESSION['msg'] = "Add Successfully";
-                header('location:../product/show_product.php');
-            } else {
-                $_SESSION['msg'] = "Not Successfully";
-                header('location:../product/add_product.php');
-            }
+            exit;
         }
-    } else {
-        if (empty($_POST['productName'])) {
-            $_SESSION['name_validation_error'] = "Please enter data..";
-            header('location:../product/add_product.php');
+        $destination_path = "../images/";
+        $target_path = $destination_path . basename($_FILES["product_image"]["name"]);
+        move_uploaded_file($_FILES['product_image']['tmp_name'], $target_path);
+
+        $productPrice = $_POST['product_price'];
+        $_SESSION['product_price'] = $productPrice;
+        $productCategory = $_POST['product_category_id'];
+        $_SESSION['product_category_id'] = $productCategory;
+        $productTax = $_POST['product_tax'];
+        $_SESSION['product_tax'] = $productTax;
+        $productStock = $_POST['product_stock'];
+        $_SESSION['product_stock'] = $productStock;
+
+        $insertProduct = $pdo->prepare("INSERT INTO `product`(`name`, `price`, `category_id`, `tax`, `stock`, `image`) VALUES(:product_name,:product_price,:product_category_id,:product_tax,:product_stock,:product_image_name)");
+        $insertProduct->bindParam(':product_name', $productName);
+        $insertProduct->bindParam(':product_price', $productPrice);
+        $insertProduct->bindParam(':product_category_id', $productCategory);
+        $insertProduct->bindParam(':product_tax', $productTax);
+        $insertProduct->bindParam(':product_stock', $productStock);
+        $insertProduct->bindParam(':product_image_name', $productImage);
+        $isExecuted = $insertProduct->execute();
+        if ($isExecuted) {
+            $_SESSION['msg'] = "Add Successfully";
+            header('location:../product/show_product.php');
+            exit;
         }
-        if (empty($_POST['price'])) {
-            $_SESSION['price_validation_error'] = "Please enter data";
-            header('location:../product/add_product.php');
-        }
-        if (empty($_POST['category_id'])) {
-            $_SESSION['category_validation_error'] = "Please enter data";
-            header('location:../product/add_product.php');
-        }
-        if (empty($_POST['tax'])) {
-            $_SESSION['tax_validation_error'] = "Please enter data";
-            header('location:../product/add_product.php');
-        }
-        if (empty($_POST['stock'])) {
-            $_SESSION['stock_validation_error'] = "Please enter data";
-            header('location:../product/add_product.php');
-        }
-        if (empty($_FILES['image']['name'])) {
-            $_SESSION['file_validation_error'] = "Please enter data";
-            header('location:../product/add_product.php');
-        }
+        $_SESSION['msg'] = "Something went wrong";
+        header('location:../product/add_product.php');
+        exit;
     }
-}
-if (isset($_POST['productName'])) {
-    $_SESSION['productName'] = $_POST['productName'];
-}
-if (isset($_POST['price'])) {
-    $_SESSION['price'] = $_POST['price'];
-}
-if (isset($_POST['category_id'])) {
-    $_SESSION['category'] = $_POST['category_id'];
-}
-if (isset($_POST['tax'])) {
-    $_SESSION['tax'] = $_POST['tax'];
-}
-if (isset($_POST['stock'])) {
-    $_SESSION['stock'] = $_POST['stock'];
-}
+    $fetchCategory = $pdo->prepare("SELECT * FROM `category`");
+    $fetchCategory->execute();
+    $categories = $fetchCategory->fetchAll();
+
 ?>
 <?php include '../layout/header.php'; ?>
 <div class="main-panel">
@@ -101,123 +97,163 @@ if (isset($_POST['stock'])) {
             <div class="col-md-6 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Add new Product</h4>
+                        <h4 class="card-title">
+                            Add new Product
+                        </h4>
                         <form class="forms-sample" method="post" enctype="multipart/form-data">
                             <div class="form-group">
-                                <label for="productName">Product Name</label>
-                                <input id="productName" type=" text" class="form-control" placeholder="Product Name"
-                                    name="productName" <?php if (isset($_SESSION['productName'])) {
-    echo "value=\"" . $_SESSION['productName'] . "\"";
-} ?> required>
+                                <label for="product-name">Product Name</label>
+                                <input id="product-name" type=" text" class="form-control" placeholder="Product Name"
+                                    name="product_name" required
+                                    <?php
+                                        if (isset($_SESSION['product_name'])) {
+                                            echo "value=\"" . $_SESSION['product_name'] . "\"";
+                                            unset($_SESSION['product_name']);
+                                        }
+                                    ?>
+                                >
                                 <label style="color:red;">
                                     <?php
-                                    if (isset($_SESSION['name_validation_error'])) {
-                                        echo $_SESSION['name_validation_error'];
-                                    }
+                                        if (isset($_SESSION['name_alert'])) {
+                                            echo $_SESSION['name_alert'];
+                                            unset($_SESSION['name_alert']);
+                                        }
                                     ?>
                                 </label>
                             </div>
                             <div class="form-group">
-                                <label for="productPrice">Product Price</label>
-                                <input id="productPrice" type="number" class="form-control" placeholder="Product Price"
-                                    name="price" <?php if (isset($_SESSION['price'])) {
-                                        echo "value=\"" . $_SESSION['price'] . "\"";
-                                    } ?> required>
+                                <label for="product-price">Product Price</label>
+                                <input id="product-price" type="number" class="form-control" placeholder="Product Price"
+                                    name="product_price" required
+                                    <?php
+                                        if (isset($_SESSION['product_price'])) {
+                                            echo "value=\"" . $_SESSION['product_price'] . "\"";
+                                            unset($_SESSION['product_price']);
+                                        }
+                                    ?>
+                                >
                                 <label style="color:red;">
                                     <?php
-                                    if (isset($_SESSION['price_validation_error'])) {
-                                        echo $_SESSION['price_validation_error'];
-                                    }
+                                        if (isset($_SESSION['price_alert'])) {
+                                            echo $_SESSION['price_alert'];
+                                            unset($_SESSION['price_alert']);
+                                        }
                                     ?>
                                 </label>
                             </div>
                             <div class="form-group">
-                                <label for="productCategory">Select Category</label>
-                                <select id="productCategory" class="form-control" name="category_id" required>
+                                <label for="product-category">Select Category</label>
+                                <select id="product-category" class="form-control" name="product_category_id" required>
                                     <option value="">--Select Category--</option>
-                                    <?php
-                                    $fetch = $pdo->prepare("select * from category");
-                                    $fetch->execute();
-                                    $res = $fetch->fetchAll();
-                                    foreach ($res as $category) {
+                                    <?php foreach ($categories as $category) { ?>
+                                        <option value="<?= $category['id'] ?>"
+                                        <?php
+                                            if (isset($_SESSION['product_category_id'])) {
+                                                echo "selected='selected'";
+                                                unset($_SESSION['product_category_id']);
+                                            }
                                         ?>
-                                    <option value="<?= $category['id'] ?>" <?php
-                                                                                if (isset($_SESSION['category'])) {
-                                                                                    echo "selected='selected'";
-                                                                                } ?>><?= $category['name'] ?></option>
-                                    <?php
-                                    }
-                                    ?>
+                                        >
+                                        <?= $category['name'] ?>
+                                        </option>
+                                    <?php } ?>
                                 </select>
                                 <label style="color:red;">
                                     <?php
-                                    if (isset($_SESSION['category_validation_error'])) {
-                                        echo $_SESSION['category_validation_error'];
-                                    }
+                                        if (isset($_SESSION['category_alert'])) {
+                                            echo $_SESSION['category_alert'];
+                                            unset($_SESSION['category_alert']);
+                                        }
                                     ?>
                                 </label>
                             </div>
                             <div class="form-group">
-                                <label for="productTax">Tax of the Product</label>
-                                <select id="productTax" class="form-control" name="tax" required>
+                                <label for="product-tax">Tax of the Product</label>
+                                <select id="product-tax" class="form-control" name="product_tax" required>
                                     <option value="">--Select Tax--</option>
-                                    <option value="5" <?php if (isset($_SESSION['tax'])) {
-                                        if ($_SESSION['tax'] == "5") {
-                                            echo 'selected="selected"';
+                                    <option value="5"
+                                    <?php
+                                        if (isset($_SESSION['product_tax'])) {
+                                            if ($_SESSION['product_tax'] == "5") {
+                                                echo 'selected="selected"';
+                                                unset($_SESSION['product_tax']);
+                                            }
                                         }
-                                    } ?>>5%</option>
-                                    <option value="10" <?php if (isset($_SESSION['tax'])) {
-                                        if ($_SESSION['tax'] == "10") {
-                                            echo 'selected="selected"';
+                                    ?>>5%</option>
+                                    <option value="10"
+                                    <?php
+                                        if (isset($_SESSION['product_tax'])) {
+                                            if ($_SESSION['product_tax'] == "10") {
+                                                echo 'selected="selected"';
+                                                unset($_SESSION['product_tax']);
+                                            }
                                         }
-                                    } ?>>10%</option>
-                                    <option value="15" <?php if (isset($_SESSION['tax'])) {
-                                        if ($_SESSION['tax'] == "15") {
-                                            echo 'selected="selected"';
+                                    ?>>10%</option>
+                                    <option value="15"
+                                    <?php
+                                        if (isset($_SESSION['product_tax'])) {
+                                            if ($_SESSION['product_tax'] == "15") {
+                                                echo 'selected="selected"';
+                                                unset($_SESSION['product_tax']);
+                                            }
                                         }
-                                    } ?>>15%</option>
-                                    <option value="20" <?php if (isset($_SESSION['tax'])) {
-                                        if ($_SESSION['tax'] == "20") {
-                                            echo 'selected="selected"';
+                                    ?>>15%</option>
+                                    <option value="20"
+                                    <?php
+                                        if (isset($_SESSION['product_tax'])) {
+                                            if ($_SESSION['product_tax'] == "20") {
+                                                echo 'selected="selected"';
+                                                unset($_SESSION['product_tax']);
+                                            }
                                         }
-                                    } ?>>20%</option>
-                                    <option value="25" <?php if (isset($_SESSION['tax'])) {
-                                        if ($_SESSION['tax'] == "25") {
-                                            echo 'selected="selected"';
+                                    ?>>20%</option>
+                                    <option value="25"
+                                    <?php
+                                        if (isset($_SESSION['product_tax'])) {
+                                            if ($_SESSION['product_tax'] == "25") {
+                                                echo 'selected="selected"';
+                                                unset($_SESSION['product_tax']);
+                                            }
                                         }
-                                    } ?>>25%</option>
+                                    ?>>25%</option>
                                 </select>
                                 <label style="color:red;">
                                     <?php
-                                    if (isset($_SESSION['tax_validation_error'])) {
-                                        echo $_SESSION['tax_validation_error'];
-                                    }
+                                        if (isset($_SESSION['tax_alert'])) {
+                                            echo $_SESSION['tax_alert'];
+                                            unset($_SESSION['tax_alert']);
+                                        }
                                     ?>
                                 </label>
                             </div>
                             <div class="form-group">
-                                <label for="productStock">Product Stock</label>
-                                <input id="productStock" type="number" class="form-control" placeholder="Product Stock"
-                                    name="stock" <?php if (isset($_SESSION['stock'])) {
-                                        echo "value=\"" . $_SESSION['stock'] . "\"";
-                                    } ?> required>
+                                <label for="product-stock">Product Stock</label>
+                                <input id="product-stock" type="number" class="form-control" placeholder="Product Stock"
+                                    name="product_stock" required
+                                    <?php
+                                        if (isset($_SESSION['product_stock'])) {
+                                            echo "value=\"" . $_SESSION['product_stock'] . "\"";
+                                            unset($_SESSION['product_stock']);
+                                        }
+                                    ?>>
                                 <label style="color:red;">
                                     <?php
-                                    if (isset($_SESSION['stock_validation_error'])) {
-                                        echo $_SESSION['stock_validation_error'];
-                                    }
+                                        if (isset($_SESSION['stock_alert'])) {
+                                            echo $_SESSION['stock_alert'];
+                                            unset($_SESSION['stock_alert']);
+                                        }
                                     ?>
                                 </label>
                             </div>
                             <div class="form-group">
-                                <label for="productImage">Image</label>
-                                <input id="productImage" type="file" class="form-control" accept="" name="image"
-                                    required>
+                                <label for="product-image">Product Image</label>
+                                <input id="product-image" type="file" class="form-control" accept="image/png, image/gif, image/jpeg, image/jpg" name="product_image" required>
                                 <label style="color:red;">
                                     <?php
-                                    if (isset($_SESSION['file_validation_error'])) {
-                                        echo $_SESSION['file_validation_error'];
-                                    }
+                                        if (isset($_SESSION['file_alert'])) {
+                                            echo $_SESSION['file_alert'];
+                                            unset($_SESSION['file_alert']);
+                                        }
                                     ?>
                                 </label>
                             </div>
@@ -229,4 +265,5 @@ if (isset($_POST['stock'])) {
             </div>
         </div>
     </div>
-    <?php include '../layout/footer.php'; ?>
+</div>
+<?php include '../layout/footer.php'; ?>

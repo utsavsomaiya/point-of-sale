@@ -1,56 +1,56 @@
 <?php
     session_start();
-    include '../layout/header.php';
+    require '../layout/db_connect.php';
+    $fetchCategory = $pdo->prepare('SELECT * FROM `category`');
+    $fetchCategory->execute();
+    $categories = $fetchCategory->fetchAll();
 ?>
+<?php include '../layout/header.php'; ?>
 <div class="main-panel">
-	<div class="content-wrapper">
-		<div class="row">
-			<div class="col-lg-6 grid-margin stretch-card">
-				<div class="card-body">
-					<h4 class="card-title">
-						<span style="margin-right:80px;">Products Category</span>
-						<a href="add_category.php">Add New Category</a>
-					</h4>
-					<table class="table">
-						<form method="post">
-							<thead>
-								<tr>
-									<th>Id</th>
-									<th>Name</th>
-									<th colspan='2'>Action</th>
-								</tr>
-							</thead>
-							<tbody>
-								<?php
-                                    require '../layout/db_connect.php';
-                                    $fetch = $pdo->prepare('select * from category');
-                                    $fetch->execute();
-                                    $result = $fetch->fetchAll();
-                                    foreach ($result as $r) {
-                                        if (!empty($r)) {
-                                            ?>
-								<tr>
-									<td><?= $r['id']?></td>
-									<td><?= $r['name'] ?></td>
-									<td><a href="../category/edit_category.php?id=<?= $r['id']?>"><img
-                                                src="/admin/image/edit-icon.png" /></a></a></td>
-									<td><a href="javascript:alert_c(<?= $r['id']?>)"><i class="fa fa-trash-o" style="font-size:24px"></i></a>
-									</td>
-								</tr>
-								<?php
-                                        } else {
-                                            echo "No Record Found..";
-                                        }
-                                    }
-                                ?>
-							</tbody>
-						</form>
-					</table>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-lg-6 grid-margin stretch-card">
+                <div class="card-body">
+                    <h4 class="card-title">
+                        <span style="margin-right:80px;">Products Category</span>
+                        <a href="add_category.php">Add New Category</a>
+                    </h4>
+                    <?php if (sizeof($categories) > 0) { ?>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Name</th>
+                                    <th colspan='2'>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($categories as $category) { ?>
+                                    <tr>
+                                        <td><?= $category['id']?></td>
+                                        <td><?= $category['name'] ?></td>
+                                        <td>
+                                            <a href="../category/edit_category.php?id=<?= $category['id']?>">
+                                                <img src="/admin/image/edit-icon.png">
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="javascript:deleteCategory(<?= $category['id']?>)">
+                                                <i class="fa fa-trash-o" style="font-size:24px"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    <?php
+                        } else {
+                            echo "No Record Found..";
+                        }
+                    ?>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<?php include '../layout/footer.php';
-    unset($_SESSION['msg']);
-?>
+<?php include '../layout/footer.php'; ?>

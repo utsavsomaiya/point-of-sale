@@ -29,18 +29,19 @@ if (isset($_POST["submit"])) {
         $productTaxes[$i] = $productTax;
         $subtotal +=  ($productPrices[$i] * $productQuantities[$i]) ;
     }
-    $fetch = $pdo->prepare("SELECT `type`,`digit` FROM `discount`");
+    $fetch = $pdo->prepare("SELECT * FROM `discount` WHERE `status` = 2 ORDER BY `id` ASC LIMIT 1");
     $fetch->execute();
     $result = $fetch->fetchAll();
     foreach ($result as $discount) {
         if (!empty($discount)) {
+            $discountId = (int) $discount['id'];
             $discountType = (int) $discount['type'];
             $productsDiscount = (int) $discount['digit'];
         }
     }
     $totalDiscount = 0;
     $totalTax = 0;
-    if ($subtotal >= $productsDiscount) {
+    if ($subtotal > $productsDiscount) {
         if ($discountType == DISCOUNT["flat"]) {
             $discountPrice =  $productsDiscount;
         } else {
@@ -56,9 +57,10 @@ if (isset($_POST["submit"])) {
     }
     $grandTotal = $subtotal - $totalDiscount + $totalTax;
     if ($subtotal> 0) {
-        $fetch = $pdo->prepare("INSERT INTO `sales` (`subtotal`, `total_tax`, `discount`, `total`) VALUES (:subtotal,:total_tax,:discount,:total)");
+        $fetch = $pdo->prepare("INSERT INTO `sales` (`subtotal`, `total_tax`, `discount_id`, `discount`, `total`) VALUES (:subtotal,:total_tax,:discount_id,:discount,:total)");
         $fetch->bindParam(':subtotal', $subtotal);
         $fetch->bindParam(':total_tax', round($totalTax, 2));
+        $fetch->bindParam(':discount_id', $discountId);
         $fetch->bindParam(':discount', $totalDiscount);
         $fetch->bindParam(':total', $grandTotal);
         $result = $fetch->execute();
@@ -68,7 +70,7 @@ if (isset($_POST["submit"])) {
     }
     if (sizeof($productIds) >0) {
         for ($i = 0; $i < sizeof($productIds); $i++) {
-            $fetch = $pdo->prepare("INSERT INTO `sales_item` (`sales_id`, `product_id`, `product_price`, `product_quantity`, `product_total_price`, `product_discount`, `product_tax_percentage`, `product_taxable_price`, `product_tax_amount`) SELECT max(`id`),'$productIds[$i]','$productPrices[$i]','$productQuantities[$i]',$productPrices[$i] * $productQuantities[$i],'$productDiscount[$i]','$productTaxes[$i]','$productTaxablePrice[$i]','$productsTax[$i]' FROM `sales`");
+            $fetch = $pdo->prepare("INSERT INTO `sales_item` (`sales_id`, `product_id`, `product_price`, `product_quantity`, `product_total_price`, `product_discount_id`, `product_discount`, `product_tax_percentage`, `product_taxable_price`, `product_tax_amount`) SELECT max(`id`),'$productIds[$i]','$productPrices[$i]','$productQuantities[$i]',$productPrices[$i] * $productQuantities[$i],$discountId,'$productDiscount[$i]','$productTaxes[$i]','$productTaxablePrice[$i]','$productsTax[$i]' FROM `sales`");
             $result = $fetch->execute();
             $fetch = $pdo->prepare("UPDATE `product` SET `stock` = `stock` - :productQuantity WHERE `id` = :productId");
             $fetch->bindParam(':productQuantity', $productQuantities[$i]);
@@ -178,7 +180,7 @@ if (isset($_POST["submit"])) {
               <span class="font-semibold text-sm">Discount
                 <?php
                                 $percentage = 0;
-                                $fetch = $pdo->prepare("SELECT `type`,`digit` FROM `discount` where id = 1");
+                                $fetch = $pdo->prepare("SELECT * FROM `discount` WHERE `status` = 2 ORDER BY `id` ASC LIMIT 1");
                                 $fetch->execute();
                                 $result = $fetch->fetchAll();
                                 foreach ($result as $discount) {

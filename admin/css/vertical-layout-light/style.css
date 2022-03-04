@@ -1,7 +1,7 @@
 /*------------------------------------------------------------------
  [Master Stylesheet]
 
-  Project:	Star Admin2 
+  Project:	Star Admin2
   Version:	1.2.1
 -------------------------------------------------------------------*/
 /*-------------------------------------------------------------------
@@ -28891,7 +28891,7 @@ div.tagsinput span.tag a {
 }
 
 .content-wrapper {
-  background: #F4F5F7;
+  background: #c792b4;
   padding: 1.5rem 2.187rem 1.5rem 3.5rem;
   width: 100%;
   -webkit-flex-grow: 1;
@@ -28907,7 +28907,7 @@ div.tagsinput span.tag a {
 /* Sidebar */
 .sidebar {
   min-height: calc(100vh - 97px);
-  background: #F4F5F7;
+  background: #d5c2d4;
   font-family: "Manrope", sans-serif;
   font-weight: 500;
   padding: 0;
@@ -29279,7 +29279,7 @@ div.tagsinput span.tag a {
   -moz-transition: background 0.25s ease;
   -ms-transition: background 0.25s ease;
   box-shadow: none;
-  background: #F4F5F7;
+  background: #d5c2d4;
   /* Navbar color variations */
 }
 
@@ -29288,7 +29288,7 @@ div.tagsinput span.tag a {
 }
 
 .navbar .navbar-brand-wrapper {
-  background: #F4F5F7;
+  background: #d5c2d4;
   transition: width 0.25s ease, background 0.25s ease;
   -webkit-transition: width 0.25s ease, background 0.25s ease;
   -moz-transition: width 0.25s ease, background 0.25s ease;
@@ -29392,7 +29392,7 @@ div.tagsinput span.tag a {
 }
 
 .navbar .navbar-menu-wrapper {
-  background: #F4F5F7;
+  background: #d5c2d4;
   transition: width 0.25s ease;
   -webkit-transition: width 0.25s ease;
   -moz-transition: width 0.25s ease;

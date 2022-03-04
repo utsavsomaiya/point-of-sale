@@ -1,7 +1,11 @@
 <?php
-session_start();
-include '../layout/header.php';
+    session_start();
+    require '../layout/db_connect.php';
+    $fetchProduct = $pdo->prepare('SELECT p.id,p.name,p.price,c.name as category_name,p.tax,p.stock,p.image FROM product p JOIN category c ON c.id = p.category_id ORDER BY p.id DESC');
+    $fetchProduct->execute();
+    $products = $fetchProduct->fetchAll();
 ?>
+<?php include '../layout/header.php'; ?>
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="row">
@@ -11,7 +15,8 @@ include '../layout/header.php';
                         <span style="margin-right:80px;">Products</span>
                         <a href="add_product.php">Add New Product</a>
                     </h4>
-                    <table class="table">
+                    <?php if (sizeof($products) > 0) { ?>
+                        <table class="table">
                             <thead>
                                 <tr>
                                     <th>Id</th>
@@ -25,52 +30,37 @@ include '../layout/header.php';
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php
-                                require '../layout/db_connect.php';
-                                $fetch = $pdo->prepare('SELECT * FROM `product` ORDER BY `id` DESC');
-                                $fetch->execute();
-                                $result = $fetch->fetchAll();
-                                foreach ($result as $product) {
-                                    if (!empty($product)) {
-                                        ?>
+                            <?php foreach ($products as $product) { ?>
                                 <tr>
                                     <td><?= $product['id'] ?></td>
                                     <td><?= $product['name'] ?></td>
                                     <td><?= "$" . $product['price'] ?></td>
-                                    <td>
-                                        <?php
-                                        $fetch = $pdo->prepare("select name from category where id = :id");
-                                        $fetch->bindParam(':id', $product['category_id']);
-                                        $fetch->execute();
-                                        $result = $fetch->fetchAll();
-                                        foreach ($result as $category) {
-                                            if (!empty($category)) {
-                                                echo $category['name'];
-                                            }
-                                        } ?>
-                                    </td>
+                                    <td><?= $product['category_name'] ?></td>
                                     <td><?= $product['tax'] . "%" ?></td>
                                     <td><?= $product['stock'] ?></td>
                                     <td><img src="<?= '/admin/images/' . $product['image'] ?>"></td>
-                                    <td><a href="../product/edit_product.php?id=<?= $product['id'] ?>"><img
-                                                src="/admin/image/edit-icon.png" /></a></td>
-                                    <td><a href="javascript:alert(<?= $product['id'] ?>)"><i class="fa fa-trash-o" style="font-size:24px"></i></a>
+                                    <td>
+                                        <a href="../product/edit_product.php?id=<?= $product['id'] ?>">
+                                            <img src="/admin/image/edit-icon.png" />
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="javascript:deleteProduct(<?= $product['id'] ?>)">
+                                            <i class="fa fa-trash-o" style="font-size:24px"></i>
+                                        </a>
                                     </td>
                                 </tr>
-                                <?php
-                                    } else {
-                                        echo "No Record Found..";
-                                    }
-                                }
-                                ?>
+                            <?php } ?>
                             </tbody>
-                        </form>
-                    </table>
+                        </table>
+                    <?php
+                        } else {
+                            echo "No Record Found..";
+                        }
+                    ?>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<?php include '../layout/footer.php';
-unset($_SESSION['msg']);
-?>
+<?php include '../layout/footer.php'; ?>
