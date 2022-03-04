@@ -16,11 +16,10 @@
             $_SESSION['msg'] = "Add Successfully";
             header('location:/admin/category/show_category.php');
             exit;
-        } else {
-            $_SESSION['msg'] = "Something went wrong";
-            header('location:/admin/category/add_category.php');
-            exit;
         }
+        $_SESSION['msg'] = "Something went wrong";
+        header('location:/admin/category/add_category.php');
+        exit;
     }
 ?>
 <?php include '../layout/header.php'; ?>
@@ -37,18 +36,19 @@
 								<input type="text" class="form-control" id="category-name"
 									placeholder="Category Name" name="category_name"
                                     <?php
-                                    if (isset($_SESSION['category_name'])) {
-                                        echo "value=\"".$_SESSION['category_name']."\"";
-                                        unset($_SESSION['category_name']);
-                                    }?>
+                                        if (isset($_SESSION['category_name'])) {
+                                            echo "value=\"".$_SESSION['category_name']."\"";
+                                            unset($_SESSION['category_name']);
+                                        }
+                                    ?>
                                 required>
                                 <label style="color:red;">
-                                <?php
-                                if (isset($_SESSION['name_alert'])) {
-                                    echo $_SESSION['name_alert'];
-                                    unset($_SESSION['name_alert']);
-                                }
-                                ?>
+                                    <?php
+                                        if (isset($_SESSION['name_alert'])) {
+                                            echo $_SESSION['name_alert'];
+                                            unset($_SESSION['name_alert']);
+                                        }
+                                    ?>
                                 </label>
 							</div>
 							<button type="submit" class="btn btn-primary me-2" name="submit">Submit</button>

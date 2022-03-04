@@ -26,11 +26,10 @@
             $_SESSION['msg'] = "Update Successfully";
             header('location:../category/show_category.php');
             exit;
-        } else {
-            $_SESSION['msg'] = "Something went wrong..";
-            header("location:../category/edit_category.php?id=$categoryId");
-            exit;
         }
+        $_SESSION['msg'] = "Something went wrong..";
+        header("location:../category/edit_category.php?id=$categoryId");
+        exit;
     }
 ?>
 <?php include '../layout/header.php'; ?>
@@ -53,12 +52,12 @@
                                     ?>
                                 >
                                 <label style="color:red;">
-                                <?php
-                                    if (isset($_SESSION['name_alert'])) {
-                                        echo $_SESSION['name_alert'];
-                                        unset($_SESSION['name_alert']);
-                                    }
-                                ?>
+                                    <?php
+                                        if (isset($_SESSION['name_alert'])) {
+                                            echo $_SESSION['name_alert'];
+                                            unset($_SESSION['name_alert']);
+                                        }
+                                    ?>
                                 </label>
                             </div>
                             <button type="submit" class="btn btn-primary me-2" name="submit" onclick="toast()">Submit</button>

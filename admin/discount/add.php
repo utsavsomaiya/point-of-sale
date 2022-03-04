@@ -45,11 +45,10 @@
             $_SESSION['msg'] = "Add Successfully";
             header('location:../discount/list.php');
             exit;
-        } else {
-            $_SESSION['msg'] = "Something went wrong";
-            header('location:../discount/add.php');
-            exit;
         }
+        $_SESSION['msg'] = "Something went wrong";
+        header('location:../discount/add.php');
+        exit;
     }
 ?>
 <?php include '../layout/header.php'; ?>

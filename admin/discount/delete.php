@@ -20,5 +20,8 @@
                 header('location:../discount/list.php');
                 exit;
             }
+            $_SESSION['msg'] = "Something went wrong";
+            header("location:../discount/delete.php?id=$discountId");
+            exit;
         }
     }

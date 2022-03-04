@@ -53,11 +53,10 @@
             $_SESSION['msg'] = "Update Successfully";
             header('location:../discount/list.php');
             exit;
-        } else {
-            $_SESSION['msg'] = "Something went wrong";
-            header("location:../discount/edit.php?id=$discountId");
-            exit;
         }
+        $_SESSION['msg'] = "Something went wrong";
+        header("location:../discount/edit.php?id=$discountId");
+        exit;
     }
 ?>
 <?php include '../layout/header.php'; ?>
@@ -79,12 +78,12 @@
                                 ?>
                                 >
                                 <label style="color:red;">
-                                <?php
-                                    if (isset($_SESSION['digit_alert'])) {
-                                        echo $_SESSION['digit_alert'];
-                                        unset($_SESSION['digit_alert']);
-                                    }
-                                ?>
+                                    <?php
+                                        if (isset($_SESSION['digit_alert'])) {
+                                            echo $_SESSION['digit_alert'];
+                                            unset($_SESSION['digit_alert']);
+                                        }
+                                    ?>
                                 </label>
                             </div>
                             <div class="form-group">
@@ -111,12 +110,12 @@
                                     >$</option>
                                 </select>
                                 <label style="color:red;">
-                                <?php
-                                    if (isset($_SESSION['type_alert'])) {
-                                        echo $_SESSION['type_alert'];
-                                        unset($_SESSION['type_alert']);
-                                    }
-                                ?>
+                                    <?php
+                                        if (isset($_SESSION['type_alert'])) {
+                                            echo $_SESSION['type_alert'];
+                                            unset($_SESSION['type_alert']);
+                                        }
+                                    ?>
                                 </label>
                             </div>
                             <div class="form-group">
@@ -124,10 +123,10 @@
                                 <select id="discountStatus" class="form-control" name="status" >
                                     <option value="">--Select Status--</option>
                                     <option value="2" <?php if (isset($discountStatus)) {
-                                    if ($discountStatus == "2") {
-                                        echo 'selected="selected"';
-                                    }
-                                } ?>>Active</option>
+                                        if ($discountStatus == "2") {
+                                            echo 'selected="selected"';
+                                        }
+                                    } ?>>Active</option>
                                     <option value="1"
                                     <?php
                                     if (isset($discountStatus)) {
