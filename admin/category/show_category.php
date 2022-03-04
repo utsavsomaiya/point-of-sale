@@ -15,7 +15,7 @@
                         <span style="margin-right:80px;">Products Category</span>
                         <a href="add_category.php">Add New Category</a>
                     </h4>
-                    <?php if (sizeof($categories)>0) { ?>
+                    <?php if (sizeof($categories) > 0) { ?>
                         <table class="table">
                             <thead>
                                 <tr>
