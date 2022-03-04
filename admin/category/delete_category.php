@@ -11,17 +11,16 @@
             $_SESSION['msg'] = "Cannot delete this category as it is used by one or more products.";
             header('location:/admin/category/show_category.php');
             exit;
-        } else {
-            $deleteCategory = $pdo->prepare("DELETE FROM `category` where `id` = :id");
-            $deleteCategory->bindParam(':id', $categoryId);
-            $isExecuted = $deleteCategory->execute();
-            if ($isExecuted) {
-                $_SESSION['msg']="Record deleted";
-                header('location:/admin/category/show_category.php');
-                exit;
-            }
-            $_SESSION['msg']="Something went wrong";
+        }
+        $deleteCategory = $pdo->prepare("DELETE FROM `category` where `id` = :id");
+        $deleteCategory->bindParam(':id', $categoryId);
+        $isExecuted = $deleteCategory->execute();
+        if ($isExecuted) {
+            $_SESSION['msg']="Record deleted";
             header('location:/admin/category/show_category.php');
             exit;
         }
+        $_SESSION['msg']="Something went wrong";
+        header('location:/admin/category/show_category.php');
+        exit;
     }
