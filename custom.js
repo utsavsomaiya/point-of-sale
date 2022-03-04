@@ -53,16 +53,22 @@ function displayCart() {
     document.getElementById('container').innerHTML = "";
     document.getElementById('hidden-form').innerHTML = "";
     id = 1;
-    digit = document.getElementById('discount-selection').value.trim();
+    discountId = document.getElementById('discount-selection').value.trim();
+    discountDigit = document.getElementById('discount-option-' + discountId).innerHTML.trim();
     let discount = new Array(cart.length);
     let tax = new Array(cart.length);
-    if (digit.substr(digit.length - 1) == "%") {
+    if (discountDigit.substr(discountDigit.length - 1) == "%") {
         discountType = 1;
     } else {
         discountType = 2;
     }
-    digit = parseInt(digit.replace(/[$%]/, ''));
-    console.log(digit);
+    discountDigit = parseInt(discountDigit.replace(/[$%]/, ''));
+
+    var inputDiscountId = document.createElement('input');
+    inputDiscountId.setAttribute('type', 'hidden');
+    inputDiscountId.setAttribute('name', 'discount_id');
+    inputDiscountId.value = discountId;
+    document.getElementById('hidden-form').appendChild(inputDiscountId);
 
     for (let i = 0; i < cart.length; i++) {
 
@@ -149,11 +155,11 @@ function displayCart() {
 
         id++;
     }
-    if (subTotal > digit) {
+    if (subTotal > discountDigit) {
         if (discountType == "2") {
-            discountPrice = digit;
+            discountPrice = discountDigit;
         } else {
-            discountPrice = (subTotal * digit) / 100;
+            discountPrice = (subTotal * discountDigit) / 100;
         }
         for (let i = 0; i < cart.length; i++) {
             discount[i] = (parseInt((cart[i].price).slice(1)) * discountPrice) / subTotal;
@@ -216,18 +222,18 @@ function removeFromCart(productId) {
     }
 }
 
-function toggleModal(modalID) {
-    document.getElementById(modalID).classList.toggle("hidden");
-    document.getElementById(modalID + "-backdrop").classList.toggle("hidden");
-    document.getElementById(modalID).classList.toggle("flex");
-    document.getElementById(modalID + "-backdrop").classList.toggle("flex");
+function discountModal(modalId) {
+    document.getElementById(modalId).classList.toggle("hidden");
+    document.getElementById(modalId + "-backdrop").classList.toggle("hidden");
+    document.getElementById(modalId).classList.toggle("flex");
+    document.getElementById(modalId + "-backdrop").classList.toggle("flex");
 }
 
 function toast() {
-    var x = document.getElementById("snackbar");
-    x.className = "show";
+    var toast = document.getElementById("snackbar");
+    toast.className = "show";
     setTimeout(function() {
-        x.className = x.className.replace("show", "");
+        toast.className = toast.className.replace("show", "");
     }, 3000);
 }
 

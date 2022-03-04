@@ -7,8 +7,8 @@
     $fetchDiscounts = $pdo->prepare("SELECT * FROM `discount` WHERE `status` = 2");
     $fetchDiscounts->execute();
     $discounts = $fetchDiscounts->fetchAll();
-
     define("DISCOUNT", ["flat"=>2, "percentage"=>1]);
+
     if (isset($_POST["submit"])) {
         if (empty($_POST['productId'])) {
             $_SESSION['msg'] = "Please add some item in your cart..";
@@ -17,46 +17,41 @@
         }
         $productIds = $_POST['productId'];
         $productQuantities = $_POST['productQuantity'];
+        $discountId = $_POST['discount_id'];
         $productPrices = [];
         $productTaxes = [];
         $productsTax = [];
         $productTaxablePrice = [];
         $productDiscount = [];
-        $result = "";
         $subtotal = 0;
         for ($i = 0; $i < sizeof($productIds); $i++) {
-            $fetch = $pdo->prepare("SELECT `price`,`tax` FROM `product` WHERE `id` = :productId");
-            $fetch->bindParam(':productId', $productIds[$i]);
-            $fetch->execute();
-            $result = $fetch->fetchAll();
-            foreach ($result as $product) {
-                if (!empty($product)) {
-                    $productPrice = (int) $product['price'];
-                    $productTax = (int) $product['tax'];
-                }
+            $fetchProducts = $pdo->prepare("SELECT `price`,`tax` FROM `product` WHERE `id` = :productId");
+            $fetchProducts->bindParam(':productId', $productIds[$i]);
+            $fetchProducts->execute();
+            $products = $fetchProducts->fetchAll();
+            foreach ($products as $product) {
+                $productPrice = (int) $product['price'];
+                $productTax = (int) $product['tax'];
             }
             $productPrices[$i] = $productPrice;
             $productTaxes[$i] = $productTax;
             $subtotal +=  ($productPrices[$i] * $productQuantities[$i]) ;
         }
-        $fetch = $pdo->prepare("SELECT * FROM `discount` WHERE `status` = 2 ORDER BY `id` ASC LIMIT 1");
-        $fetch->execute();
-        $result = $fetch->fetchAll();
-        foreach ($result as $discount) {
-            if (!empty($discount)) {
-                $discountId = (int) $discount['id'];
-                $discountType = (int) $discount['type'];
-                $productsDiscount = (int) $discount['digit'];
-            }
+        $fetchDiscount = $pdo->prepare("SELECT * FROM `discount` WHERE `id` = :id");
+        $fetchDiscount->bindParam(':id', $discountId);
+        $fetchDiscount->execute();
+        $discounts = $fetchDiscount->fetchAll();
+        foreach ($discounts as $discount) {
+            $discountType = (int) $discount['type'];
+            $productsDiscount = (int) $discount['digit'];
         }
         $totalDiscount = 0;
         $totalTax = 0;
         if ($subtotal > $productsDiscount) {
             if ($discountType == DISCOUNT["flat"]) {
                 $discountPrice =  $productsDiscount;
-            } else {
-                $discountPrice = ($subtotal * $productsDiscount) / 100;
             }
+            $discountPrice = ($subtotal * $productsDiscount) / 100;
             for ($i = 0; $i < sizeof($productIds); $i++) {
                 $productDiscount[$i] = round((($productPrices[$i] * $productQuantities[$i] * $discountPrice)/$subtotal), 2);
                 $totalDiscount += $productDiscount[$i];
@@ -66,37 +61,30 @@
             }
         }
         $grandTotal = $subtotal - $totalDiscount + $totalTax;
-        if ($subtotal> 0) {
-            $fetch = $pdo->prepare("INSERT INTO `sales` (`subtotal`, `total_tax`, `discount_id`, `discount`, `total`) VALUES (:subtotal,:total_tax,:discount_id,:discount,:total)");
-            $fetch->bindParam(':subtotal', $subtotal);
-            $fetch->bindParam(':total_tax', round($totalTax, 2));
-            $fetch->bindParam(':discount_id', $discountId);
-            $fetch->bindParam(':discount', $totalDiscount);
-            $fetch->bindParam(':total', $grandTotal);
-            $result = $fetch->execute();
-        } else {
-            $_SESSION['msg'] = "Not Successfully";
-            header('location:/');
-        }
-        if (sizeof($productIds) >0) {
-            for ($i = 0; $i < sizeof($productIds); $i++) {
-                $fetch = $pdo->prepare("INSERT INTO `sales_item` (`sales_id`, `product_id`, `product_price`, `product_quantity`, `product_total_price`, `product_discount_id`, `product_discount`, `product_tax_percentage`, `product_taxable_price`, `product_tax_amount`) SELECT max(`id`),'$productIds[$i]','$productPrices[$i]','$productQuantities[$i]',$productPrices[$i] * $productQuantities[$i],$discountId,'$productDiscount[$i]','$productTaxes[$i]','$productTaxablePrice[$i]','$productsTax[$i]' FROM `sales`");
-                $result = $fetch->execute();
-                $fetch = $pdo->prepare("UPDATE `product` SET `stock` = `stock` - :productQuantity WHERE `id` = :productId");
-                $fetch->bindParam(':productQuantity', $productQuantities[$i]);
-                $fetch->bindParam(':productId', $productIds[$i]);
-                $result = $fetch->execute();
-                if (isset($result)) {
-                    $_SESSION['msg'] = "Add Successfully";
-                    header('location:/');
-                } else {
-                    $_SESSION['msg'] = "Not Successfully";
-                    header('location:/');
-                }
+
+        $insertSales = $pdo->prepare("INSERT INTO `sales` (`subtotal`, `total_tax`, `discount_id`, `discount`, `total`) VALUES (:subtotal,:total_tax,:discount_id,:discount,:total)");
+        $insertSales->bindParam(':subtotal', $subtotal);
+        $insertSales->bindParam(':total_tax', round($totalTax, 2));
+        $insertSales->bindParam(':discount_id', $discountId);
+        $insertSales->bindParam(':discount', $totalDiscount);
+        $insertSales->bindParam(':total', $grandTotal);
+        $insertSales->execute();
+
+        for ($i = 0; $i < sizeof($productIds); $i++) {
+            $insertSalesItems = $pdo->prepare("INSERT INTO `sales_item` (`sales_id`, `product_id`, `product_price`, `product_quantity`, `product_total_price`, `product_discount_id`, `product_discount`, `product_tax_percentage`, `product_taxable_price`, `product_tax_amount`) SELECT max(`id`),'$productIds[$i]','$productPrices[$i]','$productQuantities[$i]',$productPrices[$i] * $productQuantities[$i],$discountId,'$productDiscount[$i]','$productTaxes[$i]','$productTaxablePrice[$i]','$productsTax[$i]' FROM `sales`");
+            $insertSalesItems->execute();
+            $updateStock = $pdo->prepare("UPDATE `product` SET `stock` = `stock` - :productQuantity WHERE `id` = :productId");
+            $updateStock->bindParam(':productQuantity', $productQuantities[$i]);
+            $updateStock->bindParam(':productId', $productIds[$i]);
+            $isExecuted = $updateStock->execute();
+            if ($isExecuted) {
+                $_SESSION['msg'] = "Add Successfully";
+                header('location:/');
+                exit;
             }
-        } else {
             $_SESSION['msg'] = "Not Successfully";
             header('location:/');
+            exit;
         }
     }
 ?>
@@ -163,14 +151,14 @@
                             </div>
                             <div class=" px-4 flex justify-between">
                                 <?php if (sizeof($discounts) > 0) { ?>
-                                <span class="font-semibold text-sm">Discount</span>
-                                    <img src="/images/discount.png" style="width:20px;margin-right: 0px;position:absolute;right: 430px;" onclick="toggleModal('modal-id')">
-                                <?php include 'discount.php';?>
-                                    <div class="hidden opacity-25 fixed inset-0 z-40 bg-black" id="modal-id-backdrop"></div>
-                                <span class="font-bold" id="discount-price">- $0</span>
+                                    <span class="font-semibold text-sm">Discount</span>
+                                    <img src="/images/discount.png" style="width:20px;margin-right: 0px;position:absolute;right: 430px;" onclick="discountModal('discount-modal-id')">
+                                    <?php include 'discount.php';?>
+                                    <div class="hidden opacity-25 fixed inset-0 z-40 bg-black" id="discount-modal-id-backdrop"></div>
+                                    <span class="font-bold" id="discount-price">- $0</span>
                                 <?php } ?>
                             </div>
-                            <div class=" px-4 flex justify-between ">
+                            <div class=" px-4 flex justify-between">
                                 <span class="font-semibold text-sm">Sales Tax</span>
                                 <span class="font-bold" id='sales-tax'>$0.00</span>
                             </div>
@@ -186,7 +174,7 @@
                             <button name="submit" class="px-4 py-4 rounded-md shadow-lg text-center bg-yellow-500 text-white font-semibold" style="width: 500px;">Complete Sale</button>
                         </form>
                         <?php if (isset($_SESSION["msg"])) { ?>
-                            <div id="snackbar"> <?= $_SESSION["msg"]; ?></div>
+                            <div id="snackbar"> <?= $_SESSION["msg"]; ?> </div>
                         <?php } ?>
                     </div>
                 </div>
