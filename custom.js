@@ -240,3 +240,19 @@ function toast() {
 function discountApply() {
     displayCart();
 }
+
+function searchProducts() {
+    var input = document.getElementById('searchbar').value.toLocaleLowerCase();
+    const name = [];
+    var hasResults = false;
+    for (i = 0; i < productsCount; i++) {
+        name[i] = document.getElementById('name-' + (i + 1)).innerHTML;
+        if (name[i].toLowerCase().indexOf(input) != -1) {
+            document.getElementById('products-list-' + (i + 1)).style.display = 'block';
+            hasResults = true;
+        } else {
+            document.getElementById('products-list-' + (i + 1)).style.display = 'none';
+        }
+    }
+    document.getElementById('not-available').style.display = hasResults ? 'none' : 'block';
+}

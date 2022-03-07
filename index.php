@@ -109,11 +109,15 @@
                             <div class="font-bold text-xl">Utsav's Retail Shop</div>
                             <span class="text-xs">"Aashirvad", 7-Nandhinagar, Nanavati Chowk, Rajkot-360007</span>
                         </div>
+                        <input type="text" placeholder="Search Products" class="w-full h-12 px-4 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg lg:w-20 xl:transition-all xl:duration-300 xl:w-36 xl:focus:w-44 lg:h-10 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-teal-500 dark:focus:border-teal-500 focus:outline-none focus:ring focus:ring-primary dark:placeholder-gray-400 focus:ring-opacity-40" onkeyup="searchProducts()" id="searchbar">
                     </div>
                     <div class="grid grid-cols-3 gap-4 px-5 mt-5 overflow-y-auto h-3/4">
+                        <div id="not-available" style="display: none;">
+                            <h5 style="width: 400px;">Sorry, the products has not been added yet...</h5>
+                        </div>
                         <?php $id = 0; foreach ($products as $product) { ?>
                             <?php $id++; ?>
-                            <div class="transform hover:scale-105 transition duration-300 px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between" onclick="addToCart(<?= $id; ?>)" style="
+                            <div class="transform hover:scale-105 transition duration-300 px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between" onclick="addToCart(<?= $id; ?>)" id="products-list-<?= $id; ?>" style="
                             <?php
                                 if ($product['stock'] <=0) {
                                     echo "opacity:0.5";
@@ -178,6 +182,7 @@
                         <?php } ?>
                     </div>
                 </div>
+                <script>productsCount = <?= sizeof($products) ?>;</script>
                 <script type="text/javascript" src="custom.js"></script>
                 <script>
                     <?php
