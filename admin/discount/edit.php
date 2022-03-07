@@ -59,11 +59,10 @@
             $_SESSION['msg'] = "Update Successfully";
             header('location:../discount/list.php');
             exit;
-        } else {
-            $_SESSION['msg'] = "Something went wrong";
-            header("location:../discount/edit.php?id=$discountId");
-            exit;
         }
+        $_SESSION['msg'] = "Something went wrong";
+        header("location:../discount/edit.php?id=$discountId");
+        exit;
     }
 ?>
 <?php include '../layout/header.php'; ?>

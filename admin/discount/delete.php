@@ -11,14 +11,16 @@
             $_SESSION['msg'] = "Cannot delete this discount";
             header('location:/admin/discount/list.php');
             exit;
-        } else {
-            $deleteDiscount = $pdo->prepare("DELETE FROM `discount` WHERE `id`= :id");
-            $deleteDiscount->bindParam(':id', $discountId);
-            $isExecute = $deleteDiscount->execute();
-            if ($isExecute) {
-                $_SESSION['msg']="Record deleted";
-                header('location:../discount/list.php');
-                exit;
-            }
         }
+        $deleteDiscount = $pdo->prepare("DELETE FROM `discount` WHERE `id`= :id");
+        $deleteDiscount->bindParam(':id', $discountId);
+        $isExecute = $deleteDiscount->execute();
+        if ($isExecute) {
+            $_SESSION['msg']="Record deleted";
+            header('location:../discount/list.php');
+            exit;
+        }
+        $_SESSION['msg'] = "Something went wrong";
+        header("location:../discount/delete.php?id=$discountId");
+        exit;
     }

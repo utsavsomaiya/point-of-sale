@@ -4,9 +4,12 @@ function discountStatusChanged(id, status) {
     } else {
         status = status - 1;
     }
-  $.ajax({
-            url: "edit.php",
-            data: {id : id, status: status},
-            type: "POST"
-        });
+    $.ajax({
+        url: "edit.php",
+        data: {
+            id: id,
+            status: status
+        },
+        type: "POST"
+    });
 }

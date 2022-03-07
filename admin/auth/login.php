@@ -66,29 +66,29 @@
                                     <div class="form-group">
                                         <input type="text" class="form-control form-control-lg" placeholder="Username" name="email"
                                         <?php
-                                        if (isset($_SESSION["name"])) {
-                                            echo "value=\"".$_SESSION["name"]."\"";
-                                        }
+                                            if (isset($_SESSION["name"])) {
+                                                echo "value=\"".$_SESSION["name"]."\"";
+                                            }
                                         ?>
                                         >
                                         <label style="color:red;">
-                                        <?php
-                                            if (isset($_SESSION["name_alert"])) {
-                                                echo $_SESSION["name_alert"];
-                                                unset($_SESSION["name_alert"]);
-                                            }
-                                        ?>
+                                            <?php
+                                                if (isset($_SESSION["name_alert"])) {
+                                                    echo $_SESSION["name_alert"];
+                                                    unset($_SESSION["name_alert"]);
+                                                }
+                                            ?>
                                         </label>
                                     </div>
                                     <div class="form-group">
                                         <input type="password" class="form-control form-control-lg" placeholder="Password" name="password">
                                         <label style="color:red;">
-                                        <?php
-                                            if (isset($_SESSION["password_alert"])) {
-                                                echo $_SESSION["password_alert"];
-                                                unset($_SESSION["password_alert"]);
-                                            }
-                                        ?>
+                                            <?php
+                                                if (isset($_SESSION["password_alert"])) {
+                                                    echo $_SESSION["password_alert"];
+                                                    unset($_SESSION["password_alert"]);
+                                                }
+                                            ?>
                                         </label>
                                     </div>
                                     <div class="mt-3">
