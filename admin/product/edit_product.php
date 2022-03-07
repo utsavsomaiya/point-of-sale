@@ -83,10 +83,10 @@
             $_SESSION['msg'] = "Update Successfully";
             header('location:../product/show_product.php');
             exit;
-        } else {
-            $_SESSION['msg'] = 'Something went wrong..';
-            header("location:../product/edit_product.php?id=$productId");
         }
+        $_SESSION['msg'] = 'Something went wrong..';
+        header("location:../product/edit_product.php?id=$productId");
+        exit;
     }
 ?>
 <?php include '../layout/header.php'; ?>
@@ -210,10 +210,10 @@
                                 </select>
                                 <label class="text-danger">
                                     <?php
-                                    if (isset($_SESSION['tax_alert'])) {
-                                        echo $_SESSION['tax_alert'];
-                                        unset($_SESSION['tax_alert']);
-                                    }
+                                        if (isset($_SESSION['tax_alert'])) {
+                                            echo $_SESSION['tax_alert'];
+                                            unset($_SESSION['tax_alert']);
+                                        }
                                     ?>
                                 </label>
                             </div>
@@ -240,20 +240,21 @@
                                     Product Image
                                 </label>
                                 <?php if (isset($productImage)) {?>
-                                <img  class="img-xs rounded-circle" src="<?= '/admin/images/' . $productImage ?>"><br><br>
+                                    <img  class="img-xs rounded-circle" src="<?= '/admin/images/' . $productImage ?>">
+                                    <br>
+                                    <br>
                                 <?php } ?>
                                 <input id="product-image" type="file" class="form-control" accept="image/png, image/gif, image/jpeg, image/jpg" name="product_image" required>
                                 <label class="text-danger">
                                     <?php
-                                    if (isset($_SESSION['file_alert'])) {
-                                        echo $_SESSION['file_alert'];
-                                        unset($_SESSION['file_alert']);
-                                    }
+                                        if (isset($_SESSION['file_alert'])) {
+                                            echo $_SESSION['file_alert'];
+                                            unset($_SESSION['file_alert']);
+                                        }
                                     ?>
                                 </label>
                             </div>
-                            <button type="submit" class="btn btn-primary me-2" name="submit"
-                                onclick="toast()">Submit</button>
+                            <button type="submit" class="btn btn-primary me-2" name="submit" onclick="toast()">Submit</button>
                             <a href="../product/show_product.php" class="btn btn-light">Cancel</a>
                         </form>
                     </div>

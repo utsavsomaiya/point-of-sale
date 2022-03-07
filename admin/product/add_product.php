@@ -80,11 +80,10 @@
             $_SESSION['msg'] = "Add Successfully";
             header('location:../product/show_product.php');
             exit;
-        } else {
-            $_SESSION['msg'] = "Something went wrong";
-            header('location:../product/add_product.php');
-            exit;
         }
+        $_SESSION['msg'] = "Something went wrong";
+        header('location:../product/add_product.php');
+        exit;
     }
     $fetchCategory = $pdo->prepare("SELECT * FROM `category`");
     $fetchCategory->execute();
@@ -220,10 +219,10 @@
                                 </select>
                                 <label class="text-danger">
                                     <?php
-                                    if (isset($_SESSION['tax_alert'])) {
-                                        echo $_SESSION['tax_alert'];
-                                        unset($_SESSION['tax_alert']);
-                                    }
+                                        if (isset($_SESSION['tax_alert'])) {
+                                            echo $_SESSION['tax_alert'];
+                                            unset($_SESSION['tax_alert']);
+                                        }
                                     ?>
                                 </label>
                             </div>
@@ -239,10 +238,10 @@
                                     ?>>
                                 <label class="text-danger">
                                     <?php
-                                    if (isset($_SESSION['stock_alert'])) {
-                                        echo $_SESSION['stock_alert'];
-                                        unset($_SESSION['stock_alert']);
-                                    }
+                                        if (isset($_SESSION['stock_alert'])) {
+                                            echo $_SESSION['stock_alert'];
+                                            unset($_SESSION['stock_alert']);
+                                        }
                                     ?>
                                 </label>
                             </div>
@@ -251,10 +250,10 @@
                                 <input id="product-image" type="file" class="form-control" accept="image/png, image/gif, image/jpeg, image/jpg" name="product_image" required>
                                 <label class="text-danger">
                                     <?php
-                                    if (isset($_SESSION['file_alert'])) {
-                                        echo $_SESSION['file_alert'];
-                                        unset($_SESSION['file_alert']);
-                                    }
+                                        if (isset($_SESSION['file_alert'])) {
+                                            echo $_SESSION['file_alert'];
+                                            unset($_SESSION['file_alert']);
+                                        }
                                     ?>
                                 </label>
                             </div>

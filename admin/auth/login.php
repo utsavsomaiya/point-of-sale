@@ -66,9 +66,9 @@
                                     <div class="form-group">
                                         <input type="text" class="form-control form-control-lg" placeholder="Username" name="email"
                                         <?php
-                                        if (isset($_SESSION["name"])) {
-                                            echo "value=\"".$_SESSION["name"]."\"";
-                                        }
+                                            if (isset($_SESSION["name"])) {
+                                                echo "value=\"".$_SESSION["name"]."\"";
+                                            }
                                         ?>
                                         >
                                         <label class="text-danger">
