@@ -128,7 +128,7 @@
                                     <label hidden id="<?= "id-".$id; ?>"><?= $product["id"] ?></label>
                                     <label hidden id="<?= "stock-".$id; ?>"><?= $product["stock"] ?></label>
                                     <div class="font-bold text-gray-800" id="<?= "name-".$id; ?>"><?= $product["name"] ?></div>
-                                    <span class="font-light text-sm text-gray-400"><?= $product["category_name"] ?></span>
+                                    <span class="font-light text-sm text-gray-400" id="<?= "category-".$id; ?>"><?= $product["category_name"] ?></span>
                                 </div>
                                 <div class="flex flex-row justify-between items-center">
                                     <span class="self-end font-bold text-lg text-yellow-500" id="<?= "price-".$id; ?>"><?= "$".$product["price"] ?></span>

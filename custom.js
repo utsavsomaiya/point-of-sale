@@ -244,10 +244,14 @@ function discountApply() {
 function searchProducts() {
     var input = document.getElementById('searchbar').value.toLocaleLowerCase();
     const name = [];
+    const category = [];
+    const price = [];
     var hasResults = false;
     for (i = 0; i < productsCount; i++) {
         name[i] = document.getElementById('name-' + (i + 1)).innerHTML;
-        if (name[i].toLowerCase().indexOf(input) != -1) {
+        category[i] = document.getElementById('category-' + (i + 1)).innerHTML;
+        price[i] = document.getElementById('price-' + (i + 1)).innerHTML;
+        if (name[i].toLowerCase().indexOf(input) != -1 || category[i].toLowerCase().indexOf(input) != -1 || price[i].toLowerCase().indexOf(input) != -1) {
             document.getElementById('products-list-' + (i + 1)).style.display = 'block';
             hasResults = true;
         } else {
