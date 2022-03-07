@@ -37,11 +37,11 @@
                                 </td>
                                 <td>
                                     <?php if ($count == 1) { ?>
-                                        <button class="bg-green-500 text-white font-bold py-2 px-4 rounded-full" onclick="discountApply(<?= $count ?>,<?= $discounts[$i]['id'] ?>)" id="discount-button-<?= $count ?>" disabled>
+                                        <button class="bg-green-500 text-white font-bold py-2 px-4 rounded-full" onclick="discountApply(<?= $count ?>)" id="discount-button-<?= $count ?>" disabled>
                                             Applied
                                         </button>
                                     <?php } else { ?>
-                                        <button class="bg-red-500 text-white font-bold py-2 px-4 rounded-full" onclick="discountApply(<?= $count ?>,<?= $discounts[$i]['id'] ?>)" id="discount-button-<?= $count ?>">
+                                        <button class="bg-red-500 text-white font-bold py-2 px-4 rounded-full" onclick="discountApply(<?= $count ?>)" id="discount-button-<?= $count ?>">
                                             Apply
                                         </button>
                                     <?php } ?>
