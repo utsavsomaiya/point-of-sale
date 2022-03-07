@@ -20,6 +20,7 @@
                         <thead>
                             <tr>
                                 <th>Id</th>
+                                <th>Name</th>
                                 <th>Digit</th>
                                 <th>Status</th>
                                 <th colspan='2'>Action</th>
@@ -29,6 +30,7 @@
                             <?php foreach ($discounts as $discount) { ?>
                             <tr>
                                 <td><?= $discount['id'] ?></td>
+                                <td><?= $discount['name'] ?></td>
                                 <td>
                                 <?php
                                 if ($discount['type'] == "1") {

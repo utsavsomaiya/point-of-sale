@@ -25,9 +25,9 @@
                                         ?> id="discount-option-<?= $discounts[$i]['id']?>">
                                     <?php
                                         if ($discounts[$i]['type'] == 1) {
-                                            echo $discounts[$i]['digit']."%";
+                                            echo $discounts[$i]['name']."(".$discounts[$i]['digit']."%)";
                                         }
-                                        echo "$".$discounts[$i]['digit'];
+                                        echo $discounts[$i]['name']."($".$discounts[$i]['digit'].")";
                                     ?>
                                 </option>
                             <?php } ?>
