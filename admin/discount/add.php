@@ -80,7 +80,7 @@
                                         }
                                     ?>
                                 >
-                                <label style="color:red;">
+                                <label class="text-danger">
                                     <?php
                                         if (isset($_SESSION['name_alert'])) {
                                             echo $_SESSION['name_alert'];
@@ -100,7 +100,7 @@
                                         }
                                     ?>
                                 >
-                                <label style="color:red;">
+                                <label class="text-danger">
                                     <?php
                                         if (isset($_SESSION['digit_alert'])) {
                                             echo $_SESSION['digit_alert'];
@@ -134,7 +134,7 @@
                                     ?>
                                     >$</option>
                                 </select>
-                                <label style="color:red;">
+                                <label class="text-danger">
                                     <?php
                                         if (isset($_SESSION['type_alert'])) {
                                             echo $_SESSION['type_alert'];
@@ -168,7 +168,7 @@
                                     ?>
                                     >Inactive</option>
                                 </select>
-                                <label style="color:red;">
+                                <label class="text-danger">
                                     <?php
                                         if (isset($_SESSION['status_alert'])) {
                                             echo $_SESSION['status_alert'];

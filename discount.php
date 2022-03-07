@@ -5,35 +5,51 @@
                 <h3 class="text-3xl font-semibold">
                     Discounts
                 </h3>
-                <button class="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none" onclick="discountModal('discount-modal-id')">
+                <button class="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none" onclick="displayApplicableDiscountsModal('discount-modal-id')">
                     <span class="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
                         ×
                     </span>
                 </button>
             </div>
             <div class="relative p-6 flex-auto">
-                <div class="flex justify-center">
-                    <div class="mb-3 xl:w-96">
-                        <select class="form-select appearance-none block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" aria-label="Default select example" onchange="discountApply()" id="discount-selection">
-                            <option value="">--Select discount--</option>
-                            <?php for ($i=0;$i<sizeof($discounts);$i++) {?>
-                                <option value="<?= $discounts[$i]['id']?>"
-                                        <?php
-                                            if ($i==0) {
-                                                echo "selected";
-                                            }
-                                        ?> id="discount-option-<?= $discounts[$i]['id']?>">
+                <table class="table-auto">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Apply/Applied</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $count=0; for ($i = 0; $i < sizeof($discounts); $i++) { ?>
+                            <tr>
+                                <?php $count++; ?>
+                                <td id="discount-id-<?= $count ?>"><?= $discounts[$i]['id']; ?></td>
+                                <td><?= $discounts[$i]['name']; ?></td>
+                                <td id="discount-<?= $count ?>">
                                     <?php
-                                        if ($discounts[$i]['type'] == 1) {
-                                            echo $discounts[$i]['name']."(".$discounts[$i]['digit']."%)";
+                                        if ($discounts[$i]['type'] == "1") {
+                                            echo $discounts[$i]['digit']."%";
+                                        } else {
+                                            echo "$".$discounts[$i]['digit'];
                                         }
-                                        echo $discounts[$i]['name']."($".$discounts[$i]['digit'].")";
                                     ?>
-                                </option>
-                            <?php } ?>
-                        </select>
-                    </div>
-                </div>
+                                </td>
+                                <td>
+                                    <?php if ($count == 1) { ?>
+                                        <button class="bg-green-500 text-white font-bold py-2 px-4 rounded-full" onclick="discountApply(<?= $count ?>,<?= $discounts[$i]['id'] ?>)" id="discount-button-<?= $count ?>" disabled>
+                                            Applied
+                                        </button>
+                                    <?php } else { ?>
+                                        <button class="bg-red-500 text-white font-bold py-2 px-4 rounded-full" onclick="discountApply(<?= $count ?>,<?= $discounts[$i]['id'] ?>)" id="discount-button-<?= $count ?>">
+                                            Apply
+                                        </button>
+                                    <?php } ?>
+                                </td>
+                            </tr>
+                        <?php }?>
+                    </tbody>
+                    </table>
             </div>
         </div>
     </div>

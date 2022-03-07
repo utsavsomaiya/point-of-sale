@@ -1,6 +1,11 @@
 const cart = [];
 let subTotal = 0;
 
+if ((document.getElementById('subtotal').innerHTML).localeCompare('$0') == 0) {
+    document.getElementById('discount-img').style.visibility = 'hidden';
+}
+
+
 function containerClean() {
     document.getElementById('container').innerHTML = "";
     document.getElementById('hidden-form').innerHTML = "";
@@ -46,6 +51,9 @@ function existsInArray(id) {
     });
 }
 
+var discountId = document.getElementById('discount-id-1').innerHTML.trim();
+var discountDigit = document.getElementById('discount-1').innerHTML.trim();
+
 function displayCart() {
     subTotal = 0;
     totalDiscount = 0;
@@ -53,16 +61,16 @@ function displayCart() {
     document.getElementById('container').innerHTML = "";
     document.getElementById('hidden-form').innerHTML = "";
     id = 1;
-    discountId = document.getElementById('discount-selection').value.trim();
-    discountDigit = document.getElementById('discount-option-' + discountId).innerHTML.trim();
+
+    document.getElementById('discount-img').style.visibility = 'visible';
+
     let discount = new Array(cart.length);
     let tax = new Array(cart.length);
-    if (discountDigit.substr(discountDigit.length - 1) == "%") {
+    if (discountDigit.substring(discountDigit.length - 1) == "%") {
         discountType = 1;
-    } else {
-        discountType = 2;
     }
-    discountDigit = parseInt(discountDigit.replace(/[$%]/, ''));
+    discountType = 2;
+
 
     var inputDiscountId = document.createElement('input');
     inputDiscountId.setAttribute('type', 'hidden');
@@ -155,11 +163,11 @@ function displayCart() {
 
         id++;
     }
-    if (subTotal > discountDigit) {
+    if (subTotal > parseInt(discountDigit.replace(/[$%]/, ''))) {
         if (discountType == "2") {
-            discountPrice = discountDigit;
+            discountPrice = parseInt(discountDigit.replace(/[$%]/, ''));
         } else {
-            discountPrice = (subTotal * discountDigit) / 100;
+            discountPrice = (subTotal * parseInt(discountDigit.replace(/[$%]/, ''))) / 100;
         }
         for (let i = 0; i < cart.length; i++) {
             discount[i] = (parseInt((cart[i].price).slice(1)) * discountPrice) / subTotal;
@@ -222,7 +230,7 @@ function removeFromCart(productId) {
     }
 }
 
-function discountModal(modalId) {
+function displayApplicableDiscountsModal(modalId) {
     document.getElementById(modalId).classList.toggle("hidden");
     document.getElementById(modalId + "-backdrop").classList.toggle("hidden");
     document.getElementById(modalId).classList.toggle("flex");
@@ -237,6 +245,21 @@ function toast() {
     }, 3000);
 }
 
-function discountApply() {
+function discountApply(count) {
+
+    discountId = document.getElementById('discount-id-'+count).innerHTML.trim();
+    discountDigit = document.getElementById('discount-'+count).innerHTML.trim();
+
+    for (i = 1; i <= discountsCount; i++){
+        if (count != i) {
+            document.getElementById('discount-button-' + count).setAttribute('class', 'bg-green-500 text-white font-bold py-2 px-4 rounded-full');
+            document.getElementById('discount-button-' + count).innerHTML = "Applied";
+            document.getElementById('discount-button-' + count).disabled = true;
+
+           document.getElementById('discount-button-' + i).setAttribute('class', 'bg-red-500 text-white font-bold py-2 px-4 rounded-full');
+            document.getElementById('discount-button-' + i).innerHTML = "Apply";
+            document.getElementById('discount-button-' + i).disabled = false;
+        }
+    }
     displayCart();
 }

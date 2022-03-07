@@ -42,7 +42,7 @@
                                         unset($_SESSION['category_name']);
                                     }?>
                                 required>
-                                <label style="color:red;">
+                                <label class="text-danger">
                                 <?php
                                 if (isset($_SESSION['name_alert'])) {
                                     echo $_SESSION['name_alert'];

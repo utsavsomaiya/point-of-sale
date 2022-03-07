@@ -113,7 +113,7 @@
                                         }
                                     ?>
                                 >
-                                <label style="color:red;">
+                                <label class="text-danger">
                                     <?php
                                         if (isset($_SESSION['name_alert'])) {
                                             echo $_SESSION['name_alert'];
@@ -133,7 +133,7 @@
                                         }
                                     ?>
                                 >
-                                <label style="color:red;">
+                                <label class="text-danger">
                                     <?php
                                         if (isset($_SESSION['price_alert'])) {
                                             echo $_SESSION['price_alert'];
@@ -159,7 +159,7 @@
                                         </option>
                                     <?php } ?>
                                 </select>
-                                <label style="color:red;">
+                                <label class="text-danger">
                                     <?php
                                         if (isset($_SESSION['category_alert'])) {
                                             echo $_SESSION['category_alert'];
@@ -218,7 +218,7 @@
                                         }
                                     ?>>25%</option>
                                 </select>
-                                <label style="color:red;">
+                                <label class="text-danger">
                                     <?php
                                     if (isset($_SESSION['tax_alert'])) {
                                         echo $_SESSION['tax_alert'];
@@ -237,7 +237,7 @@
                                             unset($_SESSION['product_stock']);
                                         }
                                     ?>>
-                                <label style="color:red;">
+                                <label class="text-danger">
                                     <?php
                                     if (isset($_SESSION['stock_alert'])) {
                                         echo $_SESSION['stock_alert'];
@@ -249,7 +249,7 @@
                             <div class="form-group">
                                 <label for="product-image">Product Image</label>
                                 <input id="product-image" type="file" class="form-control" accept="image/png, image/gif, image/jpeg, image/jpg" name="product_image" required>
-                                <label style="color:red;">
+                                <label class="text-danger">
                                     <?php
                                     if (isset($_SESSION['file_alert'])) {
                                         echo $_SESSION['file_alert'];

@@ -109,7 +109,7 @@
                                             echo "value=\"" . $productName . "\"";
                                         }
                                     ?>>
-                                <label style="color:red;">
+                                <label class="text-danger">
                                     <?php
                                         if (isset($_SESSION['name_alert'])) {
                                             echo $_SESSION['name_alert'];
@@ -127,7 +127,7 @@
                                             echo "value=\"" . $productPrice . "\"";
                                         }
                                     ?>>
-                                <label style="color:red;">
+                                <label class="text-danger">
                                     <?php
                                         if (isset($_SESSION['price_alert'])) {
                                             echo $_SESSION['price_alert'];
@@ -154,7 +154,7 @@
                                         ?>
                                     </option>
                                 </select>
-                                <label style="color:red;">
+                                <label class="text-danger">
                                     <?php
                                         if (isset($_SESSION['category_alert'])) {
                                             echo $_SESSION['category_alert'];
@@ -208,7 +208,7 @@
                                         25%
                                     </option>
                                 </select>
-                                <label style="color:red;">
+                                <label class="text-danger">
                                     <?php
                                     if (isset($_SESSION['tax_alert'])) {
                                         echo $_SESSION['tax_alert'];
@@ -226,7 +226,7 @@
                                             echo "value=\"" . $productStock . "\"";
                                         }
                                     ?>>
-                                <label style="color:red;">
+                                <label class="text-danger">
                                     <?php
                                     if (isset($_SESSION['stock_alert'])) {
                                         echo $_SESSION['stock_alert'];
@@ -243,7 +243,7 @@
                                 <img  class="img-xs rounded-circle" src="<?= '/admin/images/' . $productImage ?>"><br><br>
                                 <?php } ?>
                                 <input id="product-image" type="file" class="form-control" accept="image/png, image/gif, image/jpeg, image/jpg" name="product_image" required>
-                                <label style="color:red;">
+                                <label class="text-danger">
                                     <?php
                                     if (isset($_SESSION['file_alert'])) {
                                         echo $_SESSION['file_alert'];
