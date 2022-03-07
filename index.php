@@ -18,8 +18,6 @@
         $productIds = $_POST['productId'];
         $productQuantities = $_POST['productQuantity'];
         $discountId = $_POST['discount_id'];
-        /* var_dump($discountId);
-        die(); */
         $productPrices = [];
         $productTaxes = [];
         $productsTax = [];
