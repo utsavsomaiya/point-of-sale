@@ -242,16 +242,13 @@ function discountApply() {
 }
 
 function searchProducts() {
-    var input = document.getElementById('searchbar').value.toLocaleLowerCase();
-    const name = [];
-    const category = [];
-    const price = [];
+    var input = document.getElementById('searchbar').value.toLowerCase();
     var hasResults = false;
     for (i = 0; i < productsCount; i++) {
-        name[i] = document.getElementById('name-' + (i + 1)).innerHTML;
-        category[i] = document.getElementById('category-' + (i + 1)).innerHTML;
-        price[i] = document.getElementById('price-' + (i + 1)).innerHTML;
-        if (name[i].toLowerCase().indexOf(input) != -1 || category[i].toLowerCase().indexOf(input) != -1 || price[i].toLowerCase().indexOf(input) != -1) {
+        var name = document.getElementById('name-' + (i + 1)).innerHTML;
+        var category = document.getElementById('category-' + (i + 1)).innerHTML;
+        var price = document.getElementById('price-' + (i + 1)).innerHTML;
+        if (name.toLowerCase().includes(input) || category.toLowerCase().includes(input) || price.toLowerCase().includes(input)) {
             document.getElementById('products-list-' + (i + 1)).style.display = 'block';
             hasResults = true;
         } else {
