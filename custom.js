@@ -263,3 +263,20 @@ function discountApply(count) {
     }
     displayCart();
 }
+
+function searchProducts() {
+    var input = document.getElementById('searchbar').value.toLowerCase();
+    var hasResults = false;
+    for (i = 0; i < productsCount; i++) {
+        var name = document.getElementById('name-' + (i + 1)).innerHTML;
+        var category = document.getElementById('category-' + (i + 1)).innerHTML;
+        var price = document.getElementById('price-' + (i + 1)).innerHTML;
+        if (name.toLowerCase().includes(input) || category.toLowerCase().includes(input) || price.toLowerCase().includes(input)) {
+            document.getElementById('products-list-' + (i + 1)).style.display = 'block';
+            hasResults = true;
+        } else {
+            document.getElementById('products-list-' + (i + 1)).style.display = 'none';
+        }
+    }
+    document.getElementById('not-available').style.display = hasResults ? 'none' : 'block';
+}
