@@ -4,14 +4,11 @@ if ((document.getElementById('subtotal').innerHTML).localeCompare('$0') == 0) {
     document.getElementById('discount-img').style.visibility = 'hidden';
 }
 
-
 function containerClean() {
-    document.getElementById('container').innerHTML = "";
-    document.getElementById('hidden-form').innerHTML = "";
-    document.getElementById('subtotal').innerHTML = "$0";
-    document.getElementById('discount-price').innerHTML = "- $0";
-    document.getElementById('sales-tax').innerHTML = "$0.00";
-    document.getElementById('total').innerHTML = "$0.00";
+    while (cart.length) {
+        cart.pop();
+    }
+    displayCart();
 }
 
 function addToCart(id) {
@@ -180,6 +177,10 @@ function displayCart() {
     document.getElementById('sales-tax').innerHTML = "+ $" + (totalTax).toFixed(2);
     document.getElementById('discount-price').innerHTML = "- $" + (totalDiscount).toFixed(2);
     document.getElementById('total').innerHTML = "$" + (grandTotal).toFixed(2);
+
+    if ((document.getElementById('subtotal').innerHTML).localeCompare('$0') == 0) {
+        document.getElementById('discount-img').style.visibility = 'hidden';
+    }
 }
 
 function inputQuantity(productId, id) {
