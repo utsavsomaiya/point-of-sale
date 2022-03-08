@@ -10,9 +10,8 @@
             $_SESSION['msg']="Record deleted";
             header('location:../product/show_product.php');
             exit;
-        } else {
-            $_SESSION['msg']="Something went wrong..";
-            header('location:../product/show_product.php');
-            exit;
         }
+        $_SESSION['msg']="Something went wrong..";
+        header('location:../product/show_product.php');
+        exit;
     }

@@ -15,9 +15,8 @@
                         <span style="margin-right:80px;">Products Category</span>
                         <a href="add_category.php">Add New Category</a>
                     </h4>
-                    <?php if (sizeof($categories)>0) { ?>
-                    <table class="table">
-                        <form method="post">
+                    <?php if (sizeof($categories) > 0) { ?>
+                        <table class="table">
                             <thead>
                                 <tr>
                                     <th>Id</th>
@@ -27,23 +26,27 @@
                             </thead>
                             <tbody>
                                 <?php foreach ($categories as $category) { ?>
-                                <tr>
-                                    <td><?= $category['id']?></td>
-                                    <td><?= $category['name'] ?></td>
-                                    <td><a href="../category/edit_category.php?id=<?= $category['id']?>"><img
-                                                src="/admin/image/edit-icon.png" /></a></a></td>
-                                    <td><a href="javascript:deleteCategory(<?= $category['id']?>)"><i
-                                                class="fa fa-trash-o" style="font-size:24px"></i></a>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td><?= $category['id']?></td>
+                                        <td><?= $category['name'] ?></td>
+                                        <td>
+                                            <a href="../category/edit_category.php?id=<?= $category['id']?>">
+                                                <img src="/admin/image/edit-icon.png">
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="javascript:deleteCategory(<?= $category['id']?>)">
+                                                <i class="fa fa-trash-o" style="font-size:24px"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
                                 <?php } ?>
                             </tbody>
-                        </form>
-                    </table>
+                        </table>
                     <?php
-                    } else {
-                        echo "No Record Found..";
-                    }
+                        } else {
+                            echo "No Record Found..";
+                        }
                     ?>
                 </div>
             </div>

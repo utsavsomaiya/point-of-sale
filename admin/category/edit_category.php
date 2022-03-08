@@ -26,11 +26,10 @@
             $_SESSION['msg'] = "Update Successfully";
             header('location:../category/show_category.php');
             exit;
-        } else {
-            $_SESSION['msg'] = "Something went wrong..";
-            header("location:../category/edit_category.php?id=$categoryId");
-            exit;
         }
+        $_SESSION['msg'] = "Something went wrong..";
+        header("location:../category/edit_category.php?id=$categoryId");
+        exit;
     }
 ?>
 <?php include '../layout/header.php'; ?>
@@ -52,7 +51,7 @@
                                         }
                                     ?>
                                 >
-                                <label style="color:red;">
+                                <label class="text-danger">
                                 <?php
                                     if (isset($_SESSION['name_alert'])) {
                                         echo $_SESSION['name_alert'];

@@ -50,8 +50,9 @@
         if ($subtotal > $productsDiscount) {
             if ($discountType == DISCOUNT["flat"]) {
                 $discountPrice =  $productsDiscount;
+            } else {
+                $discountPrice = ($subtotal * $productsDiscount) / 100;
             }
-            $discountPrice = ($subtotal * $productsDiscount) / 100;
             for ($i = 0; $i < sizeof($productIds); $i++) {
                 $productDiscount[$i] = round((($productPrices[$i] * $productQuantities[$i] * $discountPrice)/$subtotal), 2);
                 $totalDiscount += $productDiscount[$i];
@@ -156,7 +157,7 @@
                             <div class=" px-4 flex justify-between">
                                 <?php if (sizeof($discounts) > 0) { ?>
                                     <span class="font-semibold text-sm">Discount</span>
-                                    <img src="/images/discount.png" style="width:20px;margin-right: 0px;position:absolute;right: 430px;" onclick="discountModal('discount-modal-id')">
+                                    <img src="/images/discount.png" style="width:20px;margin-right: 0px;position:absolute;right: 430px;" onclick="displayApplicableDiscountsModal('discount-modal-id')" id="discount-img">
                                     <?php include 'discount.php';?>
                                     <div class="hidden opacity-25 fixed inset-0 z-40 bg-black" id="discount-modal-id-backdrop"></div>
                                     <span class="font-bold" id="discount-price">- $0</span>
@@ -183,6 +184,7 @@
                     </div>
                 </div>
                 <script>productsCount = <?= sizeof($products) ?>;</script>
+                <script>discountsCount = <?= sizeof($discounts) ?>;</script>
                 <script type="text/javascript" src="custom.js"></script>
                 <script>
                     <?php

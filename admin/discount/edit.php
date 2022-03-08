@@ -17,11 +17,15 @@
         $discounts = $fetchDiscount->fetchAll();
         foreach ($discounts as $discount) {
             $discountDigit = (int) $discount['digit'];
+            $discountName = $discount['name'];
             $discountType = $discount['type'];
             $discountStatus = $discount['status'];
         }
     }
     if (isset($_POST['submit'])) {
+        if (empty($_POST['name'])) {
+            $_SESSION['name_alert'] = "Please enter data..";
+        }
         if (empty($_POST['digit'])) {
             $_SESSION['digit_alert'] = "Please enter data..";
         }
@@ -31,7 +35,7 @@
         if (empty($_POST['status'])) {
             $_SESSION['status_alert'] = "Please enter data..";
         }
-        if (empty($_POST['digit']) || empty($_POST['type']) || empty($_POST['status'])) {
+        if (empty($_POST['name']) || empty($_POST['digit']) || empty($_POST['type']) || empty($_POST['status'])) {
             header("location:../discount/edit.php?id=$discountId");
             exit;
         }
@@ -40,10 +44,12 @@
             header("location:../discount/edit.php?id=$discountId");
             exit;
         }
+        $discountName = $_POST['name'];
         $discountDigit = $_POST['digit'];
         $discountType = $_POST['type'];
         $discountStatus = $_POST['status'];
-        $updateDiscount = $pdo->prepare("UPDATE `discount` SET `type`=:type, `digit`=:digit, `status`=:status WHERE `id` = :id ");
+        $updateDiscount = $pdo->prepare("UPDATE `discount` SET `name`=:name, `type`=:type, `digit`=:digit, `status`=:status WHERE `id` = :id ");
+        $updateDiscount->bindParam(':name', $discountName);
         $updateDiscount->bindParam(':type', $discountType);
         $updateDiscount->bindParam(':digit', $discountDigit);
         $updateDiscount->bindParam(':status', $discountStatus);
@@ -53,11 +59,10 @@
             $_SESSION['msg'] = "Update Successfully";
             header('location:../discount/list.php');
             exit;
-        } else {
-            $_SESSION['msg'] = "Something went wrong";
-            header("location:../discount/edit.php?id=$discountId");
-            exit;
         }
+        $_SESSION['msg'] = "Something went wrong";
+        header("location:../discount/edit.php?id=$discountId");
+        exit;
     }
 ?>
 <?php include '../layout/header.php'; ?>
@@ -70,6 +75,24 @@
                         <h4 class="card-title">Edit Discount</h4>
                         <form class="forms-sample" method="post">
                             <div class="form-group">
+                                <label for="discount-name">Discount Name</label>
+                                <input type="text" class="form-control" id="discount-name" placeholder="Discount   Name" name="name"
+                                <?php
+                                    if (isset($discountName)) {
+                                        echo "value=\"".$discountName."\"";
+                                    }
+                                ?>
+                                >
+                                <label class="text-danger">
+                                    <?php
+                                        if (isset($_SESSION['name_alert'])) {
+                                            echo $_SESSION['name_alert'];
+                                            unset($_SESSION['name_alert']);
+                                        }
+                                    ?>
+                                </label>
+                            </div>
+                            <div class="form-group">
                                 <label for="discount-digit">Discount digit</label>
                                 <input type="number" class="form-control" id="discount-digit" placeholder="Discount   digit" name="digit"
                                 <?php
@@ -78,13 +101,13 @@
                                     }
                                 ?>
                                 >
-                                <label style="color:red;">
-                                <?php
-                                    if (isset($_SESSION['digit_alert'])) {
-                                        echo $_SESSION['digit_alert'];
-                                        unset($_SESSION['digit_alert']);
-                                    }
-                                ?>
+                                <label class="text-danger">
+                                    <?php
+                                        if (isset($_SESSION['digit_alert'])) {
+                                            echo $_SESSION['digit_alert'];
+                                            unset($_SESSION['digit_alert']);
+                                        }
+                                    ?>
                                 </label>
                             </div>
                             <div class="form-group">
@@ -110,13 +133,13 @@
                                     ?>
                                     >$</option>
                                 </select>
-                                <label style="color:red;">
-                                <?php
-                                    if (isset($_SESSION['type_alert'])) {
-                                        echo $_SESSION['type_alert'];
-                                        unset($_SESSION['type_alert']);
-                                    }
-                                ?>
+                                <label class="text-danger">
+                                    <?php
+                                        if (isset($_SESSION['type_alert'])) {
+                                            echo $_SESSION['type_alert'];
+                                            unset($_SESSION['type_alert']);
+                                        }
+                                    ?>
                                 </label>
                             </div>
                             <div class="form-group">
@@ -124,10 +147,10 @@
                                 <select id="discountStatus" class="form-control" name="status" >
                                     <option value="">--Select Status--</option>
                                     <option value="2" <?php if (isset($discountStatus)) {
-                                    if ($discountStatus == "2") {
-                                        echo 'selected="selected"';
-                                    }
-                                } ?>>Active</option>
+                                        if ($discountStatus == "2") {
+                                            echo 'selected="selected"';
+                                        }
+                                    } ?>>Active</option>
                                     <option value="1"
                                     <?php
                                     if (isset($discountStatus)) {
@@ -138,7 +161,7 @@
                                     ?>
                                     >Inactive</option>
                                 </select>
-                                <label style="color:red;">
+                                <label class="text-danger">
                                     <?php
                                         if (isset($_SESSION['status_alert'])) {
                                             echo $_SESSION['status_alert'];
