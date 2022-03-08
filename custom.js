@@ -1,6 +1,5 @@
 const cart = [];
 let subTotal = 0;
-
 if ((document.getElementById('subtotal').innerHTML).localeCompare('$0') == 0) {
     document.getElementById('discount-img').style.visibility = 'hidden';
 }
@@ -68,9 +67,9 @@ function displayCart() {
     let tax = new Array(cart.length);
     if (discountDigit.substring(discountDigit.length - 1) == "%") {
         discountType = 1;
+    } else {
+        discountType = 2;
     }
-    discountType = 2;
-
 
     var inputDiscountId = document.createElement('input');
     inputDiscountId.setAttribute('type', 'hidden');
@@ -247,8 +246,8 @@ function toast() {
 
 function discountApply(count) {
 
-    discountId = document.getElementById('discount-id-'+count).innerHTML.trim();
-    discountDigit = document.getElementById('discount-'+count).innerHTML.trim();
+    discountId = document.getElementById('discount-id-' + count).innerHTML.trim();
+    discountDigit = document.getElementById('discount-' + count).innerHTML.trim();
 
     for (i = 1; i <= discountsCount; i++){
         if (count != i) {
