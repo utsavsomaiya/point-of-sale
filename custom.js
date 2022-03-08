@@ -1,13 +1,14 @@
 const cart = [];
 let subTotal = 0;
+if ((document.getElementById('subtotal').innerHTML).localeCompare('$0') == 0) {
+    document.getElementById('discount-img').style.visibility = 'hidden';
+}
 
 function containerClean() {
-    document.getElementById('container').innerHTML = "";
-    document.getElementById('hidden-form').innerHTML = "";
-    document.getElementById('subtotal').innerHTML = "$0";
-    document.getElementById('discount-price').innerHTML = "$0";
-    document.getElementById('sales-tax').innerHTML = "$0";
-    document.getElementById('total').innerHTML = "$0";
+    while (cart.length) {
+        cart.pop();
+    }
+    displayCart();
 }
 
 function addToCart(id) {
@@ -46,6 +47,9 @@ function existsInArray(id) {
     });
 }
 
+var discountId = document.getElementById('discount-id-1').innerHTML.trim();
+var discountDigit = document.getElementById('discount-1').innerHTML.trim();
+
 function displayCart() {
     subTotal = 0;
     totalDiscount = 0;
@@ -53,9 +57,22 @@ function displayCart() {
     document.getElementById('container').innerHTML = "";
     document.getElementById('hidden-form').innerHTML = "";
     id = 1;
-    digit = document.getElementById('discount-digit').innerHTML.trim();
+
+    document.getElementById('discount-img').style.visibility = 'visible';
+
     let discount = new Array(cart.length);
     let tax = new Array(cart.length);
+    if (discountDigit.substring(discountDigit.length - 1) == "%") {
+        discountType = 1;
+    } else {
+        discountType = 2;
+    }
+
+    var inputDiscountId = document.createElement('input');
+    inputDiscountId.setAttribute('type', 'hidden');
+    inputDiscountId.setAttribute('name', 'discount_id');
+    inputDiscountId.value = discountId;
+    document.getElementById('hidden-form').appendChild(inputDiscountId);
 
     for (let i = 0; i < cart.length; i++) {
 
@@ -108,7 +125,7 @@ function displayCart() {
 
         var decreaseButton = document.createElement('button');
         decreaseButton.setAttribute('class', 'px-3 py-1 rounded-md bg-gray-300');
-        decreaseButton.setAttribute('onclick', 'changeQuantity(' + productId + ',' + id + ',' + '"decrease"' + ')');
+        decreaseButton.setAttribute('onclick', 'changeQuantity(' + productId + ',' + '"decrease"' + ')');
         decreaseButton.innerHTML = "-";
         document.getElementById('div-sub-second-' + id).appendChild(decreaseButton);
 
@@ -123,7 +140,7 @@ function displayCart() {
 
         var increaseButton = document.createElement('button');
         increaseButton.setAttribute('class', 'px-3 py-1 rounded-md bg-gray-300');
-        increaseButton.setAttribute('onclick', 'changeQuantity(' + productId + ',' + id + ',' + '"increase"' + ')');
+        increaseButton.setAttribute('onclick', 'changeQuantity(' + productId + ',' + '"increase"' + ')');
         increaseButton.innerHTML = "+";
         document.getElementById('div-sub-second-' + id).appendChild(increaseButton);
 
@@ -142,11 +159,11 @@ function displayCart() {
 
         id++;
     }
-    if (subTotal > digit) {
-        if (document.getElementById('discount-type').innerHTML.trim() == "2") {
-            discountPrice = digit;
+    if (subTotal > parseInt(discountDigit.replace(/[$%]/, ''))) {
+        if (discountType == "2") {
+            discountPrice = parseInt(discountDigit.replace(/[$%]/, ''));
         } else {
-            discountPrice = (subTotal * digit) / 100;
+            discountPrice = (subTotal * parseInt(discountDigit.replace(/[$%]/, ''))) / 100;
         }
         for (let i = 0; i < cart.length; i++) {
             discount[i] = (parseInt((cart[i].price).slice(1)) * discountPrice) / subTotal;
@@ -160,6 +177,10 @@ function displayCart() {
     document.getElementById('sales-tax').innerHTML = "+ $" + (totalTax).toFixed(2);
     document.getElementById('discount-price').innerHTML = "- $" + (totalDiscount).toFixed(2);
     document.getElementById('total').innerHTML = "$" + (grandTotal).toFixed(2);
+
+    if ((document.getElementById('subtotal').innerHTML).localeCompare('$0') == 0) {
+        document.getElementById('discount-img').style.visibility = 'hidden';
+    }
 }
 
 function inputQuantity(productId, id) {
@@ -175,7 +196,7 @@ function inputQuantity(productId, id) {
     displayCart();
 }
 
-function changeQuantity(productId, id, checked) {
+function changeQuantity(productId, checked) {
     var indexOfProduct = cart.findIndex((obj => obj.id == productId));
     cart[indexOfProduct].quantity = isNaN(cart[indexOfProduct].quantity) ? 0 : cart[indexOfProduct].quantity;
     if (checked == "increase") {
@@ -207,4 +228,55 @@ function removeFromCart(productId) {
         cart.splice(indexOfProduct, 1);
         displayCart();
     }
+}
+
+function displayApplicableDiscountsModal(modalId) {
+    document.getElementById(modalId).classList.toggle("hidden");
+    document.getElementById(modalId + "-backdrop").classList.toggle("hidden");
+    document.getElementById(modalId).classList.toggle("flex");
+    document.getElementById(modalId + "-backdrop").classList.toggle("flex");
+}
+
+function toast() {
+    var toast = document.getElementById("snackbar");
+    toast.className = "show";
+    setTimeout(function() {
+        toast.className = toast.className.replace("show", "");
+    }, 3000);
+}
+
+function discountApply(count) {
+
+    discountId = document.getElementById('discount-id-' + count).innerHTML.trim();
+    discountDigit = document.getElementById('discount-' + count).innerHTML.trim();
+
+    for (i = 1; i <= discountsCount; i++){
+        if (count != i) {
+            document.getElementById('discount-button-' + count).setAttribute('class', 'bg-green-500 text-white font-bold py-2 px-4 rounded-full');
+            document.getElementById('discount-button-' + count).innerHTML = "Applied";
+            document.getElementById('discount-button-' + count).disabled = true;
+
+           document.getElementById('discount-button-' + i).setAttribute('class', 'bg-red-500 text-white font-bold py-2 px-4 rounded-full');
+            document.getElementById('discount-button-' + i).innerHTML = "Apply";
+            document.getElementById('discount-button-' + i).disabled = false;
+        }
+    }
+    displayCart();
+}
+
+function searchProducts() {
+    var input = document.getElementById('searchbar').value.toLowerCase();
+    var hasResults = false;
+    for (i = 0; i < productsCount; i++) {
+        var name = document.getElementById('name-' + (i + 1)).innerHTML;
+        var category = document.getElementById('category-' + (i + 1)).innerHTML;
+        var price = document.getElementById('price-' + (i + 1)).innerHTML;
+        if (name.toLowerCase().includes(input) || category.toLowerCase().includes(input) || price.toLowerCase().includes(input)) {
+            document.getElementById('products-list-' + (i + 1)).style.display = 'block';
+            hasResults = true;
+        } else {
+            document.getElementById('products-list-' + (i + 1)).style.display = 'none';
+        }
+    }
+    document.getElementById('not-available').style.display = hasResults ? 'none' : 'block';
 }

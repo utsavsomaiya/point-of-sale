@@ -51,13 +51,13 @@
                                         }
                                     ?>
                                 >
-                                <label style="color:red;">
-                                    <?php
-                                        if (isset($_SESSION['name_alert'])) {
-                                            echo $_SESSION['name_alert'];
-                                            unset($_SESSION['name_alert']);
-                                        }
-                                    ?>
+                                <label class="text-danger">
+                                <?php
+                                    if (isset($_SESSION['name_alert'])) {
+                                        echo $_SESSION['name_alert'];
+                                        unset($_SESSION['name_alert']);
+                                    }
+                                ?>
                                 </label>
                             </div>
                             <button type="submit" class="btn btn-primary me-2" name="submit" onclick="toast()">Submit</button>
