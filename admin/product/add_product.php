@@ -103,7 +103,7 @@
                             <div class="form-group">
                                 <label for="product-name">Product Name</label>
                                 <input id="product-name" type=" text" class="form-control" placeholder="Product Name"
-                                    name="product_name"
+                                    name="product_name" required
                                     <?php
                                         if (isset($_SESSION['product_name'])) {
                                             echo "value=\"" . $_SESSION['product_name'] . "\"";
@@ -123,7 +123,7 @@
                             <div class="form-group">
                                 <label for="product-price">Product Price</label>
                                 <input id="product-price" type="number" class="form-control" placeholder="Product Price"
-                                    name="product_price"
+                                    name="product_price" required
                                     <?php
                                         if (isset($_SESSION['product_price'])) {
                                             echo "value=\"" . $_SESSION['product_price'] . "\"";
@@ -168,7 +168,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="product-tax">Tax of the Product</label>
-                                <select id="product-tax" class="form-control" name="product_tax" >
+                                <select id="product-tax" class="form-control" name="product_tax" required>
                                     <option value="">--Select Tax--</option>
                                     <option value="5"
                                     <?php
@@ -228,7 +228,7 @@
                             <div class="form-group">
                                 <label for="product-stock">Product Stock</label>
                                 <input id="product-stock" type="number" class="form-control" placeholder="Product Stock"
-                                    name="product_stock"
+                                    name="product_stock" required
                                     <?php
                                         if (isset($_SESSION['product_stock'])) {
                                             echo "value=\"" . $_SESSION['product_stock'] . "\"";
@@ -246,7 +246,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="product-image">Product Image</label>
-                                <input id="product-image" type="file" class="form-control" accept="image/png, image/gif, image/jpeg, image/jpg" name="product_image" >
+                                <input id="product-image" type="file" class="form-control" accept="image/png, image/gif, image/jpeg, image/jpg" name="product_image" required>
                                 <label class="text-danger">
                                     <?php
                                         if (isset($_SESSION['file_alert'])) {

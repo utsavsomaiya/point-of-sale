@@ -65,7 +65,7 @@
 
         $insertSales = $pdo->prepare("INSERT INTO `sales` (`subtotal`, `total_tax`, `discount_id`, `discount`, `total`) VALUES (:subtotal,:total_tax,:discount_id,:discount,:total)");
         $insertSales->bindParam(':subtotal', $subtotal);
-        $insertSales->bindParam(':total_tax', $totalTax);
+        $insertSales->bindParam(':total_tax', round($totalTax, 2));
         $insertSales->bindParam(':discount_id', $discountId);
         $insertSales->bindParam(':discount', $totalDiscount);
         $insertSales->bindParam(':total', $grandTotal);
