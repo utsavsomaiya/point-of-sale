@@ -34,9 +34,10 @@
                 <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
                     <div>
                             <a href="#">
-                                <span style="font-size:large; color:black;">Retail
+                                <span style="font-size:large; color:black;">
+                                    Retail
                                     <b style="color:blue">
-                                    Store
+                                        Store
                                     </b>
                                 </span>
                             </a>
@@ -65,10 +66,14 @@
                             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
                                 <div class="dropdown-header text-center">
                                     <img class="img-md rounded-circle" src="/admin/image/face8.jpg" alt="Profile image">
-                                    <p class="mb-1 mt-3 font-weight-semibold"><?= $_SESSION['name']; ?></p>
+                                    <p class="mb-1 mt-3 font-weight-semibold">
+                                        <?= $_SESSION['name'] ?>
+                                    </p>
                                 </div>
-                                <a class="dropdown-item" href="/admin/auth/signout.php"><i
-                                        class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out</a>
+                                <a class="dropdown-item" href="/admin/auth/signout.php">
+                                    <i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>
+                                    Sign Out
+                                </a>
                             </div>
                         </li>
                     </ul>
@@ -84,31 +89,31 @@
                             </a>
                         </li>
                         <li class="nav-item nav-category">Products</li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/admin/product/show_product.php">
-                                    <i class="menu-icon mdi mdi-floor-plan"></i>
-                                    <span class="menu-title">Products</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/admin/category/show_category.php">
-                                    <img src="/images/categories.png" style="width: 20px; margin-right: 10px;">
-                                    <span class="menu-title">Categories</span>
-                                </a>
-                            </li>
-                            <li class="nav-item nav-category">Discounts</li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/admin/discount/list.php">
-                                    <img src="/images/discount.png" style="width: 20px; margin-right: 10px;">
-                                    <span class="menu-title">Discount</span>
-                                </a>
-                            </li>
-                            <li class="nav-item nav-category">Sales Details</li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/admin/sales.php">
-                                    <img src="/images/sales.png" style="width: 20px; margin-right: 10px;">
-                                    <span class="menu-title">Sales</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/product/show_product.php">
+                                <i class="menu-icon mdi mdi-floor-plan"></i>
+                                <span class="menu-title">Products</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/category/show_category.php">
+                                <img src="/images/categories.png" style="width: 20px; margin-right: 10px;">
+                                <span class="menu-title">Categories</span>
+                            </a>
+                        </li>
+                        <li class="nav-item nav-category">Discounts</li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/discount/list.php">
+                                <img src="/images/discount.png" style="width: 20px; margin-right: 10px;">
+                                <span class="menu-title">Discount</span>
+                            </a>
+                        </li>
+                        <li class="nav-item nav-category">Sales Details</li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/sales.php">
+                                <img src="/images/sales.png" style="width: 20px; margin-right: 10px;">
+                                <span class="menu-title">Sales</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>

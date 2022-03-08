@@ -154,7 +154,7 @@
                                             }
                                         ?>
                                         >
-                                        <?= $category['name'] ?>
+                                            <?= $category['name'] ?>
                                         </option>
                                     <?php } ?>
                                 </select>
@@ -257,8 +257,12 @@
                                     ?>
                                 </label>
                             </div>
-                            <button type="submit" class="btn btn-primary me-2" name="submit">Submit</button>
-                            <a href="../product/show_product.php" class="btn btn-light">Cancel</a>
+                            <button type="submit" class="btn btn-primary me-2" name="submit">
+                                Submit
+                            </button>
+                            <a href="../product/show_product.php" class="btn btn-light">
+                                Cancel
+                            </a>
                         </form>
                     </div>
                 </div>

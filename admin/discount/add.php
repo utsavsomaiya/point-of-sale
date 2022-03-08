@@ -64,9 +64,7 @@
             <div class="col-md-6 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">
-                            Add new Discount
-                        </h4>
+                        <h4 class="card-title">Add new Discount</h4>
                         <form class="forms-sample" method="post">
                             <div class="form-group">
                                 <label for="discountName">Discount Name</label>
@@ -176,8 +174,12 @@
                                     ?>
                                 </label>
                             </div>
-                            <button type="submit" class="btn btn-primary me-2" name="submit">Submit</button>
-                            <a href="../discount/list.php" class="btn btn-light">Cancel</a>
+                            <button type="submit" class="btn btn-primary me-2" name="submit">
+                                Submit
+                            </button>
+                            <a href="../discount/list.php" class="btn btn-light">
+                                Cancel
+                            </a>
                         </form>
                     </div>
                 </div>
