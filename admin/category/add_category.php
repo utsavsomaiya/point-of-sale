@@ -2,7 +2,7 @@
     session_start();
     if (isset($_POST['submit'])) {
         if (empty($_POST['category_name'])) {
-            $_SESSION['name_alert'] = "Please Enter Data..";
+            $_SESSION['name_alert'] = "Please enter category name.";
             header('location:/admin/category/add_category.php');
             exit;
         }
@@ -13,11 +13,11 @@
         $insertCategory->bindParam('categoryName', $categoryName);
         $isExecuted = $insertCategory->execute();
         if ($isExecuted) {
-            $_SESSION['msg'] = "Add Successfully";
+            $_SESSION['message'] = "Category added successfully.";
             header('location:/admin/category/show_category.php');
             exit;
         }
-        $_SESSION['msg'] = "Something went wrong";
+        $_SESSION['message'] = "Something went wrong.";
         header('location:/admin/category/add_category.php');
         exit;
     }

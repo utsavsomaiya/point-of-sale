@@ -11,7 +11,7 @@
 
     if (isset($_POST["submit"])) {
         if (empty($_POST['productId'])) {
-            $_SESSION['msg'] = "Please add some item in your cart..";
+            $_SESSION['message'] = "Please add some item in your cart..";
             header('location:/');
             exit;
         }
@@ -79,11 +79,11 @@
             $updateStock->bindParam(':productId', $productIds[$i]);
             $isExecuted = $updateStock->execute();
             if ($isExecuted) {
-                $_SESSION['msg'] = "Add Successfully";
+                $_SESSION['message'] = "Add Successfully";
                 header('location:/');
                 exit;
             }
-            $_SESSION['msg'] = "Not Successfully";
+            $_SESSION['message'] = "Not Successfully";
             header('location:/');
             exit;
         }

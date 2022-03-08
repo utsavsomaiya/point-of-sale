@@ -2,23 +2,23 @@
     session_start();
     if (isset($_POST['submit'])) {
         if (empty($_POST['name'])) {
-            $_SESSION['name_alert'] = "Please enter data..";
+            $_SESSION['name_alert'] = "Please enter discount name.";
         }
         if (empty($_POST['digit'])) {
-            $_SESSION['digit_alert'] = "Please enter data..";
+            $_SESSION['digit_alert'] = "Please enter discount digit.";
         }
         if (empty($_POST['type'])) {
-            $_SESSION['type_alert'] = "Please enter data..";
+            $_SESSION['type_alert'] = "Please select discount type.";
         }
         if (empty($_POST['status'])) {
-            $_SESSION['status_alert'] = "Please enter data..";
+            $_SESSION['status_alert'] = "Please select discount status.";
         }
         if (empty($_POST['name']) || empty($_POST['digit']) || empty($_POST['type']) || empty($_POST['status'])) {
             header('location:../discount/add.php');
             exit;
         }
         if ($_POST['digit'] > "100"  && $_POST['type'] == "1") {
-            $_SESSION['digit_alert'] = "Percentage could not be greater than 100";
+            $_SESSION['digit_alert'] = "Percentage could not be greater than 100.";
             header('location:../discount/add.php');
             exit;
         }
@@ -35,7 +35,7 @@
         $fetchDiscount->execute();
         $count = $fetchDiscount->rowCount();
         if ($count == 1) {
-            $_SESSION['digit_alert'] = "Already taken this discount";
+            $_SESSION['digit_alert'] = "Already taken this discount.";
             header('location:../discount/add.php');
             exit;
         }
@@ -48,11 +48,11 @@
         $insertDiscount->bindParam(':status', $discountStatus);
         $isExecute = $insertDiscount->execute();
         if ($isExecute) {
-            $_SESSION['msg'] = "Add Successfully";
+            $_SESSION['message'] = "Discount added successfully.";
             header('location:../discount/list.php');
             exit;
         }
-        $_SESSION['msg'] = "Something went wrong";
+        $_SESSION['message'] = "Something went wrong.";
         header('location:../discount/add.php');
         exit;
     }

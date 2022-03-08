@@ -2,10 +2,10 @@
     session_start();
     if (isset($_POST['submit'])) {
         if (empty($_POST['email'])) {
-            $_SESSION['name_alert'] = "Please Enter data..";
+            $_SESSION['name_alert'] = "Please enter username.";
         }
         if (empty($_POST['password'])) {
-            $_SESSION['password_alert'] = "Please Enter data..";
+            $_SESSION['password_alert'] = "Please enter password.";
         }
         if (empty($_POST['password']) || empty($_POST['email'])) {
             header('location:/admin/auth/login.php');
@@ -21,12 +21,12 @@
         $fetchAdmin->execute();
         $count = $fetchAdmin->rowCount();
         if ($count > 0) {
-            $_SESSION['msg'] = "Login Successfully";
+            $_SESSION['message'] = "Login Successfully";
             $_SESSION['login'] = "User logged in..";
             header('location:../dashboard.php');
             exit;
         } else {
-            $_SESSION['alert'] = "Incorrect Credentials..";
+            $_SESSION['alert'] = "Incorrect credentials.";
             header('location:/admin/auth/login.php');
             exit;
         }
@@ -64,10 +64,11 @@
                                 <h6 class="fw-light">Sign in to continue.</h6>
                                 <form class="pt-3" method="post">
                                     <div class="form-group">
-                                        <input type="text" class="form-control form-control-lg" placeholder="Username" name="email"
+                                        <input type="text" class="form-control form-control-lg" placeholder="Username" name="email" required
                                         <?php
                                             if (isset($_SESSION["name"])) {
                                                 echo "value=\"".$_SESSION["name"]."\"";
+                                                unset($_SESSION["name"]);
                                             }
                                         ?>
                                         >
@@ -81,7 +82,7 @@
                                         </label>
                                     </div>
                                     <div class="form-group">
-                                        <input type="password" class="form-control form-control-lg" placeholder="Password" name="password">
+                                        <input type="password" class="form-control form-control-lg" placeholder="Password" name="password" required>
                                         <label class="text-danger">
                                             <?php
                                                 if (isset($_SESSION["password_alert"])) {
