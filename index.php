@@ -11,7 +11,7 @@
 
     if (isset($_POST["submit"])) {
         if (empty($_POST['productId'])) {
-            $_SESSION['message'] = "Please add some item in your cart..";
+            $_SESSION['message'] = "Please add some item in your cart.";
             header('location:/');
             exit;
         }
@@ -65,7 +65,7 @@
 
         $insertSales = $pdo->prepare("INSERT INTO `sales` (`subtotal`, `total_tax`, `discount_id`, `discount`, `total`) VALUES (:subtotal,:total_tax,:discount_id,:discount,:total)");
         $insertSales->bindParam(':subtotal', $subtotal);
-        $insertSales->bindParam(':total_tax', round($totalTax, 2));
+        $insertSales->bindParam(':total_tax', $totalTax);
         $insertSales->bindParam(':discount_id', $discountId);
         $insertSales->bindParam(':discount', $totalDiscount);
         $insertSales->bindParam(':total', $grandTotal);
@@ -78,15 +78,15 @@
             $updateStock->bindParam(':productQuantity', $productQuantities[$i]);
             $updateStock->bindParam(':productId', $productIds[$i]);
             $isExecuted = $updateStock->execute();
-            if ($isExecuted) {
-                $_SESSION['message'] = "Add Successfully";
-                header('location:/');
-                exit;
-            }
-            $_SESSION['message'] = "Not Successfully";
+        }
+        if ($isExecuted) {
+            $_SESSION['message'] = "Order added successfully.";
             header('location:/');
             exit;
         }
+        $_SESSION['message'] = "Something went wrong.";
+        header('location:/');
+        exit;
     }
 ?>
 <!doctype html>
@@ -178,8 +178,8 @@
                             <div id='hidden-form'></div>
                             <button name="submit" class="px-4 py-4 rounded-md shadow-lg text-center bg-yellow-500 text-white font-semibold" style="width: 500px;">Complete Sale</button>
                         </form>
-                        <?php if (isset($_SESSION["msg"])) { ?>
-                            <div id="snackbar"> <?= $_SESSION["msg"]; ?> </div>
+                        <?php if (isset($_SESSION['message'])) { ?>
+                            <div id="snackbar"> <?= $_SESSION['message']; ?> </div>
                         <?php } ?>
                     </div>
                 </div>
@@ -188,12 +188,12 @@
                 <script type="text/javascript" src="custom.js"></script>
                 <script>
                     <?php
-                        if (isset($_SESSION["msg"])) {
+                        if (isset($_SESSION['message'])) {
                             echo "toast()";
                         }
                     ?>
                 </script>
-                <?php unset($_SESSION["msg"]); ?>
+                <?php unset($_SESSION['message']); ?>
             </div>
         </div>
     </body>
