@@ -45,7 +45,7 @@
                         </table>
                     <?php
                         } else {
-                            echo "No Record Found..";
+                            echo "No categories found.";
                         }
                     ?>
                 </div>

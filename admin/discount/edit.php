@@ -24,23 +24,23 @@
     }
     if (isset($_POST['submit'])) {
         if (empty($_POST['name'])) {
-            $_SESSION['name_alert'] = "Please enter data..";
+            $_SESSION['name_alert'] = "Please enter discount name.";
         }
         if (empty($_POST['digit'])) {
-            $_SESSION['digit_alert'] = "Please enter data..";
+            $_SESSION['digit_alert'] = "Please enter discount digit.";
         }
         if (empty($_POST['type'])) {
-            $_SESSION['type_alert'] = "Please enter data..";
+            $_SESSION['type_alert'] = "Please select discount type.";
         }
         if (empty($_POST['status'])) {
-            $_SESSION['status_alert'] = "Please enter data..";
+            $_SESSION['status_alert'] = "Please select discount status.";
         }
         if (empty($_POST['name']) || empty($_POST['digit']) || empty($_POST['type']) || empty($_POST['status'])) {
             header("location:../discount/edit.php?id=$discountId");
             exit;
         }
         if ($_POST['digit'] > "100"  && $_POST['type'] == "1") {
-            $_SESSION['digit_alert'] = "Percentage could not be greater than 100";
+            $_SESSION['digit_alert'] = "Percentage could not be greater than 100.";
             header("location:../discount/edit.php?id=$discountId");
             exit;
         }
@@ -56,11 +56,11 @@
         $updateDiscount->bindParam(':id', $discountId);
         $isExecuted = $updateDiscount->execute();
         if ($isExecuted) {
-            $_SESSION['msg'] = "Update Successfully";
+            $_SESSION['message'] = "Discount updated successfully.";
             header('location:../discount/list.php');
             exit;
         }
-        $_SESSION['msg'] = "Something went wrong";
+        $_SESSION['message'] = "Something went wrong.";
         header("location:../discount/edit.php?id=$discountId");
         exit;
     }
