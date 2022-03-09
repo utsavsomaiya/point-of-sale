@@ -172,41 +172,31 @@
                                         if ($productTax == "5") {
                                             echo 'selected="selected"';
                                         }
-                                    ?>>
-                                        5%
-                                    </option>
+                                    ?>>5%</option>
                                     <option value="10"
                                     <?php
                                         if ($productTax == "10") {
                                             echo 'selected="selected"';
                                         }
-                                    ?>>
-                                        10%
-                                    </option>
+                                    ?>>10%</option>
                                     <option value="15"
                                     <?php
                                         if ($productTax == "15") {
                                             echo 'selected="selected"';
                                         }
-                                    ?>>
-                                        15%
-                                    </option>
+                                    ?>>15%</option>
                                     <option value="20"
                                     <?php
                                         if ($productTax == "20") {
                                             echo 'selected="selected"';
                                         }
-                                    ?>>
-                                        20%
-                                    </option>
+                                    ?>>20%</option>
                                     <option value="25"
                                     <?php
                                         if ($productTax == "25") {
                                             echo 'selected="selected"';
                                         }
-                                    ?>>
-                                        25%
-                                    </option>
+                                    ?>>25%</option>
                                 </select>
                                 <label class="text-danger">
                                     <?php
@@ -228,10 +218,10 @@
                                     ?>>
                                 <label class="text-danger">
                                     <?php
-                                    if (isset($_SESSION['stock_alert'])) {
-                                        echo $_SESSION['stock_alert'];
-                                        unset($_SESSION['stock_alert']);
-                                    }
+                                        if (isset($_SESSION['stock_alert'])) {
+                                            echo $_SESSION['stock_alert'];
+                                            unset($_SESSION['stock_alert']);
+                                        }
                                     ?>
                                 </label>
                             </div>
@@ -254,8 +244,12 @@
                                     ?>
                                 </label>
                             </div>
-                            <button type="submit" class="btn btn-primary me-2" name="submit" onclick="toast()">Submit</button>
-                            <a href="../product/show_product.php" class="btn btn-light">Cancel</a>
+                            <button type="submit" class="btn btn-primary me-2" name="submit" onclick="toast()">
+                                Submit
+                            </button>
+                            <a href="../product/show_product.php" class="btn btn-light">
+                                Cancel
+                            </a>
                         </form>
                     </div>
                 </div>
