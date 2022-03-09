@@ -13,21 +13,21 @@
     }
     if (isset($_POST['submit'])) {
         if (empty($_POST['category_name'])) {
-            $_SESSION['name_alert'] = "Please Enter Data..";
+            $_SESSION['name_alert'] = "Please enter category name.";
             header("location:/admin/category/edit_category.php?id=$categoryId");
             exit;
         }
         $categoryName = $_POST['category_name'];
         $updateCategory = $pdo->prepare("UPDATE `category` set `name` = :name WHERE `id` = :id");
         $updateCategory->bindParam(':name', $categoryName);
-        $updateCategory->bindParam(':id', $_SESSION['category_id']);
+        $updateCategory->bindParam(':id', $categoryId);
         $isExecuted = $updateCategory->execute();
         if ($isExecuted) {
-            $_SESSION['msg'] = "Update Successfully";
+            $_SESSION['message'] = "Category updated successfully.";
             header('location:../category/show_category.php');
             exit;
         }
-        $_SESSION['msg'] = "Something went wrong..";
+        $_SESSION['message'] = "Something went wrong.";
         header("location:../category/edit_category.php?id=$categoryId");
         exit;
     }
@@ -52,16 +52,20 @@
                                     ?>
                                 >
                                 <label class="text-danger">
-                                <?php
-                                    if (isset($_SESSION['name_alert'])) {
-                                        echo $_SESSION['name_alert'];
-                                        unset($_SESSION['name_alert']);
-                                    }
-                                ?>
+                                    <?php
+                                        if (isset($_SESSION['name_alert'])) {
+                                            echo $_SESSION['name_alert'];
+                                            unset($_SESSION['name_alert']);
+                                        }
+                                    ?>
                                 </label>
                             </div>
-                            <button type="submit" class="btn btn-primary me-2" name="submit" onclick="toast()">Submit</button>
-                            <a href="/admin/category/show_category.php" class="btn btn-light" name="cancel">Cancel</a>
+                            <button type="submit" class="btn btn-primary me-2" name="submit" onclick="toast()">
+                                Submit
+                            </button>
+                            <a href="/admin/category/show_category.php" class="btn btn-light" name="cancel">
+                                Cancel
+                            </a>
                         </form>
                     </div>
                 </div>

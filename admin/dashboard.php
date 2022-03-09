@@ -18,19 +18,27 @@
                                     <div class="statistics-details d-flex align-items-center justify-content-between">
                                         <div>
                                             <p class="statistics-title">Total sales count</p>
-                                            <h3 class="rate-percentage"><?= $salesDetails[0]['total_sales'] ?></h3>
+                                            <h3 class="rate-percentage">
+                                                <?= $salesDetails[0]['total_sales'] ?>
+                                            </h3>
                                         </div>
                                         <div>
                                             <p class="statistics-title">Total sales amount</p>
-                                            <h3 class="rate-percentage"><?= $salesDetails[0]['sales_total']?></h3>
+                                            <h3 class="rate-percentage">
+                                                <?= round($salesDetails[0]['sales_total'], 2)?>
+                                            </h3>
                                         </div>
                                         <div>
                                             <p class="statistics-title">Total discount offered</p>
-                                            <h3 class="rate-percentage"><?= round($salesDetails[0]['total_discount'], 2)?></h3>
+                                            <h3 class="rate-percentage">
+                                                <?= round($salesDetails[0]['total_discount'], 2)?>
+                                            </h3>
                                         </div>
                                         <div class="d-none d-md-block">
                                             <p class="statistics-title">Total tax collected</p>
-                                            <h3 class="rate-percentage"><?= round($salesDetails[0]['total_tax'], 2) ?></h3>
+                                            <h3 class="rate-percentage">
+                                                <?= round($salesDetails[0]['total_tax'], 2) ?>
+                                            </h3>
                                         </div>
                                     </div>
                                 </div>

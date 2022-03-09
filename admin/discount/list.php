@@ -29,40 +29,51 @@
                             </thead>
                             <tbody>
                                 <?php foreach ($discounts as $discount) { ?>
-                                <tr>
-                                    <td><?= $discount['id'] ?></td>
-                                    <td><?= $discount['name'] ?></td>
-                                    <td><?= "$".$discount['minimum_spend_amount'] ?></td>
-                                    <td>
-                                    <?php
-                                    if ($discount['type'] == "1") {
-                                        echo $discount['digit']."%";
-                                    } else {
-                                        echo "$".$discount['digit'];
-                                    } ?>
-                                    </td>
-                                    <td>
-                                        <label class="switch">
-                                            <input type="checkbox" value="<?=$discount['status']; ?>" <?php
-                                                        if ($discount['status'] == "2") {
-                                                            echo "checked";
-                                                        } ?>
-                                                onclick="discountStatusChanged(<?= $discount['id'] ; ?>,<?= $discount['status']?>)">
-                                            <span class="slider round"></span>
-                                        </label>
-                                    </td>
-                                    <td><a href="../discount/edit.php?id=<?= $discount['id'] ?>"><img
-                                                src="/admin/image/edit-icon.png" /></a></td>
-                                    <td><a href="javascript:deleteDiscount(<?= $discount['id'] ?>)"><i class="fa fa-trash-o"
-                                                style="font-size:24px"></i></a>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td><?= $discount['id'] ?></td>
+                                        <td><?= $discount['name'] ?></td>
+                                        <td>
+                                            <?php
+                                                if ($discount['type'] == "1") {
+                                                    echo $discount['digit']."%";
+                                                } else {
+                                                    echo "$".$discount['digit'];
+                                                }
+                                            ?>
+                                        </td>
+                                        <td>
+                                            <label class="switch">
+                                                <input type="checkbox"
+                                                value="<?= $discount['status'] ?>"
+                                                <?php
+                                                    if ($discount['status'] == "2") {
+                                                        echo "checked";
+                                                    }
+                                                ?>
+                                                onclick=
+                                                "discountStatusChanged(<?= $discount['id'] ?>,<?= $discount['status']?>)"
+                                                >
+                                                <span class="slider round"></span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <a
+                                            href="../discount/edit.php?id=<?= $discount['id'] ?>">
+                                                <img src="/admin/image/edit-icon.png">
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="javascript:deleteDiscount(<?= $discount['id'] ?>)">
+                                                <i class="fa fa-trash-o" style="font-size:24px"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
                                 <?php } ?>
                             </tbody>
                         </table>
                     <?php
                         } else {
-                            echo "No Record Found..";
+                            echo "No discounts found.";
                         }
                     ?>
                 </div>

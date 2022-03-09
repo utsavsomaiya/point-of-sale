@@ -40,7 +40,7 @@
                             </table>
                         <?php
                             } else {
-                                echo "No Record Found..";
+                                echo "No sales found.";
                             }
                         ?>
                     </div>

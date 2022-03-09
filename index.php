@@ -4,14 +4,16 @@
     $fetchProducts = $pdo->prepare("SELECT p.id,p.name,p.price,c.name as category_name,p.tax,p.stock,p.image FROM product p JOIN category c ON c.id = p.category_id ORDER BY p.name ASC");
     $fetchProducts->execute();
     $products = $fetchProducts->fetchAll();
+
     $fetchDiscounts = $pdo->prepare("SELECT * FROM `discount` WHERE `status` = 2");
     $fetchDiscounts->execute();
     $discounts = $fetchDiscounts->fetchAll();
+
     define("DISCOUNT", ["flat"=>2, "percentage"=>1]);
 
     if (isset($_POST["submit"])) {
         if (empty($_POST['productId'])) {
-            $_SESSION['msg'] = "Please add some item in your cart..";
+            $_SESSION['message'] = "Please add some item in your cart.";
             header('location:/');
             exit;
         }
@@ -36,6 +38,7 @@
             $productTaxes[$i] = $productTax;
             $subtotal +=  ($productPrices[$i] * $productQuantities[$i]) ;
         }
+
         $fetchDiscount = $pdo->prepare("SELECT * FROM `discount` WHERE `id` = :id");
         $fetchDiscount->bindParam(':id', $_POST['discount_id']);
         $fetchDiscount->execute();
@@ -45,6 +48,7 @@
             $discountType = (int) $discount['type'];
             $productsDiscount = (int) $discount['digit'];
         }
+
         $totalDiscount = 0;
         $totalTax = 0;
         $discountPrice = 0;
@@ -81,15 +85,15 @@
             $updateStock->bindParam(':productQuantity', $productQuantities[$i]);
             $updateStock->bindParam(':productId', $productIds[$i]);
             $isExecuted = $updateStock->execute();
-            if ($isExecuted) {
-                $_SESSION['msg'] = "Add Successfully";
-                header('location:/');
-                exit;
-            }
-            $_SESSION['msg'] = "Not Successfully";
+        }
+        if ($isExecuted) {
+            $_SESSION['message'] = "Order added successfully.";
             header('location:/');
             exit;
         }
+        $_SESSION['message'] = "Something went wrong.";
+        header('location:/');
+        exit;
     }
 ?>
 <!doctype html>
@@ -111,32 +115,48 @@
                     <div class="flex flex-row justify-between items-center px-5 mt-5">
                         <div class="text-gray-800">
                             <div class="font-bold text-xl">Utsav's Retail Shop</div>
-                            <span class="text-xs">"Aashirvad", 7-Nandhinagar, Nanavati Chowk, Rajkot-360007</span>
+                            <span class="text-xs">
+                                "Aashirvad", 7-Nandhinagar, Nanavati Chowk, Rajkot-360007
+                            </span>
                         </div>
                         <input type="text" placeholder="Search Products" class="w-full h-12 px-4 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg lg:w-20 xl:transition-all xl:duration-300 xl:w-36 xl:focus:w-44 lg:h-10 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-teal-500 dark:focus:border-teal-500 focus:outline-none focus:ring focus:ring-primary dark:placeholder-gray-400 focus:ring-opacity-40" onkeyup="searchProducts()" id="searchbar">
                     </div>
                     <div class="grid grid-cols-3 gap-4 px-5 mt-5 overflow-y-auto h-3/4">
                         <div id="not-available" style="display: none;">
-                            <h5 style="width: 400px;">Sorry, the products has not been added yet...</h5>
+                            <h5 style="width: 400px;">
+                                Sorry, the products has not been added yet...
+                            </h5>
                         </div>
                         <?php $id = 0; foreach ($products as $product) { ?>
                             <?php $id++; ?>
-                            <div class="transform hover:scale-105 transition duration-300 px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between" onclick="addToCart(<?= $id; ?>)" id="products-list-<?= $id; ?>" style="
-                            <?php
-                                if ($product['stock'] <=0) {
-                                    echo "opacity:0.5";
-                                }
-                            ?>"
+                            <div class="transform hover:scale-105 transition duration-300 px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between" onclick="addToCart(<?= $id; ?>)" id="products-list-<?= $id; ?>"
+                                style = " <?php
+                                    if ($product['stock'] <=0) {
+                                        echo "opacity:0.5";
+                                    }
+                                ?>"
                             >
                                 <div>
-                                    <label hidden id="<?= "id-".$id; ?>"><?= $product["id"] ?></label>
-                                    <label hidden id="<?= "stock-".$id; ?>"><?= $product["stock"] ?></label>
-                                    <div class="font-bold text-gray-800" id="<?= "name-".$id; ?>"><?= $product["name"] ?></div>
-                                    <span class="font-light text-sm text-gray-400" id="<?= "category-".$id; ?>"><?= $product["category_name"] ?></span>
+                                    <label hidden id="<?= "id-".$id; ?>">
+                                        <?= $product["id"] ?>
+                                    </label>
+                                    <label hidden id="<?= "stock-".$id; ?>">
+                                        <?= $product["stock"] ?>
+                                    </label>
+                                    <div class="font-bold text-gray-800" id="<?= "name-".$id; ?>">
+                                        <?= $product["name"] ?>
+                                    </div>
+                                    <span class="font-light text-sm text-gray-400" id="<?= "category-".$id; ?>">
+                                        <?= $product["category_name"] ?>
+                                    </span>
                                 </div>
                                 <div class="flex flex-row justify-between items-center">
-                                    <span class="self-end font-bold text-lg text-yellow-500" id="<?= "price-".$id; ?>"><?= "$".$product["price"] ?></span>
-                                    <span class="self-end font-bold text-small text-red-500" id="<?= "tax-" . $id; ?>"><?= $product["tax"] . "%" ?></span>
+                                    <span class="self-end font-bold text-lg text-yellow-500" id="<?= "price-".$id; ?>">
+                                        <?= "$".$product["price"] ?>
+                                    </span>
+                                    <span class="self-end font-bold text-small text-red-500" id="<?= "tax-" . $id; ?>">
+                                        <?= $product["tax"] . "%" ?>
+                                    </span>
                                     <img src="<?= 'admin/images/'.$product["image"] ?>" id="<?= "image-".$id; ?>" class=" h-14 w-14 object-cover rounded-md" alt="Product Image">
                                 </div>
                             </div>
@@ -147,7 +167,9 @@
                     <div class="flex flex-row items-center justify-between px-5 mt-5">
                         <div class="font-bold text-xl">Current Order</div>
                         <div class="font-semibold">
-                        <span class="px-4 py-2 rounded-md bg-red-100 text-red-500" onclick="containerClean()">Clear All</span>
+                            <span class="px-4 py-2 rounded-md bg-red-100 text-red-500" onclick="containerClean()">
+                                Clear All
+                            </span>
                         </div>
                     </div>
                     <div class="px-5 py-4 mt-5 overflow-y-auto h-64" id="container"></div>
@@ -181,8 +203,8 @@
                             <div id='hidden-form'></div>
                             <button name="submit" class="px-4 py-4 rounded-md shadow-lg text-center bg-yellow-500 text-white font-semibold" style="width: 500px;">Complete Sale</button>
                         </form>
-                        <?php if (isset($_SESSION["msg"])) { ?>
-                            <div id="snackbar"> <?= $_SESSION["msg"]; ?> </div>
+                        <?php if (isset($_SESSION['message'])) { ?>
+                            <div id="snackbar"> <?= $_SESSION['message']; ?> </div>
                         <?php } ?>
                     </div>
                 </div>
@@ -191,12 +213,12 @@
                 <script type="text/javascript" src="custom.js"></script>
                 <script>
                     <?php
-                        if (isset($_SESSION["msg"])) {
+                        if (isset($_SESSION['message'])) {
                             echo "toast()";
                         }
                     ?>
                 </script>
-                <?php unset($_SESSION["msg"]); ?>
+                <?php unset($_SESSION['message']); ?>
             </div>
         </div>
     </body>

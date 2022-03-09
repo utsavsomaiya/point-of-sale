@@ -2,19 +2,19 @@
     session_start();
     if (isset($_POST['submit'])) {
         if (empty($_POST['name'])) {
-            $_SESSION['name_alert'] = "Please enter data..";
+            $_SESSION['name_alert'] = "Please enter discount name.";
         }
         if (empty($_POST['minimum_spend_amount'])) {
             $_SESSION['minimum_spend_amount_alert'] = "Please enter minimum spend amount.";
         }
         if (empty($_POST['digit'])) {
-            $_SESSION['digit_alert'] = "Please enter data..";
+            $_SESSION['digit_alert'] = "Please enter discount digit.";
         }
         if (empty($_POST['type'])) {
-            $_SESSION['type_alert'] = "Please enter data..";
+            $_SESSION['type_alert'] = "Please select discount type.";
         }
         if (empty($_POST['status'])) {
-            $_SESSION['status_alert'] = "Please enter data..";
+            $_SESSION['status_alert'] = "Please select discount status.";
         }
         if (empty($_POST['name']) || empty($_POST['digit']) || empty($_POST['type']) || empty($_POST['status'])  || empty($_POST['minimum_spend_amount'])) {
             header('location:../discount/add.php');
@@ -63,7 +63,7 @@
         $insertDiscount->bindParam(':status', $discountStatus);
         $isExecute = $insertDiscount->execute();
         if ($isExecute) {
-            $_SESSION['msg'] = "Add Successfully";
+            $_SESSION['message'] = "Discount added successfully.";
             header('location:../discount/list.php');
             exit;
         }
@@ -84,9 +84,7 @@
             <div class="col-md-6 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">
-                            Add new Discount
-                        </h4>
+                        <h4 class="card-title">Add new Discount</h4>
                         <form class="forms-sample" method="post">
                             <div class="form-group">
                                 <label for="discountName">Discount Name</label>
@@ -216,8 +214,12 @@
                                     ?>
                                 </label>
                             </div>
-                            <button type="submit" class="btn btn-primary me-2" name="submit">Submit</button>
-                            <a href="../discount/list.php" class="btn btn-light">Cancel</a>
+                            <button type="submit" class="btn btn-primary me-2" name="submit">
+                                Submit
+                            </button>
+                            <a href="../discount/list.php" class="btn btn-light">
+                                Cancel
+                            </a>
                         </form>
                     </div>
                 </div>
