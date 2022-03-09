@@ -25,19 +25,19 @@
     }
     if (isset($_POST['submit'])) {
         if (empty($_POST['name'])) {
-            $_SESSION['name_alert'] = "Please enter data..";
+            $_SESSION['name_alert'] = "Please enter discount name.";
         }
         if (empty($_POST['minimum_spend_amount'])) {
             $_SESSION['minimum_spend_amount_alert'] = "Please enter minimum spend amount.";
         }
         if (empty($_POST['digit'])) {
-            $_SESSION['digit_alert'] = "Please enter data..";
+            $_SESSION['digit_alert'] = "Please enter discount digit.";
         }
         if (empty($_POST['type'])) {
-            $_SESSION['type_alert'] = "Please enter data..";
+            $_SESSION['type_alert'] = "Please select discount type.";
         }
         if (empty($_POST['status'])) {
-            $_SESSION['status_alert'] = "Please enter data..";
+            $_SESSION['status_alert'] = "Please select discount status.";
         }
         if (empty($_POST['name']) || empty($_POST['digit']) || empty($_POST['type']) || empty($_POST['status']) || empty($_POST['minimum_spend_amount'])) {
             header("location:../discount/edit.php?id=$discountId");
@@ -70,7 +70,7 @@
         $updateDiscount->bindParam(':id', $discountId);
         $isExecuted = $updateDiscount->execute();
         if ($isExecuted) {
-            $_SESSION['msg'] = "Update Successfully";
+            $_SESSION['message'] = "Discount updated successfully.";
             header('location:../discount/list.php');
             exit;
         }

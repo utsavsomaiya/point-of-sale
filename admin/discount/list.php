@@ -73,7 +73,7 @@
                         </table>
                     <?php
                         } else {
-                            echo "No Record Found..";
+                            echo "No discounts found.";
                         }
                     ?>
                 </div>

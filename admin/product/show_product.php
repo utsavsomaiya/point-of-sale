@@ -55,7 +55,7 @@
                         </table>
                     <?php
                         } else {
-                            echo "No Record Found..";
+                            echo "No products found.";
                         }
                     ?>
                 </div>

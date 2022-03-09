@@ -7,11 +7,11 @@
         $deleteProduct->bindParam(':id', $productId);
         $isExecuted = $deleteProduct->execute();
         if ($isExecuted) {
-            $_SESSION['msg']="Record deleted";
+            $_SESSION['message']="Product deleted successfully.";
             header('location:../product/show_product.php');
             exit;
         }
-        $_SESSION['msg']="Something went wrong..";
+        $_SESSION['message']="Something went wrong.";
         header('location:../product/show_product.php');
         exit;
     }
