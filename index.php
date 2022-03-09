@@ -17,7 +17,6 @@
         }
         $productIds = $_POST['productId'];
         $productQuantities = $_POST['productQuantity'];
-        $discountId = $_POST['discount_id'];
         $productPrices = [];
         $productTaxes = [];
         $productsTax = [];
@@ -38,7 +37,7 @@
             $subtotal +=  ($productPrices[$i] * $productQuantities[$i]) ;
         }
         $fetchDiscount = $pdo->prepare("SELECT * FROM `discount` WHERE `id` = :id");
-        $fetchDiscount->bindParam(':id', $discountId);
+        $fetchDiscount->bindParam(':id', $_POST['discount_id']);
         $fetchDiscount->execute();
         $discounts = $fetchDiscount->fetchAll();
         foreach ($discounts as $discount) {
@@ -48,21 +47,24 @@
         }
         $totalDiscount = 0;
         $totalTax = 0;
+        $discountPrice = 0;
+        $discountId = null;
         if ($minimumSpendAmount <= $subtotal) {
             if ($subtotal > $productsDiscount) {
+                $discountId = $_POST['discount_id'];
                 if ($discountType == DISCOUNT["flat"]) {
                     $discountPrice =  $productsDiscount;
                 } else {
                     $discountPrice = ($subtotal * $productsDiscount) / 100;
                 }
-                for ($i = 0; $i < sizeof($productIds); $i++) {
-                    $productDiscount[$i] = round((($productPrices[$i] * $productQuantities[$i] * $discountPrice)/$subtotal), 2);
-                    $totalDiscount += $productDiscount[$i];
-                    $productTaxablePrice[$i] = $productPrices[$i] * $productQuantities[$i] - $productDiscount[$i];
-                    $productsTax[$i] = ($productTaxablePrice[$i] * $productTaxes[$i])/100;
-                    $totalTax += $productsTax[$i];
-                }
             }
+        }
+        for ($i = 0; $i < sizeof($productIds); $i++) {
+            $productDiscount[$i] = round((($productPrices[$i] * $productQuantities[$i] * $discountPrice)/$subtotal), 2);
+            $totalDiscount += $productDiscount[$i];
+            $productTaxablePrice[$i] = $productPrices[$i] * $productQuantities[$i] - $productDiscount[$i];
+            $productsTax[$i] = ($productTaxablePrice[$i] * $productTaxes[$i])/100;
+            $totalTax += $productsTax[$i];
         }
         $grandTotal = $subtotal - $totalDiscount + $totalTax;
 

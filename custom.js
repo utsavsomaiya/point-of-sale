@@ -55,6 +55,7 @@ function displayCart() {
     subTotal = 0;
     totalDiscount = 0;
     totalTax = 0;
+    discountPrice = 0;
     document.getElementById('container').innerHTML = "";
     document.getElementById('hidden-form').innerHTML = "";
     id = 1;
@@ -167,13 +168,13 @@ function displayCart() {
             } else {
                 discountPrice = (subTotal * parseInt(discountDigit.replace(/[$%]/, ''))) / 100;
             }
-            for (let i = 0; i < cart.length; i++) {
-                discount[i] = (parseInt((cart[i].price).slice(1)) * discountPrice) / subTotal;
-                totalDiscount += discount[i];
-                tax[i] = ((parseInt((cart[i].price).slice(1)) - discount[i]) * parseInt(cart[i].tax.slice(0, 2)) / 100);
-                totalTax += tax[i];
-            }
         }
+    }
+    for (let i = 0; i < cart.length; i++) {
+        discount[i] = (parseInt((cart[i].price).slice(1)) * discountPrice) / subTotal;
+        totalDiscount += discount[i];
+        tax[i] = ((parseInt((cart[i].price).slice(1)) - discount[i]) * parseInt(cart[i].tax.slice(0, 2)) / 100);
+        totalTax += tax[i];
     }
     grandTotal = subTotal - totalDiscount + totalTax;
     document.getElementById('subtotal').innerHTML = "$" + subTotal;

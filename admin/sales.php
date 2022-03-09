@@ -1,7 +1,7 @@
 <?php
     session_start();
     require 'layout/db_connect.php';
-    $fetchSales = $pdo->prepare('SELECT * FROM `sales`');
+    $fetchSales = $pdo->prepare('SELECT * FROM `sales` ORDER BY `id` DESC');
     $fetchSales->execute();
     $sales = $fetchSales->fetchAll();
 ?>
