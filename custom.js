@@ -287,11 +287,10 @@ function searchProducts() {
         var name = document.getElementById('name-' + i).innerHTML;
         var category = document.getElementById('category-' + i).innerHTML;
         var price = document.getElementById('price-' + i).innerHTML;
+        document.getElementById('products-list-' + i).style.display = 'none';
         if (name.toLowerCase().includes(input) || category.toLowerCase().includes(input) || price.toLowerCase().includes(input)) {
             document.getElementById('products-list-' + i).style.display = 'block';
             hasResults = true;
-        } else {
-            document.getElementById('products-list-' + i).style.display = 'none';
         }
     }
     document.getElementById('not-available').style.display = hasResults ? 'none' : 'block';
