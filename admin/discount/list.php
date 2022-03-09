@@ -21,6 +21,7 @@
                                 <tr>
                                     <th>Id</th>
                                     <th>Name</th>
+                                    <th>Minimum Spend Amount</th>
                                     <th>Digit</th>
                                     <th>Status</th>
                                     <th colspan='2'>Action</th>
@@ -31,6 +32,7 @@
                                 <tr>
                                     <td><?= $discount['id'] ?></td>
                                     <td><?= $discount['name'] ?></td>
+                                    <td><?= "$".$discount['minimum_spend_amount'] ?></td>
                                     <td>
                                     <?php
                                     if ($discount['type'] == "1") {
