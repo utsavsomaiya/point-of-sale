@@ -1,15 +1,21 @@
 <?php
-session_start();
-include 'layout/header.php';
-$salesId = $_GET['id'];
+    session_start();
+    $salesId = $_GET['id'];
+    require 'layout/db_connect.php';
+    $fetchSalesItem = $pdo->prepare('SELECT sales_item.product_id, product.name, product.image, sales_item.product_quantity, sales_item.product_price, sales_item.product_total_price, sales_item.product_tax_percentage,sales_item.product_taxable_price,sales_item.product_discount,sales.subtotal,sales.total_tax,sales.discount,sales.total FROM sales_item JOIN product ON sales_item.product_id = product.id JOIN sales ON sales_item.sales_id = sales.id AND sales_item.sales_id = :sales_id');
+    $fetchSalesItem->bindParam(':sales_id', $salesId);
+    $fetchSalesItem->execute();
+    $salesItems = $fetchSalesItem->fetchAll();
 ?>
+<?php include 'layout/header.php'; ?>
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="row">
-                <div class="card-body" style="Overflow-x:scroll;">
-                    <h4 class="card-title">
-                        <span>Products</span>
-                    </h4>
+            <div class="card-body" style="Overflow-x:scroll;">
+                <h4 class="card-title">
+                    <span>Products</span>
+                </h4>
+                <?php if (sizeof($salesItems) > 0) { ?>
                     <table class="table">
                         <tbody>
                             <tr>
@@ -23,66 +29,49 @@ $salesId = $_GET['id'];
                                 <th>Discount</th>
                                 <th>Taxable price</th>
                             </tr>
-                            <?php
-                                require 'layout/db_connect.php';
-                                $fetch = $pdo->prepare('SELECT sales_item.product_id, product.name, product.image, sales_item.product_quantity, sales_item.product_price, sales_item.product_total_price, sales_item.product_tax_percentage,sales_item.product_taxable_price,sales_item.product_discount FROM sales_item JOIN product ON sales_item.product_id = product.id AND sales_item.sales_id = :sales_id');
-                                $fetch->bindParam(':sales_id', $salesId);
-                                $fetch->execute();
-                                $result = $fetch->fetchAll();
-                                foreach ($result as $salesDetails) {
-                                    if (!empty($salesDetails)) {
-                                        ?>
-                            <tr>
-                                <td><?= $salesDetails['product_id'] ?></td>
-                                <td><?= $salesDetails['name'] ?></td>
-                                <td><img src="<?= '/admin/images/' . $salesDetails['image'] ?>"></td>
-                                <td><?= $salesDetails['product_quantity'] ?></td>
-                                <td><?= $salesDetails['product_tax_percentage']."%" ?></td>
-                                <td><?= "$".$salesDetails['product_price'] ?></td>
-                                <td><?= "$".$salesDetails['product_total_price'] ?></td>
-                                <td><?= "$".$salesDetails['product_discount'] ?></td>
-                                <td><?= "$".$salesDetails['product_taxable_price'] ?></td>
-                            </tr>
-                            <?php
-                                    } else {
-                                        echo "No Record Found..";
-                                    }
-                                } ?>
-                            </td>
-                            </tr>
+                            <?php foreach ($salesItems as $salesItem) { ?>
+                                <tr>
+                                    <td><?= $salesItem['product_id'] ?></td>
+                                    <td><?= $salesItem['name'] ?></td>
+                                    <td><img src="<?= '/admin/images/' . $salesItem['image'] ?>"></td>
+                                    <td><?= $salesItem['product_quantity'] ?></td>
+                                    <td><?= $salesItem['product_tax_percentage']."%" ?></td>
+                                    <td><?= "$".$salesItem['product_price'] ?></td>
+                                    <td><?= "$".$salesItem['product_total_price'] ?></td>
+                                    <td><?= "$".$salesItem['product_discount'] ?></td>
+                                    <td><?= "$".$salesItem['product_taxable_price'] ?></td>
+                                </tr>
+                            <?php }  ?>
                         </tbody>
-                        </table>
+                    </table>
+                <?php
+                    } else {
+                        echo "No Record Found..";
+                    }
+                ?>
+            </div>
+            <div>
+                <span style="padding-left: 50px;padding-top: 100px;padding-bottom: 100px;padding-right: 50px">
+                    Thank You!
+                </span>
+                <div style="padding-left: 750px;padding-top: 20px;">
+                    <b>
+                        <span style="padding-right: 30px;">SUBTOTAL = </span>
+                        <span><?= "$".$salesItems[0]['subtotal']; ?></span>
+                        <br>
+                        <span style="padding-right: 40px;">Discount = </span>
+                        <span><?= "-"."$".$salesItems[0]['discount']; ?></span>
+                        <br>
+                        <span style="padding-right: 80px;">TAX = </span>
+                        <span><?= "+"."$".$salesItems[0]['total_tax']; ?></span>
+                        <br>
+                        <span>=================</span>
+                        <br>
+                        <span style="padding-right: 10px;">GRAND TOTAL = </span>
+                        <span><?= "$".$salesItems[0]['total']; ?></span>
+                        <br>
+                    </br>
                 </div>
-                <div>
-                    <span style="padding-left: 50px;padding-top: 100px;padding-bottom: 100px;padding-right: 50px">Thank You!</spn>
-                        <?php
-                            $fetch = $pdo->prepare('SELECT `subtotal`,`discount`,`total_tax`,`total` from `sales` WHERE `id` = :id');
-                            $fetch->bindParam(':id', $salesId);
-                            $fetch->execute();
-                            $result = $fetch->fetchAll();
-                            foreach ($result as $sales) {
-                                if (!empty($sales)) {
-                                    ?>
-                               <div style="padding-left: 750px;padding-top: 20px;">
-                                   <b>
-                                       <span style="padding-right: 30px;">SUBTOTAL = </span>
-                                       <?= "$".$sales['subtotal']; ?><br>
-                                       <span style="padding-right: 80px;">TAX = </span>
-                                       <?= "+"."$".$sales['total_tax']; ?><br>
-                                       <span style="padding-right: 40px;">Discount = </span>
-                                       <?= "-"."$".$sales['discount']; ?><br><br>
-                                       <span>===============</span><br>
-                                       <span style="padding-right: 10px;">GRAND TOTAL = </span>
-                                       <?= "$".$sales['total']; ?><br>
-                                   </b>
-                               </div>
-                        <?php
-                                } else {
-                                    echo "No Record Found..";
-                                }
-                            }
-                        ?>
-
             </div>
         </div>
     </div>
