@@ -38,15 +38,9 @@
                                     ?>
                                 </td>
                                 <td>
-                                    <?php if ($count == 1) { ?>
-                                        <button class="bg-green-500 text-white font-bold py-2 px-4 rounded-full" onclick="discountApply(<?= $count ?>)" id="discount-button-<?= $count ?>" disabled>
-                                            Applied
-                                        </button>
-                                    <?php } else { ?>
-                                        <button class="bg-red-500 text-white font-bold py-2 px-4 rounded-full" onclick="discountApply(<?= $count ?>)" id="discount-button-<?= $count ?>">
-                                            Apply
-                                        </button>
-                                    <?php } ?>
+                                    <button class="bg-red-500 text-white font-bold py-2 px-4 rounded-full" onclick="discountApply(<?= $count ?>)" id="discount-button-<?= $count ?>">
+                                        Apply
+                                    </button>
                                 </td>
                             </tr>
                         <?php }?>

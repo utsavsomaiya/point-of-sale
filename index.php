@@ -49,14 +49,12 @@
         $totalTax = 0;
         $discountPrice = 0;
         $discountId = null;
-        if ($minimumSpendAmount <= $subtotal) {
-            if ($subtotal > $productsDiscount) {
-                $discountId = $_POST['discount_id'];
-                if ($discountType == DISCOUNT["flat"]) {
-                    $discountPrice =  $productsDiscount;
-                } else {
-                    $discountPrice = ($subtotal * $productsDiscount) / 100;
-                }
+        if ($minimumSpendAmount <= $subtotal && $subtotal > $productsDiscount) {
+            $discountId = $_POST['discount_id'];
+            if ($discountType == DISCOUNT["flat"]) {
+                $discountPrice =  $productsDiscount;
+            } else {
+                $discountPrice = ($subtotal * $productsDiscount) / 100;
             }
         }
         for ($i = 0; $i < sizeof($productIds); $i++) {
