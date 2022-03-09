@@ -4,6 +4,9 @@
         if (empty($_POST['name'])) {
             $_SESSION['name_alert'] = "Please enter discount name.";
         }
+        if (empty($_POST['minimum_spend_amount'])) {
+            $_SESSION['minimum_spend_amount_alert'] = "Please enter minimum spend amount.";
+        }
         if (empty($_POST['digit'])) {
             $_SESSION['digit_alert'] = "Please enter discount digit.";
         }
@@ -13,36 +16,48 @@
         if (empty($_POST['status'])) {
             $_SESSION['status_alert'] = "Please select discount status.";
         }
-        if (empty($_POST['name']) || empty($_POST['digit']) || empty($_POST['type']) || empty($_POST['status'])) {
+        if (empty($_POST['name']) || empty($_POST['digit']) || empty($_POST['type']) || empty($_POST['status'])  || empty($_POST['minimum_spend_amount'])) {
             header('location:../discount/add.php');
             exit;
         }
+
+        $discountName = $_POST['name'];
+        $minimumSpendAmount = $_POST['minimum_spend_amount'];
+        $discountDigit = $_POST['digit'];
+        $discountType = $_POST['type'];
+        $discountStatus = $_POST['status'];
+
         if ($_POST['digit'] > "100"  && $_POST['type'] == "1") {
-            $_SESSION['digit_alert'] = "Percentage could not be greater than 100.";
+            $_SESSION['digit_alert'] = "Percentage could not be greater than 100";
+            $_SESSION['discount_name'] = $discountName;
+            $_SESSION['minimum_spend_amount'] =$minimumSpendAmount;
+            $_SESSION['digit'] = $discountDigit;
+            $_SESSION['type'] = $discountType;
+            $_SESSION['status'] = $discountStatus;
             header('location:../discount/add.php');
             exit;
         }
         require '../layout/db_connect.php';
-        $discountName =$_POST['name'];
-        $_SESSION['discount_name'] = $discountName;
-        $discountDigit = $_POST['digit'];
-        $_SESSION['digit'] = $discountDigit;
-        $discountType = $_POST['type'];
-        $_SESSION['type'] = $discountType;
+
         $fetchDiscount = $pdo->prepare('SELECT `type`,`digit` FROM `discount` WHERE `type` = :type AND `digit` = :digit LIMIT 1');
         $fetchDiscount->bindParam(':type', $discountType);
         $fetchDiscount->bindParam(':digit', $discountDigit);
         $fetchDiscount->execute();
         $count = $fetchDiscount->rowCount();
         if ($count == 1) {
-            $_SESSION['digit_alert'] = "Already taken this discount.";
+            $_SESSION['digit_alert'] = "Already taken this discount";
+            $_SESSION['discount_name'] = $discountName;
+            $_SESSION['minimum_spend_amount'] =$minimumSpendAmount;
+            $_SESSION['digit'] = $discountDigit;
+            $_SESSION['type'] = $discountType;
+            $_SESSION['status'] = $discountStatus;
             header('location:../discount/add.php');
             exit;
         }
-        $discountStatus = $_POST['status'];
-        $_SESSION['status'] = $discountStatus;
-        $insertDiscount = $pdo->prepare("INSERT INTO `discount`(`name`,`type`,`digit`,`status`) VALUES(:name, :type, :digit, :status)");
+
+        $insertDiscount = $pdo->prepare("INSERT INTO `discount`(`name`,`minimum_spend_amount`,`type`,`digit`,`status`) VALUES(:name, :minimumAmount, :type, :digit, :status)");
         $insertDiscount->bindParam(':name', $discountName);
+        $insertDiscount->bindParam(':minimumAmount', $minimumSpendAmount);
         $insertDiscount->bindParam(':type', $discountType);
         $insertDiscount->bindParam(':digit', $discountDigit);
         $insertDiscount->bindParam(':status', $discountStatus);
@@ -52,7 +67,12 @@
             header('location:../discount/list.php');
             exit;
         }
-        $_SESSION['message'] = "Something went wrong.";
+        $_SESSION['msg'] = "Something went wrong";
+        $_SESSION['discount_name'] = $discountName;
+        $_SESSION['minimum_spend_amount'] =$minimumSpendAmount;
+        $_SESSION['digit'] = $discountDigit;
+        $_SESSION['type'] = $discountType;
+        $_SESSION['status'] = $discountStatus;
         header('location:../discount/add.php');
         exit;
     }
@@ -82,6 +102,26 @@
                                         if (isset($_SESSION['name_alert'])) {
                                             echo $_SESSION['name_alert'];
                                             unset($_SESSION['name_alert']);
+                                        }
+                                    ?>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="minimum-amount">Minium Spend Amount</label>
+                                <input type="number" class="form-control" id="minimum-amount"
+                                    placeholder="Minium Spend Amount" name="minimum_spend_amount" required
+                                    <?php
+                                        if (isset($_SESSION['minimum_spend_amount'])) {
+                                            echo "value=\"".$_SESSION['minimum_spend_amount']."\"";
+                                            unset($_SESSION['minimum_spend_amount']);
+                                        }
+                                    ?>
+                                >
+                                <label class="text-danger">
+                                    <?php
+                                        if (isset($_SESSION['minimum_spend_amount_alert'])) {
+                                            echo $_SESSION['minimum_spend_amount_alert'];
+                                            unset($_SESSION['minimum_spend_amount_alert']);
                                         }
                                     ?>
                                 </label>

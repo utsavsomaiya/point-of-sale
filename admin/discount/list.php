@@ -21,6 +21,7 @@
                                 <tr>
                                     <th>Id</th>
                                     <th>Name</th>
+                                    <th>Minimum Spend Amount</th>
                                     <th>Digit</th>
                                     <th>Status</th>
                                     <th colspan='2'>Action</th>
