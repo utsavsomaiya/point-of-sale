@@ -53,9 +53,10 @@
                             <div class="auth-form-light text-left py-5 px-4 px-sm-5">
                                 <div class="brand-logo">
                                     <a href="#">
-                                        <span style="font-size:large; color:black;">Retail
+                                        <span style="font-size:large; color:black;">
+                                            Retail
                                             <b style="color:blue">
-                                            Store
+                                                Store
                                             </b>
                                         </span>
                                     </a>
@@ -97,12 +98,12 @@
                                         <br>
                                         <br>
                                         <label class="text-danger">
-                                        <?php
-                                            if (isset($_SESSION["alert"])) {
-                                                echo $_SESSION["alert"] ;
-                                                unset($_SESSION["alert"]);
-                                            }
-                                        ?>
+                                            <?php
+                                                if (isset($_SESSION["alert"])) {
+                                                    echo $_SESSION["alert"] ;
+                                                    unset($_SESSION["alert"]);
+                                                }
+                                            ?>
                                         </label>
                                     </div>
                                 </form>

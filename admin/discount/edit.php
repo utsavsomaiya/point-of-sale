@@ -146,11 +146,15 @@
                                 <label for="discountStatus">Status</label>
                                 <select id="discountStatus" class="form-control" name="status" >
                                     <option value="">--Select Status--</option>
-                                    <option value="2" <?php if (isset($discountStatus)) {
-                                        if ($discountStatus == "2") {
-                                            echo 'selected="selected"';
+                                    <option value="2"
+                                    <?php
+                                        if (isset($discountStatus)) {
+                                            if ($discountStatus == "2") {
+                                                echo 'selected="selected"';
+                                            }
                                         }
-                                    } ?>>Active</option>
+                                    ?>
+                                    >Active</option>
                                     <option value="1"
                                     <?php
                                     if (isset($discountStatus)) {
@@ -170,8 +174,12 @@
                                     ?>
                                 </label>
                             </div>
-                            <button type="submit" class="btn btn-primary me-2" name="submit">Submit</button>
-                            <a href="../discount/list.php" class="btn btn-light">Cancel</a>
+                            <button type="submit" class="btn btn-primary me-2" name="submit">
+                                Submit
+                            </button>
+                            <a href="../discount/list.php" class="btn btn-light">
+                                Cancel
+                            </a>
                         </form>
                     </div>
                 </div>
