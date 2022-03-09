@@ -15,6 +15,7 @@
                 <table class="table-auto">
                     <thead>
                         <tr>
+                            <th>Id</th>
                             <th>Name</th>
                             <th>Price</th>
                             <th>Apply/Applied</th>
@@ -26,6 +27,7 @@
                                 <?php $count++; ?>
                                 <td id="discount-id-<?= $count ?>"><?= $discounts[$i]['id']; ?></td>
                                 <td><?= $discounts[$i]['name']; ?></td>
+                                <label hidden id="minimum-spend-amount-<?= $count ?>"><?= $discounts[$i]['minimum_spend_amount']; ?></label>
                                 <td id="discount-<?= $count ?>">
                                     <?php
                                         if ($discounts[$i]['type'] == "1") {

@@ -49,6 +49,7 @@ function existsInArray(id) {
 
 var discountId = document.getElementById('discount-id-1').innerHTML.trim();
 var discountDigit = document.getElementById('discount-1').innerHTML.trim();
+var minimumSpendAmount = document.getElementById('minimum-spend-amount-1').innerHTML.trim();
 
 function displayCart() {
     subTotal = 0;
@@ -159,17 +160,19 @@ function displayCart() {
 
         id++;
     }
-    if (subTotal > parseInt(discountDigit.replace(/[$%]/, ''))) {
-        if (discountType == "2") {
-            discountPrice = parseInt(discountDigit.replace(/[$%]/, ''));
-        } else {
-            discountPrice = (subTotal * parseInt(discountDigit.replace(/[$%]/, ''))) / 100;
-        }
-        for (let i = 0; i < cart.length; i++) {
-            discount[i] = (parseInt((cart[i].price).slice(1)) * discountPrice) / subTotal;
-            totalDiscount += discount[i];
-            tax[i] = ((parseInt((cart[i].price).slice(1)) - discount[i]) * parseInt(cart[i].tax.slice(0, 2)) / 100);
-            totalTax += tax[i];
+    if (parseInt(minimumSpendAmount) <= subTotal) {
+        if (subTotal > parseInt(discountDigit.replace(/[$%]/, ''))) {
+            if (discountType == "2") {
+                discountPrice = parseInt(discountDigit.replace(/[$%]/, ''));
+            } else {
+                discountPrice = (subTotal * parseInt(discountDigit.replace(/[$%]/, ''))) / 100;
+            }
+            for (let i = 0; i < cart.length; i++) {
+                discount[i] = (parseInt((cart[i].price).slice(1)) * discountPrice) / subTotal;
+                totalDiscount += discount[i];
+                tax[i] = ((parseInt((cart[i].price).slice(1)) - discount[i]) * parseInt(cart[i].tax.slice(0, 2)) / 100);
+                totalTax += tax[i];
+            }
         }
     }
     grandTotal = subTotal - totalDiscount + totalTax;
@@ -249,6 +252,7 @@ function discountApply(count) {
 
     discountId = document.getElementById('discount-id-' + count).innerHTML.trim();
     discountDigit = document.getElementById('discount-' + count).innerHTML.trim();
+    minimumSpendAmount = document.getElementById('minimum-spend-amount-' + count).innerHTML.trim();
 
     for (i = 1; i <= discountsCount; i++){
         if (count != i) {

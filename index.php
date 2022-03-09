@@ -42,23 +42,26 @@
         $fetchDiscount->execute();
         $discounts = $fetchDiscount->fetchAll();
         foreach ($discounts as $discount) {
+            $minimumSpendAmount = (int) $discount['minimum_spend_amount'];
             $discountType = (int) $discount['type'];
             $productsDiscount = (int) $discount['digit'];
         }
         $totalDiscount = 0;
         $totalTax = 0;
-        if ($subtotal > $productsDiscount) {
-            if ($discountType == DISCOUNT["flat"]) {
-                $discountPrice =  $productsDiscount;
-            } else {
-                $discountPrice = ($subtotal * $productsDiscount) / 100;
-            }
-            for ($i = 0; $i < sizeof($productIds); $i++) {
-                $productDiscount[$i] = round((($productPrices[$i] * $productQuantities[$i] * $discountPrice)/$subtotal), 2);
-                $totalDiscount += $productDiscount[$i];
-                $productTaxablePrice[$i] = $productPrices[$i] * $productQuantities[$i] - $productDiscount[$i];
-                $productsTax[$i] = ($productTaxablePrice[$i] * $productTaxes[$i])/100;
-                $totalTax += $productsTax[$i];
+        if ($minimumSpendAmount <= $subtotal) {
+            if ($subtotal > $productsDiscount) {
+                if ($discountType == DISCOUNT["flat"]) {
+                    $discountPrice =  $productsDiscount;
+                } else {
+                    $discountPrice = ($subtotal * $productsDiscount) / 100;
+                }
+                for ($i = 0; $i < sizeof($productIds); $i++) {
+                    $productDiscount[$i] = round((($productPrices[$i] * $productQuantities[$i] * $discountPrice)/$subtotal), 2);
+                    $totalDiscount += $productDiscount[$i];
+                    $productTaxablePrice[$i] = $productPrices[$i] * $productQuantities[$i] - $productDiscount[$i];
+                    $productsTax[$i] = ($productTaxablePrice[$i] * $productTaxes[$i])/100;
+                    $totalTax += $productsTax[$i];
+                }
             }
         }
         $grandTotal = $subtotal - $totalDiscount + $totalTax;
