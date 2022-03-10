@@ -15,10 +15,10 @@
                 <table class="table-auto">
                     <thead>
                         <tr>
-                            <th>Id</th>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Apply/Applied</th>
+                            <th class="pr-5">Id</th>
+                            <th class="pr-5">Name</th>
+                            <th class="pr-5">Price</th>
+                            <th class="pr-5">Apply/Applied</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -26,16 +26,24 @@
                             <tr>
                                 <?php $count++; ?>
                                 <td id="discount-id-<?= $count ?>"><?= $discounts[$i]['id']; ?></td>
-                                <td><?= $discounts[$i]['name']; ?></td>
+                                <td class="pr-3"><?= $discounts[$i]['name']; ?></td>
                                 <label hidden id="minimum-spend-amount-<?= $count ?>"><?= $discounts[$i]['minimum_spend_amount']; ?></label>
-                                <td id="discount-<?= $count ?>">
-                                    <?php
-                                        if ($discounts[$i]['type'] == "1") {
-                                            echo $discounts[$i]['digit']."%";
-                                        } else {
-                                            echo "$".$discounts[$i]['digit'];
-                                        }
-                                    ?>
+                                <td class="flex pt-2">
+                                    <?php if ($discounts[$i]['type'] == "1") { ?>
+                                        <div id="discount-<?= $count ?>">
+                                            <?= $discounts[$i]['digit'] ?>
+                                        </div>
+                                        <div id="discount-type-<?= $count ?>">
+                                            %
+                                        </div>
+                                    <?php } else { ?>
+                                        <div id="discount-type-<?= $count ?>">
+                                            $
+                                        </div>
+                                        <div id="discount-<?= $count ?>">
+                                            <?= $discounts[$i]['digit'] ?>
+                                        </div>
+                                    <?php } ?>
                                 </td>
                                 <td>
                                     <button class="bg-red-500 text-white font-bold py-2 px-4 rounded-full" onclick="discountApply(<?= $count ?>)" id="discount-button-<?= $count ?>">

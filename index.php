@@ -151,12 +151,18 @@
                                     </span>
                                 </div>
                                 <div class="flex flex-row justify-between items-center">
-                                    <span class="self-end font-bold text-lg text-yellow-500" id="<?= "price-".$id; ?>">
-                                        <?= "$".$product["price"] ?>
-                                    </span>
-                                    <span class="self-end font-bold text-small text-red-500" id="<?= "tax-" . $id; ?>">
-                                        <?= $product["tax"] . "%" ?>
-                                    </span>
+                                    <div class="flex space-x-0 self-end font-bold text-lg text-yellow-500">
+                                        <span>$</span>
+                                        <span id="<?= "price-".$id; ?>">
+                                            <?= $product["price"] ?>
+                                        </span>
+                                    </div>
+                                    <div class="flex space-x-0 self-end font-bold text-lg text-red-500">
+                                        <span id="<?= "tax-".$id; ?>">
+                                            <?= $product["tax"] ?>
+                                        </span>
+                                        <span>%</span>
+                                    </div>
                                     <img src="<?= 'admin/images/'.$product["image"] ?>" id="<?= "image-".$id; ?>" class=" h-14 w-14 object-cover rounded-md" alt="Product Image">
                                 </div>
                             </div>
