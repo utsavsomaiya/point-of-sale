@@ -163,12 +163,12 @@
                                     <img src="/images/discount.png" style="width:20px;margin-right: 0px;position:absolute;right: 430px;" onclick="displayApplicableDiscountsModal('discount-modal-id')" id="discount-img">
                                     <?php include 'discount.php';?>
                                     <div class="hidden opacity-25 fixed inset-0 z-40 bg-black" id="discount-modal-id-backdrop"></div>
-                                    <span class="font-bold" id="discount-price">- $0</span>
+                                    <span class="font-bold" id="discount-price">- $0.00</span>
                                 <?php } ?>
                             </div>
                             <div class=" px-4 flex justify-between">
                                 <span class="font-semibold text-sm">Sales Tax</span>
-                                <span class="font-bold" id='sales-tax'>$0.00</span>
+                                <span class="font-bold" id='sales-tax'>+ $0.00</span>
                             </div>
                             <div class="border-t-2 mt-3 py-2 px-4 flex items-center justify-between">
                                 <span class="font-semibold text-2xl">Total</span>
