@@ -55,10 +55,9 @@
         $discountId = null;
         if ($minimumSpendAmount <= $subtotal && $subtotal > $productsDiscount) {
             $discountId = $_POST['discount_id'];
+            $discountPrice = ($subtotal * $productsDiscount) / 100;
             if ($discountType == DISCOUNT["flat"]) {
                 $discountPrice =  $productsDiscount;
-            } else {
-                $discountPrice = ($subtotal * $productsDiscount) / 100;
             }
         }
         for ($i = 0; $i < sizeof($productIds); $i++) {

@@ -162,10 +162,9 @@ function displayCart() {
         }
     }
 
+    discountType = 2;
     if (discountDigit.substring(discountDigit.length - 1) == "%") {
         discountType = 1;
-    } else {
-        discountType = 2;
     }
 
     var inputDiscountId = document.createElement('input');
