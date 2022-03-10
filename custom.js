@@ -200,7 +200,7 @@ function displayCart() {
 
 function inputQuantity(productId, id) {
     var indexOfProduct = cart.findIndex((obj => obj.id == productId));
-    if (document.getElementById('stock-' + productId).innerHTML > document.getElementById('input-id-' + id).value) {
+    if (document.getElementById('stock-' + id).innerHTML > document.getElementById('input-id-' + id).value) {
         cart[indexOfProduct].quantity = document.getElementById('input-id-' + id).value;
     } else {
         document.getElementById('input-id-' + id).value = document.getElementById('stock-' + productId).innerHTML;

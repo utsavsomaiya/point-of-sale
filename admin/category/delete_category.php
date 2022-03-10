@@ -8,7 +8,7 @@
         $fetchProduct->execute();
         $count = $fetchProduct->rowCount();
         if ($count > 0) {
-            $_SESSION['msg'] = "Cannot delete this category as it is used by one or more products.";
+            $_SESSION['message'] = "Cannot delete this category as it is used by one or more products.";
             header('location:/admin/category/show_category.php');
             exit;
         }
@@ -16,11 +16,11 @@
         $deleteCategory->bindParam(':id', $categoryId);
         $isExecuted = $deleteCategory->execute();
         if ($isExecuted) {
-            $_SESSION['msg']="Record deleted";
+            $_SESSION['message']="Category deleted successfully.";
             header('location:/admin/category/show_category.php');
             exit;
         }
-        $_SESSION['msg']="Something went wrong";
+        $_SESSION['message']="Something went wrong.";
         header('location:/admin/category/show_category.php');
         exit;
     }

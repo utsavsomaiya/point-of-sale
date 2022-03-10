@@ -3,16 +3,14 @@
     require '../layout/db_connect.php';
     if (isset($_GET['id'])) {
         $productId = $_GET['id'];
-        $fetchProduct = $pdo->prepare("SELECT p.name,p.price,p.category_id as category,c.id as category_id,c.name as category_name,p.tax,p.stock,p.image FROM product p JOIN category c on c.id = p.category_id WHERE p.id =  :id");
+        $fetchProduct = $pdo->prepare("SELECT * FROM `product` WHERE `id` = :id");
         $fetchProduct->bindParam(':id', $productId);
         $fetchProduct->execute();
         $products = $fetchProduct->fetchAll();
         foreach ($products as $product) {
             $productName = $product['name'];
             $productPrice = $product['price'];
-            $productCategoryId = $product['category'];
             $categoryId = $product['category_id'];
-            $categoryName = $product['category_name'];
             $productTax = $product['tax'];
             $productStock = $product['stock'];
             $productImage = $product['image'];
@@ -20,55 +18,54 @@
     }
     if (isset($_POST['submit'])) {
         if (empty($_POST['product_name'])) {
-            $_SESSION['name_alert'] = "Please enter data..";
+            $_SESSION['name_alert'] = "Please enter product name.";
         }
         if (empty($_POST['product_price'])) {
-            $_SESSION['price_alert'] = "Please enter data";
+            $_SESSION['price_alert'] = "Please enter product price.";
         }
         if (empty($_POST['product_category_id'])) {
-            $_SESSION['category_alert'] = "Please enter data";
+            $_SESSION['category_alert'] = "Please select product category.";
         }
         if (empty($_POST['product_tax'])) {
-            $_SESSION['tax_alert'] = "Please enter data";
+            $_SESSION['tax_alert'] = "Please select product tax.";
         }
         if (empty($_POST['product_stock'])) {
-            $_SESSION['stock_alert'] = "Please enter data";
+            $_SESSION['stock_alert'] = "Please enter product stock.";
         }
-        if (empty($_FILES['product_image']['name'])) {
-            $_SESSION['file_alert'] = "Please enter data";
-        }
-        if (empty($_POST['product_name']) || empty($_POST['product_price']) || empty($_POST['product_category_id']) || empty($_POST['product_tax']) || empty($_POST['product_stock']) || empty($_FILES['product_image']['name'])) {
+        if (empty($_POST['product_name']) || empty($_POST['product_price']) || empty($_POST['product_category_id']) || empty($_POST['product_tax']) || empty($_POST['product_stock'])) {
             header("location:../product/edit_product.php?id=$productId");
             exit;
         }
-
-        $productImage = $_FILES['product_image']['name'];
-        $imageExtension = pathinfo($productImage, PATHINFO_EXTENSION);
-        if ($imageExtension != "jpg" && $imageExtension != "png" && $imageExtension != "jpeg" && $imageExtension != "gif") {
-            $_SESSION['file_alert'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-            header("location:../product/edit_product.php?id=$productId");
-            exit;
-        }
-        if (($_FILES["product_image"]["size"] > 1000000)) {
-            $_SESSION['file_alert'] = "Image size exceeds 1MB";
-            header("location:../product/edit_product.php?id=$productId");
-            exit;
-        }
-        $imageInfo = @getimagesize($_FILES['product_image']['tmp_name']);
-        if ($imageInfo[0] != 100 || $imageInfo[1] != 100) {
-            $_SESSION['file_validation_error'] = "Image dimension should be within 100X100";
-            header("location:../product/edit_product.php?id=$productId");
-            exit;
-        }
-        $destination_path = "../images/";
-        $target_path = $destination_path . basename($_FILES["product_image"]["name"]);
-        move_uploaded_file($_FILES['product_image']['tmp_name'], $target_path);
 
         $productName = $_POST['product_name'];
         $productPrice = $_POST['product_price'];
         $productCategory = $_POST['product_category_id'];
         $productTax = $_POST['product_tax'];
         $productStock = $_POST['product_stock'];
+
+        if (!empty($_FILES['product_image']['name'])) {
+            $productImage = $_FILES['product_image']['name'];
+            $imageExtension = pathinfo($productImage, PATHINFO_EXTENSION);
+            if ($imageExtension != "jpg" && $imageExtension != "png" && $imageExtension != "jpeg" && $imageExtension != "gif") {
+                $_SESSION['file_alert'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+                header("location:../product/edit_product.php?id=$productId");
+                exit;
+            }
+            if (($_FILES["product_image"]["size"] > 1000000)) {
+                $_SESSION['file_alert'] = "Image size exceeds 1MB";
+                header("location:../product/edit_product.php?id=$productId");
+                exit;
+            }
+            $imageInfo = @getimagesize($_FILES['product_image']['tmp_name']);
+            if ($imageInfo[0] != 100 || $imageInfo[1] != 100) {
+                $_SESSION['file_alert'] = "Image dimension should be within 100X100.";
+                header("location:../product/edit_product.php?id=$productId");
+                exit;
+            }
+            $destination_path = "../images/";
+            $target_path = $destination_path . basename($_FILES["product_image"]["name"]);
+            move_uploaded_file($_FILES['product_image']['tmp_name'], $target_path);
+        }
 
         $updateProduct = $pdo->prepare("UPDATE `product` SET `name` = :product_name, `price`= :product_price, `category_id` = :product_category, `tax` = :product_tax, `stock` = :product_stock, `image` = :product_image WHERE `id` = :product_id");
         $updateProduct->bindParam(':product_name', $productName);
@@ -80,14 +77,17 @@
         $updateProduct->bindParam(':product_id', $productId);
         $isExecuted = $updateProduct->execute();
         if ($isExecuted) {
-            $_SESSION['msg'] = "Update Successfully";
+            $_SESSION['message'] = "Product updated successfully.";
             header('location:../product/show_product.php');
             exit;
         }
-        $_SESSION['msg'] = 'Something went wrong..';
+        $_SESSION['message'] = 'Something went wrong.';
         header("location:../product/edit_product.php?id=$productId");
         exit;
     }
+    $fetchCategory = $pdo->prepare("SELECT * FROM `category`");
+    $fetchCategory->execute();
+    $categories = $fetchCategory->fetchAll();
 ?>
 <?php include '../layout/header.php'; ?>
 <div class="main-panel">
@@ -140,19 +140,16 @@
                                 <label for="product-category">Select Category</label>
                                 <select id="product-category" class="form-control" name="product_category_id" required>
                                     <option value="">--Select Category--</option>
-                                    <option
-                                    <?php
-                                        if (isset($categoryId) && $productCategoryId == $categoryId) {
-                                            echo "value=\"" . $categoryId . "\"";
-                                            echo "selected='selected'";
-                                        }
-                                    ?>>
+                                    <?php foreach ($categories as $category) { ?>
+                                        <option value="<?= $category['id'] ?>"
                                         <?php
-                                            if (isset($categoryName)) {
-                                                echo $categoryName;
+                                            if ($category['id'] == $categoryId) {
+                                                echo "selected='selected'";
                                             }
-                                        ?>
-                                    </option>
+                                        ?>>
+                                            <?= $category['name'] ?>
+                                        </option>
+                                    <?php } ?>
                                 </select>
                                 <label class="text-danger">
                                     <?php
@@ -172,41 +169,31 @@
                                         if ($productTax == "5") {
                                             echo 'selected="selected"';
                                         }
-                                    ?>>
-                                        5%
-                                    </option>
+                                    ?>>5%</option>
                                     <option value="10"
                                     <?php
                                         if ($productTax == "10") {
                                             echo 'selected="selected"';
                                         }
-                                    ?>>
-                                        10%
-                                    </option>
+                                    ?>>10%</option>
                                     <option value="15"
                                     <?php
                                         if ($productTax == "15") {
                                             echo 'selected="selected"';
                                         }
-                                    ?>>
-                                        15%
-                                    </option>
+                                    ?>>15%</option>
                                     <option value="20"
                                     <?php
                                         if ($productTax == "20") {
                                             echo 'selected="selected"';
                                         }
-                                    ?>>
-                                        20%
-                                    </option>
+                                    ?>>20%</option>
                                     <option value="25"
                                     <?php
                                         if ($productTax == "25") {
                                             echo 'selected="selected"';
                                         }
-                                    ?>>
-                                        25%
-                                    </option>
+                                    ?>>25%</option>
                                 </select>
                                 <label class="text-danger">
                                     <?php
@@ -228,10 +215,10 @@
                                     ?>>
                                 <label class="text-danger">
                                     <?php
-                                    if (isset($_SESSION['stock_alert'])) {
-                                        echo $_SESSION['stock_alert'];
-                                        unset($_SESSION['stock_alert']);
-                                    }
+                                        if (isset($_SESSION['stock_alert'])) {
+                                            echo $_SESSION['stock_alert'];
+                                            unset($_SESSION['stock_alert']);
+                                        }
                                     ?>
                                 </label>
                             </div>
@@ -244,7 +231,7 @@
                                     <br>
                                     <br>
                                 <?php } ?>
-                                <input id="product-image" type="file" class="form-control" accept="image/png, image/gif, image/jpeg, image/jpg" name="product_image" required>
+                                <input id="product-image" type="file" class="form-control" accept="image/png, image/gif, image/jpeg, image/jpg" name="product_image">
                                 <label class="text-danger">
                                     <?php
                                         if (isset($_SESSION['file_alert'])) {
@@ -254,8 +241,12 @@
                                     ?>
                                 </label>
                             </div>
-                            <button type="submit" class="btn btn-primary me-2" name="submit" onclick="toast()">Submit</button>
-                            <a href="../product/show_product.php" class="btn btn-light">Cancel</a>
+                            <button type="submit" class="btn btn-primary me-2" name="submit" onclick="toast()">
+                                Submit
+                            </button>
+                            <a href="../product/show_product.php" class="btn btn-light">
+                                Cancel
+                            </a>
                         </form>
                     </div>
                 </div>

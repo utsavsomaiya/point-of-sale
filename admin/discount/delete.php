@@ -8,7 +8,7 @@
         $fetchSales->execute();
         $count = $fetchSales->rowCount();
         if ($count == 1) {
-            $_SESSION['msg'] = "Cannot delete this discount";
+            $_SESSION['message'] = "Cannot delete this discount.";
             header('location:/admin/discount/list.php');
             exit;
         }
@@ -16,11 +16,11 @@
         $deleteDiscount->bindParam(':id', $discountId);
         $isExecute = $deleteDiscount->execute();
         if ($isExecute) {
-            $_SESSION['msg']="Record deleted";
+            $_SESSION['message'] = "Discount deleted successfully.";
             header('location:../discount/list.php');
             exit;
         }
-        $_SESSION['msg'] = "Something went wrong";
+        $_SESSION['message'] = "Something went wrong.";
         header("location:../discount/delete.php?id=$discountId");
         exit;
     }
