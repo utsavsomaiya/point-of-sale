@@ -169,7 +169,7 @@ function displayCart() {
             }
         }
     }
-
+  
     var inputDiscountId = document.createElement('input');
     inputDiscountId.setAttribute('type', 'hidden');
     inputDiscountId.setAttribute('name', 'discount_id');
