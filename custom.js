@@ -1,5 +1,4 @@
 const cart = [];
-let subTotal = 0;
 if ((document.getElementById('subtotal').innerHTML).localeCompare('$0') == 0) {
     document.getElementById('discount-img').style.visibility = 'hidden';
 }
@@ -46,33 +45,22 @@ function existsInArray(id) {
         return element.id === id;
     });
 }
-
-var discountId = document.getElementById('discount-id-1').innerHTML.trim();
-var discountDigit = document.getElementById('discount-1').innerHTML.trim();
-
+var discountDigit = '';
+var discountId = 0;
+var minimumSpendAmount = 0;
 function displayCart() {
     subTotal = 0;
     totalDiscount = 0;
     totalTax = 0;
+    discountPrice = 0;
     document.getElementById('container').innerHTML = "";
     document.getElementById('hidden-form').innerHTML = "";
     id = 1;
 
     document.getElementById('discount-img').style.visibility = 'visible';
 
-    let discount = new Array(cart.length);
-    let tax = new Array(cart.length);
-    if (discountDigit.substring(discountDigit.length - 1) == "%") {
-        discountType = 1;
-    } else {
-        discountType = 2;
-    }
-
-    var inputDiscountId = document.createElement('input');
-    inputDiscountId.setAttribute('type', 'hidden');
-    inputDiscountId.setAttribute('name', 'discount_id');
-    inputDiscountId.value = discountId;
-    document.getElementById('hidden-form').appendChild(inputDiscountId);
+    let discount = 0;
+    let tax = 0;
 
     for (let i = 0; i < cart.length; i++) {
 
@@ -159,18 +147,44 @@ function displayCart() {
 
         id++;
     }
-    if (subTotal > parseInt(discountDigit.replace(/[$%]/, ''))) {
+
+    if (discountDigit == '') {
+        for (i = 1; i <= discountsCount; i++) {
+            minimumSpendAmount = parseInt(document.getElementById('minimum-spend-amount-' + i).innerHTML.trim());
+            if (minimumSpendAmount <= subTotal) {
+                discountId = document.getElementById('discount-id-' + i).innerHTML.trim();
+                discountDigit = document.getElementById('discount-' + i).innerHTML.trim();
+                document.getElementById('discount-button-' + i).setAttribute('class', 'bg-green-500 text-white font-bold py-2 px-4 rounded-full');
+                document.getElementById('discount-button-' + i).innerHTML = "Applied";
+                document.getElementById('discount-button-' + i).disabled = true;
+                break;
+            }
+        }
+    }
+
+    discountType = 2;
+    if (discountDigit.substring(discountDigit.length - 1) == "%") {
+        discountType = 1;
+    }
+
+    var inputDiscountId = document.createElement('input');
+    inputDiscountId.setAttribute('type', 'hidden');
+    inputDiscountId.setAttribute('name', 'discount_id');
+    inputDiscountId.value = discountId;
+    document.getElementById('hidden-form').appendChild(inputDiscountId);
+
+    if (parseInt(minimumSpendAmount) <= subTotal && subTotal > parseInt(discountDigit.replace(/[$%]/, ''))) {
         if (discountType == "2") {
             discountPrice = parseInt(discountDigit.replace(/[$%]/, ''));
         } else {
             discountPrice = (subTotal * parseInt(discountDigit.replace(/[$%]/, ''))) / 100;
         }
-        for (let i = 0; i < cart.length; i++) {
-            discount[i] = (parseInt((cart[i].price).slice(1)) * discountPrice) / subTotal;
-            totalDiscount += discount[i];
-            tax[i] = ((parseInt((cart[i].price).slice(1)) - discount[i]) * parseInt(cart[i].tax.slice(0, 2)) / 100);
-            totalTax += tax[i];
-        }
+    }
+    for (let i = 0; i < cart.length; i++) {
+        discount = (parseInt((cart[i].price).slice(1)) * discountPrice) / subTotal;
+        totalDiscount += discount;
+        tax = ((parseInt((cart[i].price).slice(1)) - discount) * parseInt(cart[i].tax.slice(0, 2)) / 100);
+        totalTax += tax;
     }
     grandTotal = subTotal - totalDiscount + totalTax;
     document.getElementById('subtotal').innerHTML = "$" + subTotal;
@@ -249,6 +263,7 @@ function discountApply(count) {
 
     discountId = document.getElementById('discount-id-' + count).innerHTML.trim();
     discountDigit = document.getElementById('discount-' + count).innerHTML.trim();
+    minimumSpendAmount = document.getElementById('minimum-spend-amount-' + count).innerHTML.trim();
 
     for (i = 1; i <= discountsCount; i++){
         if (count != i) {
@@ -267,13 +282,13 @@ function discountApply(count) {
 function searchProducts() {
     var input = document.getElementById('searchbar').value.toLowerCase();
     var hasResults = false;
-    for (i = 0; i < productsCount; i++) {
-        var name = document.getElementById('name-' + (i + 1)).innerHTML;
-        var category = document.getElementById('category-' + (i + 1)).innerHTML;
-        var price = document.getElementById('price-' + (i + 1)).innerHTML;
-        document.getElementById('products-list-' + (i + 1)).style.display = 'none';
+    for (i = 1; i <= productsCount; i++) {
+        var name = document.getElementById('name-' + i).innerHTML;
+        var category = document.getElementById('category-' + i).innerHTML;
+        var price = document.getElementById('price-' + i).innerHTML;
+        document.getElementById('products-list-' + i).style.display = 'none';
         if (name.toLowerCase().includes(input) || category.toLowerCase().includes(input) || price.toLowerCase().includes(input)) {
-            document.getElementById('products-list-' + (i + 1)).style.display = 'block';
+            document.getElementById('products-list-' + i).style.display = 'block';
             hasResults = true;
         }
     }

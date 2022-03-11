@@ -15,6 +15,7 @@
                 <table class="table-auto">
                     <thead>
                         <tr>
+                            <th>Id</th>
                             <th>Name</th>
                             <th>Price</th>
                             <th>Apply/Applied</th>
@@ -26,6 +27,7 @@
                                 <?php $count++; ?>
                                 <td id="discount-id-<?= $count ?>"><?= $discounts[$i]['id']; ?></td>
                                 <td><?= $discounts[$i]['name']; ?></td>
+                                <label hidden id="minimum-spend-amount-<?= $count ?>"><?= $discounts[$i]['minimum_spend_amount']; ?></label>
                                 <td id="discount-<?= $count ?>">
                                     <?php
                                         if ($discounts[$i]['type'] == "1") {
@@ -36,15 +38,9 @@
                                     ?>
                                 </td>
                                 <td>
-                                    <?php if ($count == 1) { ?>
-                                        <button class="bg-green-500 text-white font-bold py-2 px-4 rounded-full" onclick="discountApply(<?= $count ?>)" id="discount-button-<?= $count ?>" disabled>
-                                            Applied
-                                        </button>
-                                    <?php } else { ?>
-                                        <button class="bg-red-500 text-white font-bold py-2 px-4 rounded-full" onclick="discountApply(<?= $count ?>)" id="discount-button-<?= $count ?>">
-                                            Apply
-                                        </button>
-                                    <?php } ?>
+                                    <button class="bg-red-500 text-white font-bold py-2 px-4 rounded-full" onclick="discountApply(<?= $count ?>)" id="discount-button-<?= $count ?>">
+                                        Apply
+                                    </button>
                                 </td>
                             </tr>
                         <?php } ?>

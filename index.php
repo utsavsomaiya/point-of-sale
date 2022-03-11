@@ -19,7 +19,6 @@
         }
         $productIds = $_POST['productId'];
         $productQuantities = $_POST['productQuantity'];
-        $discountId = $_POST['discount_id'];
         $productPrices = [];
         $productTaxes = [];
         $productsTax = [];
@@ -41,29 +40,32 @@
         }
 
         $fetchDiscount = $pdo->prepare("SELECT * FROM `discount` WHERE `id` = :id");
-        $fetchDiscount->bindParam(':id', $discountId);
+        $fetchDiscount->bindParam(':id', $_POST['discount_id']);
         $fetchDiscount->execute();
         $discounts = $fetchDiscount->fetchAll();
         foreach ($discounts as $discount) {
+            $minimumSpendAmount = (int) $discount['minimum_spend_amount'];
             $discountType = (int) $discount['type'];
             $productsDiscount = (int) $discount['digit'];
         }
 
         $totalDiscount = 0;
         $totalTax = 0;
-        if ($subtotal > $productsDiscount) {
+        $discountPrice = 0;
+        $discountId = null;
+        if ($minimumSpendAmount <= $subtotal && $subtotal > $productsDiscount) {
+            $discountId = $_POST['discount_id'];
+            $discountPrice = ($subtotal * $productsDiscount) / 100;
             if ($discountType == DISCOUNT["flat"]) {
                 $discountPrice =  $productsDiscount;
-            } else {
-                $discountPrice = ($subtotal * $productsDiscount) / 100;
             }
-            for ($i = 0; $i < sizeof($productIds); $i++) {
-                $productDiscount[$i] = round((($productPrices[$i] * $productQuantities[$i] * $discountPrice)/$subtotal), 2);
-                $totalDiscount += $productDiscount[$i];
-                $productTaxablePrice[$i] = $productPrices[$i] * $productQuantities[$i] - $productDiscount[$i];
-                $productsTax[$i] = ($productTaxablePrice[$i] * $productTaxes[$i])/100;
-                $totalTax += $productsTax[$i];
-            }
+        }
+        for ($i = 0; $i < sizeof($productIds); $i++) {
+            $productDiscount[$i] = round((($productPrices[$i] * $productQuantities[$i] * $discountPrice)/$subtotal), 2);
+            $totalDiscount += $productDiscount[$i];
+            $productTaxablePrice[$i] = $productPrices[$i] * $productQuantities[$i] - $productDiscount[$i];
+            $productsTax[$i] = ($productTaxablePrice[$i] * $productTaxes[$i])/100;
+            $totalTax += $productsTax[$i];
         }
         $grandTotal = $subtotal - $totalDiscount + $totalTax;
 
@@ -182,12 +184,12 @@
                                     <img src="/images/discount.png" style="width:20px;margin-right: 0px;position:absolute;right: 430px;" onclick="displayApplicableDiscountsModal('discount-modal-id')" id="discount-img">
                                     <?php include 'discount.php';?>
                                     <div class="hidden opacity-25 fixed inset-0 z-40 bg-black" id="discount-modal-id-backdrop"></div>
-                                    <span class="font-bold" id="discount-price">- $0</span>
+                                    <span class="font-bold" id="discount-price">- $0.00</span>
                                 <?php } ?>
                             </div>
                             <div class=" px-4 flex justify-between">
                                 <span class="font-semibold text-sm">Sales Tax</span>
-                                <span class="font-bold" id='sales-tax'>$0.00</span>
+                                <span class="font-bold" id='sales-tax'>+ $0.00</span>
                             </div>
                             <div class="border-t-2 mt-3 py-2 px-4 flex items-center justify-between">
                                 <span class="font-semibold text-2xl">Total</span>
