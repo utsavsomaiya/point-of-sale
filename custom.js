@@ -17,10 +17,8 @@ function addToCart(id) {
             if (document.getElementById('stock-' + id).innerHTML > cart[index].quantity) {
                 cart[index].quantity = parseInt(cart[index].quantity) + 1;
             }
-            var price = document.getElementById('price-' + id).innerHTML;
-            price = parseInt(price.slice(1));
+            var price = parseInt(document.getElementById('price-' + id).innerHTML.trim());
             price *= cart[index].quantity;
-            price = "$" + price;
             cart[index].price = price;
         } else {
             const product = {
@@ -28,8 +26,8 @@ function addToCart(id) {
                 "productId": document.getElementById('id-' + id).innerHTML,
                 "name": document.getElementById('name-' + id).innerHTML,
                 "img": document.getElementById('image-' + id).src,
-                "price": document.getElementById('price-' + id).innerHTML,
-                "tax": document.getElementById('tax-' + id).innerHTML,
+                "price": document.getElementById('price-' + id).innerHTML.trim(),
+                "tax": document.getElementById('tax-' + id).innerHTML.trim(),
                 "quantity": 1
             };
             cart.push(product);
@@ -93,7 +91,7 @@ function displayCart() {
         inputQuantity.value = productQuantity;
         document.getElementById('hidden-form').appendChild(inputQuantity);
 
-        subTotal += parseInt((cart[i].price).slice(1));
+        subTotal += parseInt((cart[i].price));
 
         var imageTag = document.createElement('img');
         imageTag.src = productImg;
@@ -132,12 +130,21 @@ function displayCart() {
         increaseButton.innerHTML = "+";
         document.getElementById('div-sub-second-' + id).appendChild(increaseButton);
 
-
         var divMainSubThird = document.createElement('div');
-        divMainSubThird.setAttribute('class', 'font-semibold text-lg w-16 text-center');
+        divMainSubThird.setAttribute('class', 'flex pl-3 font-semibold text-lg w-16 text-center');
         divMainSubThird.setAttribute('id', 'div-sub-third-' + id);
-        divMainSubThird.innerHTML = productPrice;
         document.getElementById('div-main-' + id).appendChild(divMainSubThird);
+
+        var divPriceSign = document.createElement('div');
+        divPriceSign.setAttribute('id', 'div-sign-' + id);
+        divPriceSign.innerHTML = "$";
+        document.getElementById('div-sub-third-' + id).appendChild(divPriceSign);
+
+        var divPrice = document.createElement('div');
+        divPrice.setAttribute('id', 'div-price-' + id);
+        divPrice.innerHTML = productPrice;
+        document.getElementById('div-sub-third-' + id).appendChild(divPrice);
+
 
         var deleteIcon = document.createElement('span');
         deleteIcon.setAttribute('class', 'px-3 py-1 rounded-md bg-red-300 text-white');
@@ -154,6 +161,7 @@ function displayCart() {
             if (minimumSpendAmount <= subTotal) {
                 discountId = document.getElementById('discount-id-' + i).innerHTML.trim();
                 discountDigit = document.getElementById('discount-' + i).innerHTML.trim();
+                discountType = document.getElementById('discount-type-' + i).innerHTML.trim();
                 document.getElementById('discount-button-' + i).setAttribute('class', 'bg-green-500 text-white font-bold py-2 px-4 rounded-full');
                 document.getElementById('discount-button-' + i).innerHTML = "Applied";
                 document.getElementById('discount-button-' + i).disabled = true;
@@ -161,29 +169,23 @@ function displayCart() {
             }
         }
     }
-
-    discountType = 2;
-    if (discountDigit.substring(discountDigit.length - 1) == "%") {
-        discountType = 1;
-    }
-
+  
     var inputDiscountId = document.createElement('input');
     inputDiscountId.setAttribute('type', 'hidden');
     inputDiscountId.setAttribute('name', 'discount_id');
     inputDiscountId.value = discountId;
     document.getElementById('hidden-form').appendChild(inputDiscountId);
 
-    if (parseInt(minimumSpendAmount) <= subTotal && subTotal > parseInt(discountDigit.replace(/[$%]/, ''))) {
-        if (discountType == "2") {
-            discountPrice = parseInt(discountDigit.replace(/[$%]/, ''));
-        } else {
-            discountPrice = (subTotal * parseInt(discountDigit.replace(/[$%]/, ''))) / 100;
+    if (parseInt(minimumSpendAmount) <= subTotal && subTotal > parseInt(discountDigit)) {
+        discountPrice = (subTotal * parseInt(discountDigit)) / 100;
+        if (discountType == "$") {
+            discountPrice = parseInt(discountDigit);
         }
     }
     for (let i = 0; i < cart.length; i++) {
-        discount = (parseInt((cart[i].price).slice(1)) * discountPrice) / subTotal;
+        discount = (parseInt(cart[i].price) * discountPrice) / subTotal;
         totalDiscount += discount;
-        tax = ((parseInt((cart[i].price).slice(1)) - discount) * parseInt(cart[i].tax.slice(0, 2)) / 100);
+        tax = ((parseInt(cart[i].price) - discount) * parseInt(cart[i].tax) / 100);
         totalTax += tax;
     }
     grandTotal = subTotal - totalDiscount + totalTax;
@@ -205,7 +207,7 @@ function inputQuantity(productId, id) {
         document.getElementById('input-id-' + id).value = document.getElementById('stock-' + productId).innerHTML;
         cart[indexOfProduct].quantity = document.getElementById('input-id-' + id).value;
     }
-    price = parseInt((document.getElementById('price-' + productId).innerHTML).slice(1)) * cart[indexOfProduct].quantity;
+    price = parseInt((document.getElementById('price-' + productId).innerHTML).trim()) * cart[indexOfProduct].quantity;
     cart[indexOfProduct].price = '$' + price;
     displayCart();
 }
@@ -217,8 +219,8 @@ function changeQuantity(productId, checked) {
         if (document.getElementById('stock-' + productId).innerHTML > cart[indexOfProduct].quantity) {
             cart[indexOfProduct].quantity = parseInt(cart[indexOfProduct].quantity) + 1;
         }
-        price = parseInt((document.getElementById('price-' + productId).innerHTML).slice(1)) * cart[indexOfProduct].quantity;
-        cart[indexOfProduct].price = '$' + price;
+        price = parseInt((document.getElementById('price-' + productId).innerHTML).trim()) * cart[indexOfProduct].quantity;
+        cart[indexOfProduct].price = price;
         subTotal += price;
         displayCart();
     }
@@ -226,8 +228,8 @@ function changeQuantity(productId, checked) {
         cart[indexOfProduct].quantity = isNaN(cart[indexOfProduct].quantity) ? 0 : cart[indexOfProduct].quantity;
         if (cart[indexOfProduct].quantity > 1) {
             cart[indexOfProduct].quantity = parseInt(cart[indexOfProduct].quantity) - 1;
-            price = parseInt((document.getElementById('price-' + productId).innerHTML).slice(1)) * cart[indexOfProduct].quantity;
-            cart[indexOfProduct].price = '$' + price;
+            price = parseInt((document.getElementById('price-' + productId).innerHTML).trim()) * cart[indexOfProduct].quantity;
+            cart[indexOfProduct].price = price;
             subTotal += price;
             displayCart();
         } else {
@@ -263,6 +265,7 @@ function discountApply(count) {
 
     discountId = document.getElementById('discount-id-' + count).innerHTML.trim();
     discountDigit = document.getElementById('discount-' + count).innerHTML.trim();
+    discountType = document.getElementById('discount-type-' + count).innerHTML.trim();
     minimumSpendAmount = document.getElementById('minimum-spend-amount-' + count).innerHTML.trim();
 
     for (i = 1; i <= discountsCount; i++){
