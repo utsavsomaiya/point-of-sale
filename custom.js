@@ -169,7 +169,15 @@ function displayCart() {
             }
         }
     }
-  
+    
+    for (i = 1; i <= discountsCount; i++) {
+        minimumSpendAmount = parseInt(document.getElementById('minimum-spend-amount-' + i).innerHTML.trim());
+        document.getElementById('discounts-'+ i).style.display = "none";
+        if (minimumSpendAmount <= subTotal) {
+            document.getElementById('discounts-' + i).style.display = "table-row";
+        }
+    }
+
     var inputDiscountId = document.createElement('input');
     inputDiscountId.setAttribute('type', 'hidden');
     inputDiscountId.setAttribute('name', 'discount_id');

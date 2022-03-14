@@ -23,8 +23,8 @@
                     </thead>
                     <tbody>
                         <?php $count=0; for ($i = 0; $i < sizeof($discounts); $i++) { ?>
-                            <tr>
-                                <?php $count++; ?>
+                            <?php $count++; ?>
+                            <tr id="discounts-<?= $count ?>">
                                 <td id="discount-id-<?= $count ?>"><?= $discounts[$i]['id']; ?></td>
                                 <td class="pr-3"><?= $discounts[$i]['name']; ?></td>
                                 <label hidden id="minimum-spend-amount-<?= $count ?>"><?= $discounts[$i]['minimum_spend_amount']; ?></label>
