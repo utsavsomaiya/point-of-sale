@@ -21,8 +21,6 @@
                                 <tr>
                                     <th>Id</th>
                                     <th>Name</th>
-                                    <th>Minimum Spend Amount</th>
-                                    <th>Digit</th>
                                     <th>Status</th>
                                     <th colspan='2'>Action</th>
                                 </tr>
@@ -32,15 +30,6 @@
                                     <tr>
                                         <td><?= $discount['id'] ?></td>
                                         <td><?= $discount['name'] ?></td>
-                                        <td>
-                                            <?php
-                                                if ($discount['type'] == "1") {
-                                                    echo $discount['digit']."%";
-                                                } else {
-                                                    echo "$".$discount['digit'];
-                                                }
-                                            ?>
-                                        </td>
                                         <td>
                                             <label class="switch">
                                                 <input type="checkbox"
