@@ -43,9 +43,11 @@ function existsInArray(id) {
         return element.id === id;
     });
 }
-var discountDigit = '';
-var discountId = 0;
-var minimumSpendAmount = 0;
+const discountDigits = [];
+const discountIds = [];
+const discountTierIds = [];
+const minimumSpendAmounts = [];
+const discountTypes = [];
 function displayCart() {
     subTotal = 0;
     totalDiscount = 0;
@@ -155,28 +157,36 @@ function displayCart() {
         id++;
     }
 
-    if (discountDigit == '') {
-        for (i = 1; i <= discountsCount; i++) {
-            minimumSpendAmount = parseInt(document.getElementById('minimum-spend-amount-' + i).innerHTML.trim());
-            if (minimumSpendAmount <= subTotal) {
-                discountId = document.getElementById('discount-id-' + i).innerHTML.trim();
-                discountDigit = document.getElementById('discount-' + i).innerHTML.trim();
-                discountType = document.getElementById('discount-type-' + i).innerHTML.trim();
-                document.getElementById('discount-button-' + i).setAttribute('class', 'bg-green-500 text-white font-bold py-2 px-4 rounded-full');
-                document.getElementById('discount-button-' + i).innerHTML = "Applied";
-                document.getElementById('discount-button-' + i).disabled = true;
-                break;
-            }
+    for (i = 0; i < discountsCount; i++) {
+        minimumSpendAmounts[i] = parseInt(document.getElementById('minimum-spend-amount-' + (i + 1)).innerHTML.trim());
+        discountDigits[i] = parseInt(document.getElementById('discount-' + (i + 1)).innerHTML.trim());
+        discountTypes[i] = document.getElementById('discount-type-' + (i + 1)).innerHTML.trim();
+        discountIds[i] = document.getElementById('discount-id-' + (i + 1)).innerHTML.trim();
+        discountTierIds[i] = document.getElementById('discount-tier-id-' + (i + 1)).innerHTML.trim();
+    }
+
+    for (i = 0; i < discountsCount; i++) {
+        if (subTotal >= minimumSpendAmounts[i]) {
+            minimumSpendAmount = minimumSpendAmounts[i];
+            discountId = discountIds[i]
+            discountDigit = discountDigits[i];
+            discountTierId = discountTierIds[i];
+            discountType = discountTypes[i];
         }
     }
-    
-    for (i = 1; i <= discountsCount; i++) {
-        minimumSpendAmount = parseInt(document.getElementById('minimum-spend-amount-' + i).innerHTML.trim());
-        document.getElementById('discounts-'+ i).style.display = "none";
-        if (minimumSpendAmount <= subTotal) {
-            document.getElementById('discounts-' + i).style.display = "table-row";
+
+    var count = 0;
+    for (i = 0; i < discountsCount; i++) {
+        if (subTotal >= minimumSpendAmounts[i]) {
+            discountThread = document.getElementById('discounts-table');
+            count = i;
         }
     }
+    for (i = 0; i < discountsCount; i++) {
+        discountThread.children[i].style.display = "none";
+        discountThread.children[count].style.display = "table-row";
+    }
+
 
     var inputDiscountId = document.createElement('input');
     inputDiscountId.setAttribute('type', 'hidden');
@@ -184,7 +194,13 @@ function displayCart() {
     inputDiscountId.value = discountId;
     document.getElementById('hidden-form').appendChild(inputDiscountId);
 
-    if (parseInt(minimumSpendAmount) <= subTotal && subTotal > parseInt(discountDigit)) {
+    var inputDiscountTierId = document.createElement('input');
+    inputDiscountTierId.setAttribute('type', 'hidden');
+    inputDiscountTierId.setAttribute('name', 'discount_tier_id');
+    inputDiscountTierId.value = discountTierId;
+    document.getElementById('hidden-form').appendChild(inputDiscountTierId);
+
+    if (minimumSpendAmount <= subTotal && subTotal > discountDigit) {
         discountPrice = (subTotal * parseInt(discountDigit)) / 100;
         if (discountType == "$") {
             discountPrice = parseInt(discountDigit);
@@ -209,14 +225,14 @@ function displayCart() {
 
 function inputQuantity(productId, id) {
     var indexOfProduct = cart.findIndex((obj => obj.id == productId));
-    if (document.getElementById('stock-' + id).innerHTML > document.getElementById('input-id-' + id).value) {
+    if (parseInt(document.getElementById('stock-' + productId).innerHTML.trim()) > parseInt(document.getElementById('input-id-' + id).value)) {
         cart[indexOfProduct].quantity = document.getElementById('input-id-' + id).value;
     } else {
-        document.getElementById('input-id-' + id).value = document.getElementById('stock-' + productId).innerHTML;
+        document.getElementById('input-id-' + id).value = document.getElementById('stock-' + productId).innerHTML.trim();
         cart[indexOfProduct].quantity = document.getElementById('input-id-' + id).value;
     }
     price = parseInt((document.getElementById('price-' + productId).innerHTML).trim()) * cart[indexOfProduct].quantity;
-    cart[indexOfProduct].price = '$' + price;
+    cart[indexOfProduct].price = price;
     displayCart();
 }
 
@@ -269,7 +285,7 @@ function toast() {
     }, 3000);
 }
 
-function discountApply(count) {
+/* function discountApply(count) {
 
     discountId = document.getElementById('discount-id-' + count).innerHTML.trim();
     discountDigit = document.getElementById('discount-' + count).innerHTML.trim();
@@ -288,7 +304,7 @@ function discountApply(count) {
         }
     }
     displayCart();
-}
+} */
 
 function searchProducts() {
     var input = document.getElementById('searchbar').value.toLowerCase();
