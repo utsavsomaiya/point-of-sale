@@ -4,7 +4,7 @@ function discountStatusChanged(id, status) {
     } else {
         status = status - 1;
     }
-    $.ajax({
+    $.acountax({
         url: "edit.php",
         data: {
             id: id,
@@ -14,48 +14,46 @@ function discountStatusChanged(id, status) {
     });
 }
 
-var j = 1;
+var count = 1;
 
-function addInsert() {
+function addElementFromInsertPage() {
     var discountDiv = document.getElementById('discount-tiers-container');
     var discountDivClone = discountDiv.cloneNode(true);
     discountDivClone.children[0].children[1].value = "";
     discountDivClone.children[1].children[1].value = "";
     discountDivClone.children[2].style.display = "block";
-    discountDivClone.children[2].id = "remove-div-" + j;
-    discountDivClone.setAttribute('id', 'discount-tiers-container-' + j);
+    discountDivClone.children[2].id = "remove-div-" + count;
+    discountDivClone.setAttribute('id', 'discount-tiers-container-' + count);
     document.getElementById('container').appendChild(discountDivClone);
 
     var remove = document.createElement('i');
     remove.setAttribute('class', 'fa fa-trash-o');
-    remove.setAttribute('onclick', 'remove('+j+')');
-    document.getElementById('remove-div-' + j).appendChild(remove);
+    remove.setAttribute('onclick', 'remove('+count+')');
+    document.getElementById('remove-div-' + count).appendChild(remove);
 
-    j++;
+    count++;
 }
 
-function add() {
+function addElementFromEditPage() {
     var discountDiv = document.getElementById('discount-tiers-container');
     var discountDivClone = discountDiv.cloneNode(true);
     discountDivClone.children[0].children[1].value = "";
     discountDivClone.children[1].children[1].value = "";
     discountDivClone.children[2].style.display = "block";
-    discountDivClone.children[2].id = "remove-div-" + index;
-    discountDivClone.setAttribute('id', 'discount-tiers-container-' + index);
+    discountDivClone.children[2].id = "remove-div-" + totalDiscounts;
+    discountDivClone.setAttribute('id', 'discount-tiers-container-' + totalDiscounts);
     document.getElementById('container').appendChild(discountDivClone);
 
     var remove = document.createElement('i');
     remove.setAttribute('class', 'fa fa-trash-o');
-    remove.setAttribute('onclick', 'remove('+index+')');
-    document.getElementById('remove-div-' + index).appendChild(remove);
+    remove.setAttribute('onclick', 'remove('+totalDiscounts+')');
+    document.getElementById('remove-div-' + totalDiscounts).appendChild(remove);
 
-    index++;
+    totalDiscounts++;
 }
-
-
 
 function remove(index) {
     var select = document.getElementById('discount-tiers-container-'+index);
     select.parentNode.removeChild(select);
-    j--;
+    count--;
 }

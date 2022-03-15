@@ -27,7 +27,7 @@
         $fetchDiscountTier->bindParam(':id', $discountId);
         $fetchDiscountTier->execute();
         $discountTires = $fetchDiscountTier->fetchAll();
-        for ($i = 0; $i < sizeof($discountTires); $i++) {
+        for ($i = 0; $i < count($discountTires); $i++) {
             $discountTierIds[$i] = $discountTires[$i]['tier_id'];
             $minimumSpendAmounts[$i] = $discountTires[$i]['minimum_spend_amount'];
             $discountDigits[$i] = $discountTires[$i]['discount_digit'];
@@ -46,7 +46,7 @@
         $discountName = $_POST['name'];
         $discountType = $_POST['type'];
         $discountStatus = $_POST['status'];
-        for ($i = 0; $i < sizeof($_POST['digit']); $i++) {
+        for ($i = 0; $i < count($_POST['digit']); $i++) {
             if (empty($_POST['digit'][$i])) {
                 $_SESSION['digit_alert'][$i] = "Please enter digit.";
             }
@@ -68,7 +68,7 @@
         $discountDigit = [];
         $minimumSpendAmount = [];
 
-        for ($i = 0; $i < sizeof($_POST['digit']); $i++) {
+        for ($i = 0; $i < count($_POST['digit']); $i++) {
             if (in_array($_POST['digit'][$i], $discountDigit)) {
                 $_SESSION['digit_alert'][$i] = "Discount digits are same";
                 $_SESSION['discount_name'] = $discountName;
@@ -93,7 +93,7 @@
             $minimumSpendAmount[$i] = $_POST['minimum_spend_amount'][$i];
         }
 
-        for ($i = 0; $i < sizeof($_POST['digit']); $i++) {
+        for ($i = 0; $i < count($_POST['digit']); $i++) {
             if (empty($_POST['minimum_spend_amount'][$i]) || empty($_POST['digit'][$i])) {
                 header("location:../discount/edit.php?id=$discountId");
                 exit;
@@ -116,8 +116,8 @@
         $updateDiscount->bindParam(':status', $discountStatus);
         $isExecuted = $updateDiscount->execute();
 
-        if (sizeof($_POST['digit']) == sizeof($discountDigits)) {
-            for ($i = 0; $i < sizeof($discountTierIds); $i++) {
+        if (count($_POST['digit']) == count($discountDigits)) {
+            for ($i = 0; $i < count($discountTierIds); $i++) {
                 $updateDiscountTire = $pdo->prepare("UPDATE `discount_tier` SET `minimum_spend_amount` = :minimumAmount, `discount_digit` = :digit WHERE `tier_id` = :id");
                 $updateDiscountTire->bindParam(':minimumAmount', $minimumSpendAmount[$i]);
                 $updateDiscountTire->bindParam(':digit', $discountDigit[$i]);
@@ -126,10 +126,10 @@
             }
         }
 
-        if (sizeof($_POST['digit']) > sizeof($discountDigits)) {
+        if (count($_POST['digit']) > count($discountDigits)) {
             $differenceTierDigit =  array_diff($_POST['digit'], $discountDigits);
             $differenceTierMinimumSpendAmount = array_diff($_POST['minimum_spend_amount'], $minimumSpendAmounts);
-            for ($i = 0; $i < sizeof($differenceTierDigit); $i++) {
+            for ($i = 0; $i < count($differenceTierDigit); $i++) {
                 $insertDiscountTier = $pdo->prepare("INSERT INTO `discount_tier`(`discount_id`,`minimum_spend_amount`,`discount_digit`) VALUES(:discount_id, :minimum_spend_amount, :discount_digit)");
                 $insertDiscountTier->bindParam(':discount_id', $discountId);
                 $insertDiscountTier->bindParam(':minimum_spend_amount', $differenceTierMinimumSpendAmount[$i]);
@@ -138,10 +138,10 @@
             }
         }
 
-        if (sizeof($_POST['digit']) < sizeof($discountDigits)) {
+        if (count($_POST['digit']) < count($discountDigits)) {
             $differenceTierDigit =  array_diff($discountDigits, $_POST['digit']);
             $differenceTierMinimumSpendAmount = array_diff($minimumSpendAmounts, $_POST['minimum_spend_amount']);
-            for ($i = 0; $i < sizeof($differenceTierDigit); $i++) {
+            for ($i = 0; $i < count($differenceTierDigit); $i++) {
                 $deleteDiscountTier = $pdo->prepare("DELETE FROM `discount_tier` WHERE `minimum_spend_amount` = :minimumSpendAmount AND `discount_digit` = :discountDigit AND `discount_id` = :discount_id");
                 $deleteDiscountTier->bindParam(':discount_id', $discountId);
                 $deleteDiscountTier->bindParam(':minimumSpendAmount', $differenceTierMinimumSpendAmount[$i]);
@@ -219,7 +219,7 @@
                             </div>
                             <div class="form-group" id="container">
                                 <div>
-                                    <button type="button" class="input-group-text bg-primary text-white" style="margin-left: 350px;" onclick="add()" id="add-button">
+                                    <button type="button" class="input-group-text bg-primary text-white" style="margin-left: 350px;" onclick="addElementFromEditPage()" id="add-button">
                                         Add new
                                     </button>
                                 </div>
@@ -268,7 +268,7 @@
                                     </div>
                                     <div class="input-group-append" style="display: none;"></div>
                                 </div>
-                                <?php for ($i = 1; $i < sizeof($discountTierIds); $i++) { ?>
+                                <?php for ($i = 1; $i < count($discountTierIds); $i++) { ?>
                                     <div class="input-group" id="discount-tiers-container-<?= $i; ?>">
                                         <div class="input-group-append">
                                             <label for="minimum-amount">Minium Spend Amount</label>
@@ -319,7 +319,7 @@
                                 <?php } ?>
                                 <?php
                                 if (isset($_SESSION['tier_digit'])) {
-                                    for ($i = sizeof($discountTierIds); $i < sizeof($_SESSION['tier_digit']); $i++) { ?>
+                                    for ($i = count($discountTierIds); $i < count($_SESSION['tier_digit']); $i++) { ?>
                                         <div class="input-group" id="discount-tiers-container-<?= $i; ?>">
                                             <div class="input-group-append">
                                                 <label for="minimum-amount">Minium Spend Amount</label>
@@ -415,7 +415,7 @@
     </div>
 </div>
 <script>
-    var index = <?= sizeof($discountTierIds) ?>;
+    var totalDiscounts = <?= count($discountTierIds) ?>;
 </script>
 <script type="text/javascript" src="/admin/js/discount.js"></script>
 <?php include '../layout/footer.php'; ?>

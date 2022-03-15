@@ -2,11 +2,11 @@
     session_start();
     if (isset($_POST['submit'])) {
         $discountTiers = [];
-        for ($i = 0; $i < sizeof($_POST['digit']); $i++) {
+        for ($i = 0; $i < count($_POST['digit']); $i++) {
             $newInput[$i] = [
-                    'minimum_spend_amount' => $_POST['minimum_spend_amount'][$i],
-                    'discount_digit' => $_POST['digit'][$i],
-                ];
+                'minimum_spend_amount' => $_POST['minimum_spend_amount'][$i],
+                'discount_digit' => $_POST['digit'][$i],
+            ];
             array_push($discountTiers, $newInput);
         }
 
@@ -30,7 +30,7 @@
         $fetchDiscount->execute();
         $discounts = $fetchDiscount->fetchAll();
 
-        for ($i = 0; $i < sizeof($_POST['digit']); $i++) {
+        for ($i = 0; $i < count($_POST['digit']); $i++) {
             if (empty($_POST['digit'][$i])) {
                 $_SESSION['digit_alert'][$i] = "Please enter digit.";
             }
@@ -57,7 +57,7 @@
 
         $discountDigits = [];
         $minimumSpendAmounts = [];
-        for ($i = 0; $i < sizeof($_POST['digit']); $i++) {
+        for ($i = 0; $i < count($_POST['digit']); $i++) {
             if (in_array($_POST['digit'][$i], $discountDigits)) {
                 $_SESSION['digit_alert'][$i] = "Discount digits are same";
                 $_SESSION['discount_name'] = $discountName;
@@ -82,7 +82,7 @@
             }
         }
 
-        for ($i = 0; $i < sizeof($_POST['digit']); $i++) {
+        for ($i = 0; $i < count($_POST['digit']); $i++) {
             if (empty($_POST['minimum_spend_amount'][$i]) || empty($_POST['digit'][$i])) {
                 header('location:../discount/add.php');
                 exit;
@@ -110,7 +110,7 @@
         $insertDiscount->bindParam(':type', $discountType);
         $insertDiscount->bindParam(':status', $discountStatus);
         $insertDiscount->execute();
-        for ($i = 0; $i < sizeof($discountDigits); $i++) {
+        for ($i = 0; $i < count($discountDigits); $i++) {
             $insertTierDiscount = $pdo->prepare("INSERT INTO discount_tier(`discount_id`,`minimum_spend_amount`,`discount_digit`) SELECT max(`id`),$minimumSpendAmounts[$i],$discountDigits[$i] FROM `discount`");
             $isExecute = $insertTierDiscount->execute();
         }
@@ -192,7 +192,7 @@
                             </div>
                             <div class="form-group" id="container">
                                 <div>
-                                    <button type="button" class="input-group-text bg-primary text-white" style="margin-left: 350px;" onclick="addInsert()" id="add-button">
+                                    <button type="button" class="input-group-text bg-primary text-white" style="margin-left: 350px;" onclick="addElementFromInsertPage()" id="add-button">
                                         Add new
                                     </button>
                                 </div>
@@ -241,7 +241,7 @@
                                 </div>
                                 <?php
                                     if (isset($_SESSION['discount_tier'])) {
-                                        for ($i = 1; $i < sizeof($_SESSION['discount_tier']); $i++) { ?>
+                                        for ($i = 1; $i < count($_SESSION['discount_tier']); $i++) { ?>
                                     <div class="input-group" id="discount-tiers-container-<?= $i;?>">
                                         <div class="input-group-append">
                                             <label>Minium Spend Amount</label>
