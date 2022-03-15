@@ -4,7 +4,7 @@ function discountStatusChanged(id, status) {
     } else {
         status = status - 1;
     }
-    $.acountax({
+    $.ajax({
         url: "edit.php",
         data: {
             id: id,
