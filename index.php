@@ -55,8 +55,10 @@
         $totalTax = 0;
         $discountPrice = 0;
         $discountId = null;
+        $discountTierId = null;
         if ($minimumSpendAmount <= $subtotal && $subtotal > $productsDiscount) {
             $discountId = $_POST['discount_id'];
+            $discountTierId = $_POST['discount_tier_id'];
             if ($discountType == DISCOUNT["flat"]) {
                 $discountPrice =  $productsDiscount;
             } else {
@@ -79,12 +81,25 @@
         $insertSales->bindParam(':discount', $totalDiscount);
         $insertSales->bindParam(':total', $grandTotal);
         $insertSales->execute();
+        $salesId = $pdo->lastInsertId();
 
         for ($i = 0; $i < sizeof($productIds); $i++) {
             $productIds[$i] = (int) $productIds[$i];
             $productQuantities[$i] = (int) $productQuantities[$i];
             $discountId = (int) $discountId;
-            $insertSalesItems = $pdo->prepare("INSERT INTO `sales_item` (`sales_id`, `product_id`, `product_price`, `product_quantity`, `product_total_price`, `product_discount_id`, `product_discount`, `product_tax_percentage`, `product_taxable_price`, `product_tax_amount`) SELECT max(`id`),'$productIds[$i]','$productPrices[$i]','$productQuantities[$i]',$productPrices[$i] * $productQuantities[$i],'$discountId','$productDiscount[$i]','$productTaxes[$i]','$productTaxablePrice[$i]','$productsTax[$i]' FROM `sales`");
+            $productTotalPrice = ($productQuantities[$i] * $productPrices[$i]);
+            $insertSalesItems = $pdo->prepare("INSERT INTO `sales_item` (`sales_id`, `product_id`, `product_price`, `product_quantity`, `product_total_price`, `product_discount_id`, `product_discount_tier_id`, `product_discount`, `product_tax_percentage`, `product_taxable_price`, `product_tax_amount`) VALUES(:sales_id, :product_id, :product_price, :product_quantity, :product_total_price, :discount_id, :discount_tier_id, :product_discount, :product_tax_percentage, :product_taxable_price, :product_tax_amount)");
+            $insertSalesItems->bindParam(':sales_id', $salesId);
+            $insertSalesItems->bindParam(':product_id', $productIds[$i]);
+            $insertSalesItems->bindParam(':product_price', $productPrices[$i]);
+            $insertSalesItems->bindParam(':product_quantity', $productQuantities[$i]);
+            $insertSalesItems->bindParam(':product_total_price', $productTotalPrice);
+            $insertSalesItems->bindParam(':discount_id', $discountId);
+            $insertSalesItems->bindParam(':discount_tier_id', $discountTierId);
+            $insertSalesItems->bindParam(':product_discount', $productDiscount[$i]);
+            $insertSalesItems->bindParam(':product_tax_percentage', $productTaxes[$i]);
+            $insertSalesItems->bindParam(':product_taxable_price', $productTaxablePrice[$i]);
+            $insertSalesItems->bindParam(':product_tax_amount', $productsTax[$i]);
             $isExecuted = $insertSalesItems->execute();
             $updateStock = $pdo->prepare("UPDATE `product` SET `stock` = `stock` - :productQuantity WHERE `id` = :productId");
             $updateStock->bindParam(':productQuantity', $productQuantities[$i]);
