@@ -127,9 +127,9 @@
         }
 
         if (count($_POST['digit']) > count($discountDigits)) {
-            $differenceTierDigit =  array_diff($_POST['digit'], $discountDigits);
-            $differenceTierMinimumSpendAmount = array_diff($_POST['minimum_spend_amount'], $minimumSpendAmounts);
-            for ($i = 0; $i < count($differenceTierDigit); $i++) {
+            $differenceTierDigit =  array_values(array_diff($_POST['digit'], $discountDigits));
+            $differenceTierMinimumSpendAmount = array_values(array_diff($_POST['minimum_spend_amount'], $minimumSpendAmounts));
+            for ($i = 0; ($i < count($differenceTierMinimumSpendAmount)) || ($i < count($differenceTierDigit)); $i++) {
                 $insertDiscountTier = $pdo->prepare("INSERT INTO `discount_tier`(`discount_id`,`minimum_spend_amount`,`discount_digit`) VALUES(:discount_id, :minimum_spend_amount, :discount_digit)");
                 $insertDiscountTier->bindParam(':discount_id', $discountId);
                 $insertDiscountTier->bindParam(':minimum_spend_amount', $differenceTierMinimumSpendAmount[$i]);
@@ -217,157 +217,16 @@
                                     ?>
                                 </label>
                             </div>
+                            <h6><u><b>Minimum Spends</b></u></h6>
                             <div class="form-group" id="container">
                                 <div>
-                                    <button type="button" class="input-group-text bg-primary text-white" style="margin-left: 350px;" onclick="addElementFromEditPage()" id="add-button">
+                                    <button type="button" class="input-group-text bg-primary text-white" style="margin-left: 350px;" onclick="editPageAddMinimumRow()" id="add-button">
                                         Add new
                                     </button>
                                 </div>
-                                <div class="input-group" id="discount-tiers-container">
-                                    <div class="input-group-append">
-                                        <label for="minimum-amount">Minium Spend Amount</label>
-                                        <input type="number" id="minimum-amount" class="form-control" required
-                                        placeholder="Minium Spend Amount" name="minimum_spend_amount[]"
-                                            <?php
-                                                if (isset($_SESSION['minimum_spend_amount']) && isset($_SESSION['minimum_spend_amount'][0])) {
-                                                    echo "value=\"".$_SESSION['minimum_spend_amount'][0]."\"";
-                                                    unset($_SESSION['minimum_spend_amount'][0]);
-                                                }
-                                            ?>
-                                            value="<?= $minimumSpendAmounts[0]?>"
-                                        >
-                                        <label class="text-danger">
-                                            <?php
-                                                if (isset($_SESSION['minimum_spend_amount_alert']) && isset($_SESSION['minimum_spend_amount_alert'][0])) {
-                                                    echo $_SESSION['minimum_spend_amount_alert'][0];
-                                                    unset($_SESSION['minimum_spend_amount_alert'][0]);
-                                                }
-                                            ?>
-                                        </label>
-                                    </div>
-                                    <div class="input-group-append">
-                                        <label for="discountDigit">Discount digit</label>
-                                        <input type="number" id="discountDigit" class="form-control"
-                                            placeholder="Discount digit" name="digit[]" required
-                                            <?php
-                                                if (isset($_SESSION['digit']) && isset($_SESSION['digit'][0])) {
-                                                    echo "value=\"".$_SESSION['digit'][0]."\"";
-                                                    unset($_SESSION['digit'][0]);
-                                                }
-                                            ?>
-                                            value="<?= $discountDigits[0]?>"
-                                        >
-                                        <label class="text-danger">
-                                            <?php
-                                                if (isset($_SESSION['digit_alert']) && isset($_SESSION['digit_alert'][0])) {
-                                                    echo $_SESSION['digit_alert'][0];
-                                                    unset($_SESSION['digit_alert'][0]);
-                                                }
-                                            ?>
-                                        </label>
-                                    </div>
-                                    <div class="input-group-append" style="display: none;"></div>
+                                <div class="minimum-spend-row-container">
+                                    <!-- Here added Minimum Spends Row using javascript -->
                                 </div>
-                                <?php for ($i = 1; $i < count($discountTierIds); $i++) { ?>
-                                    <div class="input-group" id="discount-tiers-container-<?= $i; ?>">
-                                        <div class="input-group-append">
-                                            <label for="minimum-amount">Minium Spend Amount</label>
-                                            <input type="number" id="minimum-amount"  required class="form-control"
-                                                placeholder="Minium Spend Amount" name="minimum_spend_amount[]"
-                                                <?php
-                                                    if (isset($_SESSION['minimum_spend_amount']) && isset($_SESSION['minimum_spend_amount'][$i])) {
-                                                        echo "value=\"".$_SESSION['minimum_spend_amount'][$i]."\"";
-                                                        unset($_SESSION['minimum_spend_amount'][$i]);
-                                                    }
-                                                ?>
-                                                value="<?= $minimumSpendAmounts[$i]?>"
-                                            >
-                                            <label class="text-danger">
-                                                <?php
-                                                    if (isset($_SESSION['minimum_spend_amount_alert']) && isset($_SESSION['minimum_spend_amount_alert'][$i])) {
-                                                        echo $_SESSION['minimum_spend_amount_alert'][$i];
-                                                        unset($_SESSION['minimum_spend_amount_alert'][$i]);
-                                                    }
-                                                ?>
-                                            </label>
-                                        </div>
-                                        <div class="input-group-append">
-                                            <label for="discountDigit">Discount digit</label>
-                                            <input type="number" id="discountDigit"  required class="form-control"
-                                                placeholder="Discount digit" name="digit[]"
-                                                <?php
-                                                    if (isset($_SESSION['digit']) && isset($_SESSION['digit'][$i])) {
-                                                        echo "value=\"".$_SESSION['digit'][$i]."\"";
-                                                        unset($_SESSION['digit'][$i]);
-                                                    }
-                                                ?>
-                                                value="<?= $discountDigits[$i]?>"
-                                            >
-                                            <label class="text-danger">
-                                                <?php
-                                                    if (isset($_SESSION['digit_alert']) && isset($_SESSION['digit_alert'][$i])) {
-                                                        echo $_SESSION['digit_alert'][$i];
-                                                        unset($_SESSION['digit_alert'][$i]);
-                                                    }
-                                                ?>
-                                            </label>
-                                        </div>
-                                        <div class="input-group-append">
-                                            <i class="fa fa-trash-o" onclick="remove(<?= $i ?>)"></i>
-                                        </div>
-                                    </div>
-                                <?php } ?>
-                                <?php
-                                if (isset($_SESSION['tier_digit'])) {
-                                    for ($i = count($discountTierIds); $i < count($_SESSION['tier_digit']); $i++) { ?>
-                                        <div class="input-group" id="discount-tiers-container-<?= $i; ?>">
-                                            <div class="input-group-append">
-                                                <label for="minimum-amount">Minium Spend Amount</label>
-                                                <input type="number" id="minimum-amount" class="form-control" required
-                                                    placeholder="Minium Spend Amount" name="minimum_spend_amount[]"
-                                                    <?php
-                                                        if (isset($_SESSION['minimum_spend_amount']) && isset($_SESSION['minimum_spend_amount'][$i])) {
-                                                            echo "value=\"".$_SESSION['minimum_spend_amount'][$i]."\"";
-                                                            unset($_SESSION['minimum_spend_amount'][$i]);
-                                                        }
-                                                    ?>
-                                                >
-                                                <label class="text-danger">
-                                                    <?php
-                                                        if (isset($_SESSION['minimum_spend_amount_alert']) && isset($_SESSION['minimum_spend_amount_alert'][$i])) {
-                                                            echo $_SESSION['minimum_spend_amount_alert'][$i];
-                                                            unset($_SESSION['minimum_spend_amount_alert'][$i]);
-                                                        }
-                                                    ?>
-                                                </label>
-                                            </div>
-                                            <div class="input-group-append">
-                                                <label for="discountDigit">Discount digit</label>
-                                                <input type="number" id="discountDigit" required class="form-control"
-                                                    placeholder="Discount digit" name="digit[]"
-                                                    <?php
-                                                        if (isset($_SESSION['digit']) && isset($_SESSION['digit'][$i])) {
-                                                            echo "value=\"".$_SESSION['digit'][$i]."\"";
-                                                            unset($_SESSION['digit'][$i]);
-                                                        }
-                                                    ?>
-                                                >
-                                                <label class="text-danger">
-                                                    <?php
-                                                        if (isset($_SESSION['digit_alert']) && isset($_SESSION['digit_alert'][$i])) {
-                                                            echo $_SESSION['digit_alert'][$i];
-                                                            unset($_SESSION['digit_alert'][$i]);
-                                                        }
-                                                    ?>
-                                                </label>
-                                            </div>
-                                            <div class="input-group-append">
-                                                <i class="fa fa-trash-o" onclick="remove(<?= $i ?>)"></i>
-                                            </div>
-                                        </div>
-                                <?php }
-                                } ?>
-                                <?php unset($_SESSION['tier_digit']);?>
                             </div>
                             <div class="form-group">
                                 <label for="discountStatus">Status</label>
@@ -414,8 +273,12 @@
         </div>
     </div>
 </div>
+<?php include '../discount/tier_template.php'; ?>
 <script>
     var totalDiscounts = <?= count($discountTierIds) ?>;
+    const discountDigits = <?= json_encode($discountDigits) ?>;
+    const minimumSpendAmounts = <?= json_encode($minimumSpendAmounts);?>;
 </script>
 <script type="text/javascript" src="/admin/js/discount.js"></script>
+<script>editPageFetchTemplate();</script>
 <?php include '../layout/footer.php'; ?>
