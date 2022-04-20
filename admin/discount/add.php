@@ -3,12 +3,24 @@
     if (isset($_POST['submit'])) {
         if (empty($_POST['name'])) {
             $_SESSION['name_alert'] = "Please enter discount name.";
+            $_SESSION['minimum_spend_amount'] = $_POST['minimum_spend_amount'];
+            $_SESSION['digit']= $_POST['digit'];
+            $_SESSION['type'] = $_POST['type'];
+            $_SESSION['status'] = $_POST['status'];
         }
         if (empty($_POST['type'])) {
             $_SESSION['type_alert'] = "Please select discount type.";
+            $_SESSION['discount_name'] = $_POST['name'];
+            $_SESSION['minimum_spend_amount'] = $_POST['minimum_spend_amount'];
+            $_SESSION['digit']= $_POST['digit'];
+            $_SESSION['status'] = $_POST['status'];
         }
         if (empty($_POST['status'])) {
             $_SESSION['status_alert'] = "Please select discount status.";
+            $_SESSION['minimum_spend_amount'] = $_POST['minimum_spend_amount'];
+            $_SESSION['digit']= $_POST['digit'];
+            $_SESSION['type'] = $_POST['type'];
+            $_SESSION['discount_name'] = $_POST['name'];
         }
 
         require '../layout/db_connect.php';
@@ -22,13 +34,19 @@
         for ($i = 0; $i < count($_POST['digit']); $i++) {
             if (empty($_POST['digit'][$i])) {
                 $_SESSION['digit_alert'][$i] = "Please enter digit.";
-                $_SESSION['digit'] = $_POST['digit'];
+                $_SESSION['discount_name'] = $_POST['name'];
                 $_SESSION['minimum_spend_amount'] = $_POST['minimum_spend_amount'];
+                $_SESSION['digit']= $_POST['digit'];
+                $_SESSION['type'] = $_POST['type'];
+                $_SESSION['status'] = $_POST['status'];
             }
             if (empty($_POST['minimum_spend_amount'][$i])) {
                 $_SESSION['minimum_spend_amount_alert'][$i] = "Please enter minimum spend amount.";
-                $_SESSION['digit'] = $_POST['digit'];
+                $_SESSION['discount_name'] = $_POST['name'];
                 $_SESSION['minimum_spend_amount'] = $_POST['minimum_spend_amount'];
+                $_SESSION['digit']= $_POST['digit'];
+                $_SESSION['type'] = $_POST['type'];
+                $_SESSION['status'] = $_POST['status'];
             }
 
             if ($_POST['type'] == "1" && $_POST['digit'][$i] > 100) {
@@ -56,7 +74,7 @@
                 $_SESSION['digit_alert'][$i] = "Discount digits are same";
                 $_SESSION['discount_name'] = $discountName;
                 $_SESSION['minimum_spend_amount']= $_POST['minimum_spend_amount'];
-                $_SESSION['digit'][$i] = $_POST['digit'][$i];
+                $_SESSION['digit'] = $_POST['digit'];
                 $_SESSION['type'] = $_POST['type'];
                 $_SESSION['status'] = $_POST['status'];
             }

@@ -14,10 +14,7 @@ function discountStatusChanged(id, status) {
     });
 }
 
-const minimumSpendContainer = [{
-    "minimum_spend": null,
-    "digit": null,
-}];
+const minimumSpendContainer = [0];
 
 function renderMinimumSpendTemplate() {
     document.getElementsByClassName('minimum-spend-row-container')[0].innerHTML = '';
@@ -33,24 +30,25 @@ function renderMinimumSpendTemplate() {
     [...removeObject].forEach((remove, i) => {
         const deleteIcon = document.createElement('i');
         deleteIcon.setAttribute('class', 'fa fa-trash-o');
-        deleteIcon.setAttribute('onclick', `removeMinimumSpendRow(${i})`);
+        deleteIcon.setAttribute('onclick', `removeMinimumSpendRow(${i},${null})`);
         remove.appendChild(deleteIcon);
     });
 }
 
 function addMinimumSpendRow() {
-    minimumSpendContainer.push({
-        "minimum_spend": null,
-        "digit": null,
-    });
+    minimumSpendContainer.push(minimumSpendContainer[minimumSpendContainer.length-1]+1);
     renderMinimumSpendTemplate();
 }
 
-function removeMinimumSpendRow(index) {
-    if (index > -1) {
-        minimumSpendContainer.splice(index, 1);
+function removeMinimumSpendRow(index,flag) {
+    var indexOfRow = minimumSpendContainer.findIndex((obj => obj.id == index+1));
+    if (indexOfRow > -1) {
+        minimumSpendContainer.splice(indexOfRow, 1);
+        if (flag == "error")
+            sessionRenderMinimumSpendTemplate();
+        else
+            renderMinimumSpendTemplate();
     }
-    renderMinimumSpendTemplate();
 }
 
 var discountDigit = document.getElementsByClassName('digit');
@@ -70,7 +68,7 @@ function sessionRenderMinimumSpendTemplate() {
     [...removeObject].forEach((remove, i) => {
         const deleteIcon = document.createElement('i');
         deleteIcon.setAttribute('class', 'fa fa-trash-o');
-        deleteIcon.setAttribute('onclick', `removeMinimumSpendRow(${i})`);
+        deleteIcon.setAttribute('onclick', `removeMinimumSpendRow(${i},"error")`);
         remove.appendChild(deleteIcon);
     });
     for (i = 0; i < discountDigit.length; i++) {
@@ -90,16 +88,24 @@ function sessionRenderMinimumSpendTemplate() {
 }
 
 function sessionAddMinimumSpendRow() {
-    minimumSpendContainer.push({
-        "minimum_spend": null,
-        "digit": null,
-    });
+    minimumSpendContainer.push(minimumSpendContainer[minimumSpendContainer.length-1]+1);
     sessionRenderMinimumSpendTemplate();
 }
 
 const editMiniumSpendContainer = [];
-for (i = 0; i < totalDiscounts; i++) {
-    editMiniumSpendContainer.push(i);
+
+function availableEditPageOption() {
+    if (errorDiscountDigit.length > 0) {
+        for (i = 0; i < (errorDiscountDigit.length); i++) {
+            editMiniumSpendContainer.push(i);
+        }
+    }
+    else {
+        for (i = 0; i < (totalDiscounts); i++) {
+            editMiniumSpendContainer.push(i);
+        }
+    }
+    editPageFetchTemplate();
 }
 
 function editPageFetchTemplate() {
@@ -123,18 +129,35 @@ function editPageFetchTemplate() {
         discountDigit[i].value = discountDigits[i];
         minimumSpendAmount[i].value = minimumSpendAmounts[i];
     }
+    if (errorDiscountDigit.length > 0)
+    {
+        for (i = 0; i < discountDigit.length; i++) {
+            if (errorDiscountDigit.length > 0) {
+                discountDigit[i].value = errorDiscountDigit[i];
+            }
+            if (errorMinimumSpendAmount.length > 0) {
+                minimumSpendAmount[i].value = errorMinimumSpendAmount[i];
+            }
+            if (minimumSpendAlert[i] != undefined) {
+                document.getElementsByClassName('minimum-spend-amount-error')[i].innerHTML = minimumSpendAlert[i];
+            }
+            if (digitAlert[i] != undefined  && digitAlert[i] != '[object Object]') {
+                document.getElementsByClassName('digit-error')[i].innerHTML = digitAlert[i];
+            }
+        }
+    }
 }
 
 function editRemoveMinimumSpendRow(index) {
-    console.log(index);
-    if (index > -1) {
-        editMiniumSpendContainer.splice(index, 1);
+    if (index + 1 > -1) {
+        discountDigits.splice(index + 1, 1);
+        minimumSpendAmounts.splice(index + 1, 1);
+        editMiniumSpendContainer.splice(index + 1, 1);
+        editPageFetchTemplate();
     }
-    const minimumSpend = document.getElementsByClassName('minimum-spend-row-container');
-    console.log(minimumSpend[0].removeChild(minimumSpend[0].children[index+1]));
 }
 
 function editPageAddMinimumRow() {
-    editMiniumSpendContainer.push('j');
+    editMiniumSpendContainer.push(editMiniumSpendContainer[editMiniumSpendContainer.length-1]+1);
     editPageFetchTemplate();
 }
