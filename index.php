@@ -234,6 +234,7 @@
                         <?php } ?>
                     </div>
                 </div>
+                <?php require 'cart_template.php'; ?>
                 <script>productsCount = <?= sizeof($products) ?>;</script>
                 <script>discountsCount = <?= sizeof($discounts) ?>;</script>
                 <script type="text/javascript" src="custom.js"></script>

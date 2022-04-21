@@ -23,8 +23,8 @@ function addToCart(id) {
         } else {
             const product = {
                 "id": id,
-                "productId": document.getElementById('id-' + id).innerHTML,
-                "name": document.getElementById('name-' + id).innerHTML,
+                "productId": document.getElementById('id-' + id).innerHTML.trim(),
+                "name": document.getElementById('name-' + id).innerHTML.trim(),
                 "img": document.getElementById('image-' + id).src,
                 "price": document.getElementById('price-' + id).innerHTML.trim(),
                 "tax": document.getElementById('tax-' + id).innerHTML.trim(),
@@ -55,7 +55,6 @@ function displayCart() {
     discountPrice = 0;
     document.getElementById('container').innerHTML = "";
     document.getElementById('hidden-form').innerHTML = "";
-    id = 1;
 
     document.getElementById('discount-img').style.visibility = 'visible';
 
@@ -64,67 +63,37 @@ function displayCart() {
 
     for (let i = 0; i < cart.length; i++) {
 
-        var divMain = document.createElement('div');
-        divMain.setAttribute('class', 'flex flex-row justify-between items-center mb-4');
-        divMain.setAttribute('id', 'div-main-' + id);
-        document.getElementById('container').appendChild(divMain);
-
-        var divMainSubFirst = document.createElement('div');
-        divMainSubFirst.setAttribute('class', 'flex flex-row items-center w-2/5');
-        divMainSubFirst.setAttribute('id', 'div-sub-first-' + id);
-        document.getElementById('div-main-' + id).appendChild(divMainSubFirst);
-
         var productId = cart[i].id;
-
-        var inputId = document.createElement('input');
-        inputId.setAttribute('type', 'hidden');
-        inputId.setAttribute('name', 'productId[]');
-        inputId.value = cart[i].productId;
-        document.getElementById('hidden-form').appendChild(inputId);
-
         var productImg = cart[i].img;
         var productName = cart[i].name;
         var productPrice = cart[i].price;
         var productQuantity = cart[i].quantity;
 
-        var inputQuantity = document.createElement('input');
-        inputQuantity.setAttribute('type', 'hidden');
-        inputQuantity.setAttribute('name', 'productQuantity[]');
-        inputQuantity.value = productQuantity;
-        document.getElementById('hidden-form').appendChild(inputQuantity);
+        var template = document.getElementById('cart-item').innerHTML;
+        var container = document.getElementById('container');
+        var hiddenTemplate = document.getElementById('cart-hidden').innerHTML;
+        var hiddenForm = document.getElementById('hidden-form');
+        container.innerHTML += template;
+        hiddenForm.innerHTML += hiddenTemplate;
 
-        subTotal += parseInt((cart[i].price));
+        document.querySelector('.w-10').src = productImg;
+        document.querySelector('.w-10').alt = productName;
 
-        var imageTag = document.createElement('img');
-        imageTag.src = productImg;
-        imageTag.setAttribute('class', 'w-10 h-10 object-cover rounded-md');
-        imageTag.setAttribute('alt', productName);
-        document.getElementById('div-sub-first-' + id).appendChild(imageTag);
+        document.querySelector('.ml-4').innerHTML = productName;
 
-        var spanTag = document.createElement('span');
-        spanTag.setAttribute('class', 'ml-4 font-semibold text-sm');
-        spanTag.innerHTML = productName;
-        document.getElementById('div-sub-first-' + id).appendChild(spanTag);
+        document.querySelectorAll('.bg-gray-300')[0].onclick = function () { changeQuantity(productId, "decrease") };
 
-        var divMainSubSecond = document.createElement('div');
-        divMainSubSecond.setAttribute('class', 'w-32 flex justify-between');
-        divMainSubSecond.setAttribute('id', 'div-sub-second-' + id);
-        document.getElementById('div-main-' + id).appendChild(divMainSubSecond);
+        document.querySelector('input[type="number"]').value = productQuantity;
+        document.querySelector('input[type="number"]').onchange = function () { inputQuantity(productId, (i+1)) };
+        document.querySelector('input[type="number"]').setAttribute('id', 'input-id-' + (i + 1));
+        document.querySelector('input[type="number"]').setAttribute('max', document.getElementById('stock-' + id).innerHTML);
 
-        var decreaseButton = document.createElement('button');
-        decreaseButton.setAttribute('class', 'px-3 py-1 rounded-md bg-gray-300');
-        decreaseButton.setAttribute('onclick', 'changeQuantity(' + productId + ',' + '"decrease"' + ')');
-        decreaseButton.innerHTML = "-";
-        document.getElementById('div-sub-second-' + id).appendChild(decreaseButton);
+        document.querySelectorAll('.bg-gray-300')[0].onclick = function () { };
 
-        var inputTag = document.createElement('input');
-        inputTag.setAttribute('class', 'mx-2 border text-center w-8');
-        inputTag.setAttribute('id', 'input-id-' + id);
-        inputTag.setAttribute('type', 'number');
-        inputTag.setAttribute('max', document.getElementById('stock-' + id).innerHTML);
-        inputTag.setAttribute('onchange', 'inputQuantity(' + productId + ',' + id + ')');
-        inputTag.setAttribute('value', productQuantity);
-        document.getElementById('div-sub-second-' + id).appendChild(inputTag);
+        /* subTotal += parseInt((cart[i].price)); */
+
+
+        /*
 
         var increaseButton = document.createElement('button');
         increaseButton.setAttribute('class', 'px-3 py-1 rounded-md bg-gray-300');
@@ -152,9 +121,8 @@ function displayCart() {
         deleteIcon.setAttribute('class', 'px-3 py-1 rounded-md bg-red-300 text-white');
         deleteIcon.setAttribute('onclick', 'removeFromCart(' + productId + ')');
         deleteIcon.innerHTML = "x";
-        document.getElementById('div-main-' + id).appendChild(deleteIcon);
+        document.getElementById('div-main-' + id).appendChild(deleteIcon); */
 
-        id++;
     }
 
     for (i = 0; i < discountsCount; i++) {
@@ -182,13 +150,13 @@ function displayCart() {
             count = i;
         }
     }
-    for (i = 0; i < discountsCount; i++) {
+    /* for (i = 0; i < discountsCount; i++) {
         discountThread.children[i].style.display = "none";
         discountThread.children[count].style.display = "table-row";
-    }
+    } */
 
 
-    var inputDiscountId = document.createElement('input');
+    /* var inputDiscountId = document.createElement('input');
     inputDiscountId.setAttribute('type', 'hidden');
     inputDiscountId.setAttribute('name', 'discount_id');
     inputDiscountId.value = discountId;
@@ -198,9 +166,9 @@ function displayCart() {
     inputDiscountTierId.setAttribute('type', 'hidden');
     inputDiscountTierId.setAttribute('name', 'discount_tier_id');
     inputDiscountTierId.value = discountTierId;
-    document.getElementById('hidden-form').appendChild(inputDiscountTierId);
+    document.getElementById('hidden-form').appendChild(inputDiscountTierId); */
 
-    if (minimumSpendAmount <= subTotal && subTotal > discountDigit) {
+    /* if (minimumSpendAmount <= subTotal && subTotal > discountDigit) {
         discountPrice = (subTotal * parseInt(discountDigit)) / 100;
         if (discountType == "$") {
             discountPrice = parseInt(discountDigit);
@@ -220,7 +188,7 @@ function displayCart() {
 
     if ((document.getElementById('subtotal').innerHTML).localeCompare('$0') == 0) {
         document.getElementById('discount-img').style.visibility = 'hidden';
-    }
+    } */
 }
 
 function inputQuantity(productId, id) {
