@@ -135,7 +135,7 @@
                 <div class="w-full lg:w-3/5 min-h-screen shadow-lg">
                     <div class="flex flex-row justify-between items-center px-5 mt-5">
                         <div class="text-gray-800">
-                            <div class="font-bold text-xl testing">Utsav's Retail Shop</div>
+                            <div class="font-bold text-xl">Utsav's Retail Shop</div>
                             <span class="text-xs">
                                 "Aashirvad", 7-Nandhinagar, Nanavati Chowk, Rajkot-360007
                             </span>
