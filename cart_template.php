@@ -5,9 +5,9 @@
                 <span class="ml-4 font-semibold text-sm"></span>
             </div>
             <div class="w-32 flex justify-between">
-                <button class="px-3 py-1 rounded-md bg-gray-300">-</button>
-                <input class="mx-2 border text-center w-8" type="number">
-                <button class="px-3 py-1 rounded-md bg-gray-300">+</button>
+                <button class="px-3 py-1 rounded-md bg-gray-300 decrease">-</button>
+                <input class="mx-2 border text-center w-8 input-quantity" type="number">
+                <button class="px-3 py-1 rounded-md bg-gray-300 increase">+</button>
             </div>
             <div class="flex pl-3 font-semibold text-lg w-16 text-center" >
                 <div class="currency-sign"></div>
@@ -18,6 +18,8 @@
 </template>
 
 <template id="cart-hidden">
-    <input type="hidden" class="product-id">
-    <input type="hidden" class="product-quantity">
+    <input type="hidden" name="productId[]" class="product-id">
+    <input type="hidden" name="productQuantity[]"class="product-quantity">
+    <input type="hidden" name="discount_id" class="discount-id">
+    <input type="hidden" name="discount_tier_id" class="discount-tier-id">
 </template>
