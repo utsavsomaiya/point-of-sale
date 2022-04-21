@@ -151,17 +151,15 @@ function displayCart() {
         discountThread.children[count].style.display = "table-row";
     }
 
-    var inputDiscountId = document.createElement('input');
-    inputDiscountId.setAttribute('type', 'hidden');
-    inputDiscountId.setAttribute('name', 'discount_id');
-    inputDiscountId.value = discountId;
-    document.getElementById('hidden-form').appendChild(inputDiscountId);
+    let inputDiscountId = document.querySelectorAll('.discount-id');
+    inputDiscountId.forEach(function (id) {
+        id.value = discountId;
+    });
 
-    var inputDiscountTierId = document.createElement('input');
-    inputDiscountTierId.setAttribute('type', 'hidden');
-    inputDiscountTierId.setAttribute('name', 'discount_tier_id');
-    inputDiscountTierId.value = discountTierId;
-    document.getElementById('hidden-form').appendChild(inputDiscountTierId);
+    let inputDiscountTierId = document.querySelectorAll('.discount-tier-id');
+    inputDiscountTierId.forEach(function (tierId){
+        tierId.value = discountTierId;
+    });
 
     if (minimumSpendAmount <= subTotal && subTotal > discountDigit) {
         discountPrice = (subTotal * parseInt(discountDigit)) / 100;
