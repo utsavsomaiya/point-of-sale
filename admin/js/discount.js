@@ -41,9 +41,8 @@ function addMinimumSpendRow() {
 }
 
 function removeMinimumSpendRow(index,flag) {
-    var indexOfRow = minimumSpendContainer.findIndex((obj => obj.id == index+1));
-    if (indexOfRow > -1) {
-        minimumSpendContainer.splice(indexOfRow, 1);
+    if ((index+1) > -1) {
+        minimumSpendContainer.splice((index+1), 1);
         if (flag == "error")
             sessionRenderMinimumSpendTemplate();
         else
