@@ -190,7 +190,7 @@
                             <div class="form-group">
                                 <label for="discount-name">Discount Name</label>
                                 <input type="text" class="form-control" id="discount-name"
-                                    placeholder="Discount Name" name="name"
+                                    placeholder="Discount Name" name="name" required
                                     <?php
                                         if (isset($_SESSION['discount_name'])) {
                                             echo "value=\"".$_SESSION['discount_name']."\"";
@@ -211,7 +211,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="discountType">Type Of Discount</label>
-                                <select id="discountType" class="form-control" name="type" >
+                                <select id="discountType" class="form-control" name="type" required>
                                     <option value="">--Select Type--</option>
                                     <option value="1"
                                     <?php
@@ -260,7 +260,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="discountStatus">Status</label>
-                                <select id="discountStatus" class="form-control" name="status" >
+                                <select id="discountStatus" class="form-control" name="status" required>
                                     <option value="">--Select Status--</option>
                                     <option value="2"
                                     <?php

@@ -14,16 +14,47 @@ function discountStatusChanged(id, status) {
     });
 }
 
+var flag;
+var discountCategory = document.querySelector('.category');
+discountCategory.onchange = function () {
+    if (discountCategory.value == "1")
+    {
+        document.querySelector('.category1').classList.remove('d-none');
+        document.querySelector('.category2').classList.add('d-none');
+        flag = 1;
+    }
+    if (discountCategory.value == "2")
+    {
+        document.querySelector('.category2').classList.remove('d-none');
+        document.querySelector('.category1').classList.add('d-none');
+        flag = 2;
+    }
+    renderMinimumSpendTemplate();
+};
+
 const minimumSpendContainer = [0];
 
 function renderMinimumSpendTemplate() {
-    document.getElementsByClassName('minimum-spend-row-container')[0].innerHTML = '';
+    if(flag == 1)
+        document.getElementsByClassName('minimum-spend-row-container1')[0].innerHTML = '';
+    if (flag == 2)
+        document.getElementsByClassName('minimum-spend-row-container2')[0].innerHTML = '';
     for (const key in minimumSpendContainer) {
-        minimumSpendRowContainer = document.getElementsByClassName('minimum-spend-row-container')[0];
-        minimumSpendRowTemplate = document.getElementById('minimum-spend-template').innerHTML;
-        minimumSpendRowContainer.innerHTML += minimumSpendRowTemplate;
-        if (key === "0") {
-            document.querySelector('.remove-minimum-spend').setAttribute('class', 'd-none');
+        if (flag == 1) {
+            minimumSpendRowContainer = document.getElementsByClassName('minimum-spend-row-container1')[0];
+            minimumSpendRowTemplate = document.getElementById('minimum-spend-template2').innerHTML;
+            minimumSpendRowContainer.innerHTML += minimumSpendRowTemplate;
+            if (key === "0") {
+                document.querySelector('.remove-minimum-spend').setAttribute('class', 'd-none');
+            }
+        }
+        if (flag == 2) {
+            minimumSpendRowContainer = document.getElementsByClassName('minimum-spend-row-container2')[0];
+            minimumSpendRowTemplate = document.getElementById('minimum-spend-template1').innerHTML;
+            minimumSpendRowContainer.innerHTML += minimumSpendRowTemplate;
+            if (key === "0") {
+                document.querySelector('.remove-minimum-spend').setAttribute('class', 'd-none');
+            }
         }
     }
     removeObject = document.getElementsByClassName('remove-minimum-spend');
