@@ -285,27 +285,6 @@ function toast() {
     }, 3000);
 }
 
-/* function discountApply(count) {
-
-    discountId = document.getElementById('discount-id-' + count).innerHTML.trim();
-    discountDigit = document.getElementById('discount-' + count).innerHTML.trim();
-    discountType = document.getElementById('discount-type-' + count).innerHTML.trim();
-    minimumSpendAmount = document.getElementById('minimum-spend-amount-' + count).innerHTML.trim();
-
-    for (i = 1; i <= discountsCount; i++){
-        if (count != i) {
-            document.getElementById('discount-button-' + count).setAttribute('class', 'bg-green-500 text-white font-bold py-2 px-4 rounded-full');
-            document.getElementById('discount-button-' + count).innerHTML = "Applied";
-            document.getElementById('discount-button-' + count).disabled = true;
-
-           document.getElementById('discount-button-' + i).setAttribute('class', 'bg-red-500 text-white font-bold py-2 px-4 rounded-full');
-            document.getElementById('discount-button-' + i).innerHTML = "Apply";
-            document.getElementById('discount-button-' + i).disabled = false;
-        }
-    }
-    displayCart();
-} */
-
 function searchProducts() {
     var input = document.getElementById('searchbar').value.toLowerCase();
     var hasResults = false;

@@ -51,11 +51,6 @@
                                         </div>
                                     <?php } ?>
                                 </td>
-                                <!-- <td>
-                                    <button class="bg-red-500 text-white font-bold py-2 px-4 rounded-full" id="discount-button-<?= $count ?>">
-                                        Apply
-                                    </button>
-                                </td> -->
                             </tr>
                         <?php } ?>
                     </tbody>
