@@ -23,23 +23,23 @@
                 class="form-control minimum-spend-amount"
                 placeholder="Minium Spend Amount"
                 name="minimum_spend_amount[]"
-                required
+
             >
             <label class="text-danger minimum-spend-amount-error"></label>
         </div>
         <div class="input-group-append">
             <label>Discount Product</label>
             <select class="form-control product" name="products[]">
-                <option>--Select Products--</option>
+                <option value="">--Select Products--</option>
                 <?php if (sizeof($products) > 0) { ?>
                     <?php foreach ($products as $product) { ?>
-                        <option value="<?= $product['id'] ?>"><?= $product['name'] ?></option>
+                        <option value="<?= $product['name'] ?>"><?= $product['name'] ?></option>
                     <?php } ?>
                 <?php } ?>
             </select>
             <label class="text-danger product-error"></label>
         </div>
-        <div class="input-group-append remove-minimum-spend">
+        <div class="input-group-append remove-minimum-spend2">
             <!-- Remove button create from javascript -->
         </div>
     </div>

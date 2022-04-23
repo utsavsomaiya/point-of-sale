@@ -1,7 +1,7 @@
 <div class="category1 d-none">
     <div class="form-group">
         <label for="discountType">Type Of Discount</label>
-        <select id="discountType" class="form-control" name="type" required>
+        <select id="discountType" class="form-control" name="type" >
             <option value="">--Select Type--</option>
             <option value="1"
             <?php
@@ -57,7 +57,7 @@
                 class="form-control minimum-spend-amount"
                 placeholder="Minium Spend Amount"
                 name="minimum_spend_amount[]"
-                required
+
             >
             <label class="text-danger minimum-spend-amount-error"></label>
         </div>
@@ -67,11 +67,11 @@
                 class="form-control digit"
                 placeholder="Discount digit"
                 name="digit[]"
-                required
+
             >
             <label class="text-danger digit-error"></label>
         </div>
-        <div class="input-group-append remove-minimum-spend">
+        <div class="input-group-append remove-minimum-spend1">
             <!-- Remove button create from javascript -->
         </div>
     </div>
