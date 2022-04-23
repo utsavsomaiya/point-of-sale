@@ -123,7 +123,6 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Retail Shop</title>
-        <!-- https://unpkg.com/tailwindcss@2.0.2/dist/tailwind.min.css -->
         <link rel="stylesheet" href="/tailwind.min.css">
         <link rel="stylesheet" href="/admin/vendors/mdi/css/custom_styles.css">
         <link rel="stylesheet" href="custom.css">
