@@ -19,6 +19,7 @@
     if (empty($_POST['type'])) {
         $_SESSION['type_alert'] = "Please select discount type.";
         $_SESSION['discount_name'] = $_POST['name'];
+        $_SESSION['category'] = $_POST['category'];
         $_SESSION['minimum_spend_amount'] = $_POST['minimum_spend_amount'];
         $_SESSION['digit']= $_POST['digit'];
         $_SESSION['status'] = $_POST['status'];
@@ -27,6 +28,7 @@
     if (empty($_POST['status'])) {
         $_SESSION['status_alert'] = "Please select discount status.";
         $_SESSION['minimum_spend_amount'] = $_POST['minimum_spend_amount'];
+        $_SESSION['category'] = $_POST['category'];
         $_SESSION['digit']= $_POST['digit'];
         $_SESSION['type'] = $_POST['type'];
         $_SESSION['discount_name'] = $_POST['name'];
@@ -37,6 +39,18 @@
     $fetchDiscount->bindParam(':discount_name', $discountName);
     $fetchDiscount->execute();
     $discounts = $fetchDiscount->fetchAll();
+
+    if (((int) $discounts[0]['discount_name']) > 0) {
+        $_SESSION['name_alert'] = "Already taken this name";
+        $_SESSION['discount_name'] = $discountName;
+        $_SESSION['category'] = $_POST['category'];
+        $_SESSION['minimum_spend_amount'] = $_POST['minimum_spend_amount'];
+        $_SESSION['digit']= $_POST['digit'];
+        $_SESSION['type'] = $_POST['type'];
+        $_SESSION['status'] = $_POST['status'];
+        header('location:../discount/add.php');
+        exit;
+    }
 
     for ($i = 0; $i < count($_POST['digit']); $i++) {
         if (empty($_POST['digit'][$i])) {
@@ -67,16 +81,8 @@
             $_SESSION['type'] = $_POST['type'];
             $_SESSION['status'] = $_POST['status'];
         }
-        if (((int) $discounts[0]['discount_name']) > 0) {
-            $_SESSION['name_alert'] = "Already taken this name";
-            $_SESSION['discount_name'] = $discountName;
-            $_SESSION['category'] = $_POST['category'];
-            $_SESSION['minimum_spend_amount'] = $_POST['minimum_spend_amount'];
-            $_SESSION['digit']= $_POST['digit'];
-            $_SESSION['type'] = $_POST['type'];
-            $_SESSION['status'] = $_POST['status'];
-        }
     }
+
 
     $discountDigits = [];
     $minimumSpendAmounts = [];
@@ -116,22 +122,13 @@
             header('location:../discount/add.php');
             exit;
         }
-        if (((int) $discounts[0]['discount_name']) > 0) {
-            header('location:../discount/add.php');
-            exit;
-        }
     }
 
-    if (empty($_POST['name']) || empty($_POST['type']) || empty($_POST['status']) || $_POST['category'] == "") {
+    if (empty($_POST['name']) || empty($_POST['type']) || empty($_POST['status']) || empty($_POST['category'])) {
         header('location:../discount/add.php');
         exit;
     }
 
-    $discountType = $_POST['type'];
-    $discountStatus = $_POST['status'];
-
-    $discountDigits = $_POST['digit'];
-    $minimumSpendAmounts = $_POST['minimum_spend_amount'];
 
     $insertDiscount = $pdo->prepare("INSERT INTO `discount`(`name`,`type`,`status`,`category`) VALUES(:name, :type, :status, :category)");
     $insertDiscount->bindParam(':name', $_POST['name']);
@@ -139,6 +136,7 @@
     $insertDiscount->bindParam(':status', $_POST['status']);
     $insertDiscount->bindParam(':category', $_POST['category']);
     $insertDiscount->execute();
+
     for ($i = 0; $i < count($discountDigits); $i++) {
         $insertTierDiscount = $pdo->prepare("INSERT INTO discount_tier(`discount_id`,`minimum_spend_amount`,`discount_digit`,`discount_product`) SELECT max(`id`),$minimumSpendAmounts[$i],$discountDigits[$i],NULL FROM `discount`");
         $isExecute = $insertTierDiscount->execute();
@@ -152,7 +150,7 @@
     $_SESSION['discount_name'] = $discountName;
     $_SESSION['digit'] = $discountDigits;
     $_SESSION['minimum_spend_amount'] = $minimumSpendAmounts;
-    $_SESSION['type'] = $discountType;
-    $_SESSION['status'] = $discountStatus;
+    $_SESSION['type'] = $_POST['type'];
+    $_SESSION['status'] = $_POST['status'];
     header('location:../discount/add.php');
     exit;

@@ -6,10 +6,10 @@
     $products = $fetchProducts->fetchAll();
     if (isset($_POST['submit'])) {
         if (!isset($_POST['digit'])) {
-            require '../discount/category2.php';
+            require '../discount/addCategory2.php';
         }
         if (!isset($_POST['products'])) {
-            require '../discount/category1.php';
+            require '../discount/addCategory1.php';
         }
     }
 ?>
@@ -124,8 +124,6 @@
         </div>
     </div>
 </div>
-<?php include '../discount/tier_template1.php'; ?>
-<?php include '../discount/tier_template2.php'; ?>
 <script>
     var errorDiscountDigit = [];
     var errorDiscountProduct = [];
@@ -148,7 +146,7 @@
         <?php unset($_SESSION['digit_alert']); ?>
     <?php } ?>
     <?php if (isset($_SESSION['product_alert'])) { ?>
-        var digitAlert = <?= json_encode($_SESSION['product_alert']); ?>;
+        var productAlert = <?= json_encode($_SESSION['product_alert']); ?>;
         <?php unset($_SESSION['product_alert']); ?>
     <?php } ?>
     <?php if (isset($_SESSION['minimum_spend_amount_alert'])) { ?>
@@ -172,6 +170,6 @@
 <?php
 } else { ?>
     <script>categoryTemplate(null)</script>
-<?php include '../layout/footer.php';
-}
-?>
+<?php } ?>
+<script>insertTemplate()</script>
+<?include '../layout/footer.php';?>
