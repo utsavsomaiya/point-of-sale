@@ -240,6 +240,11 @@ function availableEditPageOption() {
             editMiniumSpendContainer.push(i);
         }
     }
+    else if (flag == 2 && errorDiscountProduct.length > 0) {
+        for (i = 0; i < (errorDiscountProduct.length); i++) {
+            editMiniumSpendContainer.push(i);
+        }
+    }
     else {
         for (i = 0; i < (totalDiscounts); i++) {
             editMiniumSpendContainer.push(i);
@@ -285,7 +290,7 @@ function editPageFetchTemplate() {
                 discountTypeSelections.options[i].selected = true;
             }
         }
-        for (i = 0; i < editMiniumSpendContainer.length; i++){
+        for (i = 0; i < discountDigits.length; i++){
             discountDigit[i].value = discountDigits[i];
             minimumSpendAmount[i].value = minimumSpendAmounts[i];
         }
@@ -314,14 +319,14 @@ function editPageFetchTemplate() {
             deleteIcon.setAttribute('onclick', `editProductRemoveMinimumSpendRow(${i})`);
             remove.appendChild(deleteIcon);
         });
-        for (i = 0; i < editMiniumSpendContainer.length; i++){
+        for (i = 0; i < discountProducts.length; i++) {
             discountProduct[i].value = discountProducts[i];
             minimumSpendAmount[i].value = minimumSpendAmounts[i];
         }
         if (errorDiscountProduct.length > 0) {
             for (i = 0; i < discountProduct.length; i++) {
                 if (errorDiscountProduct.length > 0) {
-                    discountDigit[i].value = errorDiscountProduct[i];
+                    discountProduct[i].value = errorDiscountProduct[i];
                 }
                 if (errorMinimumSpendAmount.length > 0) {
                     minimumSpendAmount[i].value = errorMinimumSpendAmount[i];
@@ -330,7 +335,7 @@ function editPageFetchTemplate() {
                     document.getElementsByClassName('minimum-spend-amount-error')[i].innerHTML = minimumSpendAlert[i];
                 }
                 if (productAlert[i] != undefined && productAlert[i] != '[object Object]') {
-                    document.getElementsByClassName('digit-error')[i].innerHTML = digitAlert[i];
+                    document.getElementsByClassName('product-error')[i].innerHTML = productAlert[i];
                 }
             }
         }

@@ -25,7 +25,7 @@
                             <div class="form-group">
                                 <label for="discount-name">Discount Name</label>
                                 <input type="text" class="form-control" id="discount-name"
-                                    placeholder="Discount Name" name="name"
+                                    placeholder="Discount Name" name="name" required
                                     <?php
                                         if (isset($_SESSION['discount_name'])) {
                                             echo "value=\"".$_SESSION['discount_name']."\"";
@@ -44,7 +44,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="discountCategory">Discount Category</label>
-                                <select id="discountCategory" class="form-control category" name="category">
+                                <select id="discountCategory" class="form-control category" name="category" required>
                                         <option value="">--Select Category--</option>
                                         <option value="1"
                                         <?php
@@ -81,7 +81,7 @@
                                 <select id="discountStatus"
                                     class="form-control"
                                     name="status"
-                                    >
+                                    required>
                                     <option value="">--Select Status--</option>
                                     <option value="2"
                                     <?php

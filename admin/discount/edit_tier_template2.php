@@ -23,7 +23,6 @@
                 class="form-control minimum-spend-amount"
                 placeholder="Minium Spend Amount"
                 name="minimum_spend_amount[]"
-
             >
             <label class="text-danger minimum-spend-amount-error"></label>
         </div>

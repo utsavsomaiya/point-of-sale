@@ -176,143 +176,157 @@
                 exit;
             }
         }
+        if ($error == 'digit') {
+            if (empty($_POST['name'])) {
+                $_SESSION['name_alert'] = "Please enter discount name.";
+                $_SESSION['category'] = $_POST['category'];
+                $_SESSION['minimum_spend_amount'] = $_POST['minimum_spend_amount'];
+                $_SESSION['digit'] = $_POST['digit'];
+                $_SESSION['status'] = $_POST['status'];
+                $_SESSION['type'] = $_POST['type'];
+            }
+            if (empty($_POST['category'])) {
+                $_SESSION['category_alert'] = "Please enter discount name.";
+                $_SESSION['discount_name'] = $_POST['name'];
+                $_SESSION['type'] = $_POST['type'];
+                $_SESSION['minimum_spend_amount'] = $_POST['minimum_spend_amount'];
+                $_SESSION['digit'] = $_POST['digit'];
+                $_SESSION['status'] = $_POST['status'];
+            }
+            if (empty($_POST['type'])) {
+                $_SESSION['type_alert'] = "Please select discount type.";
+                $_SESSION['discount_name'] = $_POST['name'];
+                $_SESSION['category'] = $_POST['category'];
+                $_SESSION['minimum_spend_amount'] = $_POST['minimum_spend_amount'];
+                $_SESSION['digit'] = $_POST['digit'];
+                $_SESSION['status'] = $_POST['status'];
+            }
+            if (empty($_POST['status'])) {
+                $_SESSION['status_alert'] = "Please select discount status.";
+                $_SESSION['discount_name'] = $_POST['name'];
+                $_SESSION['category'] = $_POST['category'];
+                $_SESSION['type'] = $_POST['type'];
+                $_SESSION['minimum_spend_amount'] = $_POST['minimum_spend_amount'];
+                $_SESSION['digit'] = $_POST['digit'];
+            }
+            if (empty($_POST['name']) || empty($_POST['category']) || empty($_POST['status']) || empty($_POST['type'])) {
+                header("location:../discount/edit.php?id=$discountId");
+                exit;
+            }
+
+            $discountName = $_POST['name'];
+            $discountType = $_POST['type'];
+            $discountStatus = $_POST['status'];
+            $discountCategory = $_POST['category'];
+
+            for ($i = 0; $i < count($_POST['digit']); $i++) {
+                if (empty($_POST['digit'][$i])) {
+                    $_SESSION['digit_alert'][$i] = "Please enter digit.";
+                    $_SESSION['discount_name'] = $_POST['name'];
+                    $_SESSION['minimum_spend_amount'] = $_POST['minimum_spend_amount'];
+                    $_SESSION['category'] = $_POST['category'];
+                    $_SESSION['type'] = $_POST['type'];
+                    $_SESSION['status'] = $_POST['status'];
+                }
+                if (empty($_POST['minimum_spend_amount'][$i])) {
+                    $_SESSION['minimum_spend_amount_alert'][$i] = "Please enter minimum spend amount.";
+                    $_SESSION['discount_name'] = $_POST['name'];
+                    $_SESSION['category'] = $_POST['category'];
+                    $_SESSION['digit'] = $_POST['digit'];
+                    $_SESSION['status'] = $_POST['status'];
+                }
+                if ($_POST['type'] == "1" && $_POST['digit'][$i] > 100) {
+                    $_SESSION['digit_alert'][$i] = "Percentage is not greater than 100.";
+                    $_SESSION['discount_name'] = $_POST['name'];
+                    $_SESSION['minimum_spend_amount'] = $_POST['minimum_spend_amount'];
+                    $_SESSION['digit'] = $_POST['digit'];
+                    $_SESSION['type'] = $_POST['type'];
+                    $_SESSION['status'] = $_POST['status'];
+                }
+            }
+            for ($i = 0; $i < count($_POST['digit']); $i++) {
+                if (empty($_POST['minimum_spend_amount'][$i]) || empty($_POST['digit'][$i]) || ($_POST['type'] == "1" && $_POST['digit'][$i] > 100)) {
+                    header("location:../discount/edit.php?id=$discountId");
+                    exit;
+                }
+            }
+
+            $discountDigit = [];
+            $minimumSpendAmount = [];
+
+            for ($i = 0; $i < count($_POST['digit']); $i++) {
+                if (in_array($_POST['digit'][$i], $discountDigit)) {
+                    $_SESSION['digit_alert'][$i] = "Discount digits are same";
+                    $_SESSION['discount_name'] = $discountName;
+                    $_SESSION['minimum_spend_amount'] = $_POST['minimum_spend_amount'];
+                    $_SESSION['digit'] = $_POST['digit'];
+                    $_SESSION['type'] = $_POST['type'];
+                    $_SESSION['status'] = $_POST['status'];
+                }
+                if (in_array($_POST['minimum_spend_amount'][$i], $minimumSpendAmount)) {
+                    $_SESSION['minimum_spend_amount_alert'][$i] = "Minimum spend amount are same";
+                    $_SESSION['discount_name'] = $discountName;
+                    $_SESSION['minimum_spend_amount'] = $_POST['minimum_spend_amount'];
+                    $_SESSION['digit'] = $_POST['digit'];
+                    $_SESSION['type'] = $_POST['type'];
+                    $_SESSION['status'] = $_POST['status'];
+                }
+                if (in_array($_POST['minimum_spend_amount'][$i], $minimumSpendAmount) || in_array($_POST['digit'][$i], $discountDigit)) {
+                    header("location:../discount/edit.php?id=$discountId");
+                    exit;
+                }
+                $discountDigit[$i] = $_POST['digit'][$i];
+                $minimumSpendAmount[$i] = $_POST['minimum_spend_amount'][$i];
+            }
+
+            $updateDiscount = $pdo->prepare("UPDATE `discount` SET `name` = :name, `type` = :type, status = :status, `category` = :category  WHERE `id`= :id ");
+            $updateDiscount->bindParam(':name', $discountName);
+            $updateDiscount->bindParam(':type', $discountType);
+            $updateDiscount->bindParam(':id', $discountId);
+            $updateDiscount->bindParam(':status', $discountStatus);
+            $updateDiscount->bindParam(':category', $discountCategory);
+            $isExecuted = $updateDiscount->execute();
+
+            if (count($_POST['digit']) == count($productOrDigit)) {
+                for ($i = 0; $i < count($discountTierIds); $i++) {
+                    $updateDiscountTire = $pdo->prepare("UPDATE `discount_tier` SET `minimum_spend_amount` = :minimumAmount, `discount_digit` = :digit WHERE `tier_id` = :id");
+                    $updateDiscountTire->bindParam(':minimumAmount', $minimumSpendAmount[$i]);
+                    $updateDiscountTire->bindParam(':digit', $discountDigit[$i]);
+                    $updateDiscountTire->bindParam(':id', $discountTierIds[$i]);
+                    $updateDiscountTire->execute();
+                }
+            }
+
+            if (count($_POST['digit']) > count($productOrDigit)) {
+                $differenceTierDigit =  array_values(array_diff($_POST['digit'], $productOrDigit));
+                $differenceTierMinimumSpendAmount = array_values(array_diff($_POST['minimum_spend_amount'], $minimumSpendAmounts));
+                for ($i = 0; ($i < count($differenceTierMinimumSpendAmount)) || ($i < count($differenceTierDigit)); $i++) {
+                    $insertDiscountTier = $pdo->prepare("INSERT INTO `discount_tier`(`discount_id`,`minimum_spend_amount`,`discount_digit`) VALUES(:discount_id, :minimum_spend_amount, :discount_digit)");
+                    $insertDiscountTier->bindParam(':discount_id', $discountId);
+                    $insertDiscountTier->bindParam(':minimum_spend_amount', $differenceTierMinimumSpendAmount[$i]);
+                    $insertDiscountTier->bindParam(':discount_digit', $differenceTierDigit[$i]);
+                    $isExecuted = $insertDiscountTier->execute();
+                }
+            }
+            if (count($_POST['digit']) < count($productOrDigit)) {
+                $differenceTierDigit =  array_diff($productOrDigit, $_POST['digit']);
+                $differenceTierMinimumSpendAmount = array_diff($minimumSpendAmounts, $_POST['minimum_spend_amount']);
+                for ($i = 0; $i < count($differenceTierDigit); $i++) {
+                    $deleteDiscountTier = $pdo->prepare("DELETE FROM `discount_tier` WHERE `minimum_spend_amount` = :minimumSpendAmount AND `discount_digit` = :discountDigit AND `discount_id` = :discount_id");
+                    $deleteDiscountTier->bindParam(':discount_id', $discountId);
+                    $deleteDiscountTier->bindParam(':minimumSpendAmount', $differenceTierMinimumSpendAmount[$i]);
+                    $deleteDiscountTier->bindParam(':discountDigit', $differenceTierDigit[$i]);
+                    $isExecuted = $deleteDiscountTier->execute();
+                }
+            }
+
+            if ($isExecuted) {
+                $_SESSION['message'] = "Discount updated successfully.";
+                header('location:../discount/list.php');
+                exit;
+            }
+        }
     }
-        /*
-         if (empty($_POST['type'])) {
-             $_SESSION['type_alert'] = "Please select discount type.";
-             $_SESSION['discount_name'] = $_POST['name'];
-             $_SESSION['minimum_spend_amount'] = $_POST['minimum_spend_amount'];
-             $_SESSION['digit'] = $_POST['digit'];
-             $_SESSION['status'] = $_POST['status'];
-         }
-         if (empty($_POST['status'])) {
-             $_SESSION['status_alert'] = "Please select discount status.";
-             $_SESSION['discount_name'] = $_POST['name'];
-             $_SESSION['minimum_spend_amount'] = $_POST['minimum_spend_amount'];
-             $_SESSION['digit'] = $_POST['digit'];
-             $_SESSION['type'] = $_POST['type'];
-         }
-         $discountName = $_POST['name'];
-         $discountType = $_POST['type'];
-         $discountStatus = $_POST['status'];
-         for ($i = 0; $i < count($_POST['digit']); $i++) {
-             if (empty($_POST['digit'][$i])) {
-                 $_SESSION['digit_alert'][$i] = "Please enter digit.";
-                 $_SESSION['discount_name'] = $_POST['name'];
-                 $_SESSION['minimum_spend_amount'] = $_POST['minimum_spend_amount'];
-                 $_SESSION['digit'] = $_POST['digit'];
-                 $_SESSION['type'] = $_POST['type'];
-                 $_SESSION['status'] = $_POST['status'];
-             }
-             if (empty($_POST['minimum_spend_amount'][$i])) {
-                 $_SESSION['minimum_spend_amount_alert'][$i] = "Please enter minimum spend amount.";
-                 $_SESSION['discount_name'] = $_POST['name'];
-                 $_SESSION['minimum_spend_amount'] = $_POST['minimum_spend_amount'];
-                 $_SESSION['digit'] = $_POST['digit'];
-                 $_SESSION['type'] = $_POST['type'];
-                 $_SESSION['status'] = $_POST['status'];
-             }
-             if ($_POST['type'] == "1" && $_POST['digit'][$i] > 100) {
-                 $_SESSION['digit_alert'][$i] = "Percentage is not greater than 100.";
-                 $_SESSION['discount_name'] = $_POST['name'];
-                 $_SESSION['minimum_spend_amount'] = $_POST['minimum_spend_amount'];
-                 $_SESSION['digit'] = $_POST['digit'];
-                 $_SESSION['type'] = $_POST['type'];
-                 $_SESSION['status'] = $_POST['status'];
-                 header("location:../discount/edit.php?id=$discountId");
-                 exit;
-             }
-         }
-         $discountDigit = [];
-         $minimumSpendAmount = [];
-
-         for ($i = 0; $i < count($_POST['digit']); $i++) {
-             if (in_array($_POST['digit'][$i], $discountDigit)) {
-                 $_SESSION['digit_alert'][$i] = "Discount digits are same";
-                 $_SESSION['discount_name'] = $discountName;
-                 $_SESSION['minimum_spend_amount'] = $_POST['minimum_spend_amount'];
-                 $_SESSION['digit'] = $_POST['digit'];
-                 $_SESSION['type'] = $_POST['type'];
-                 $_SESSION['status'] = $_POST['status'];
-             }
-             if (in_array($_POST['minimum_spend_amount'][$i], $minimumSpendAmount)) {
-                 $_SESSION['minimum_spend_amount_alert'][$i] = "Minimum spend amount are same";
-                 $_SESSION['discount_name'] = $discountName;
-                 $_SESSION['minimum_spend_amount'] = $_POST['minimum_spend_amount'];
-                 $_SESSION['digit'] = $_POST['digit'];
-                 $_SESSION['type'] = $_POST['type'];
-                 $_SESSION['status'] = $_POST['status'];
-             }
-             if (in_array($_POST['minimum_spend_amount'][$i], $minimumSpendAmount) || in_array($_POST['digit'][$i], $discountDigit)) {
-                 header("location:../discount/edit.php?id=$discountId");
-                 exit;
-             }
-             $discountDigit[$i] = $_POST['digit'][$i];
-             $minimumSpendAmount[$i] = $_POST['minimum_spend_amount'][$i];
-         }
-
-         for ($i = 0; $i < count($_POST['digit']); $i++) {
-             if (empty($_POST['minimum_spend_amount'][$i]) || empty($_POST['digit'][$i])) {
-                 header("location:../discount/edit.php?id=$discountId");
-                 exit;
-             }
-             if ($_POST['type'] == "1" && $_POST['digit'][$i] > 100) {
-                 header("location:../discount/edit.php?id=$discountId");
-                 exit;
-             }
-         }
-         if (empty($_POST['name']) || empty($_POST['type']) || empty($_POST['status'])) {
-             header("location:../discount/edit.php?id=$discountId");
-             exit;
-         }
-
-
-         $updateDiscount = $pdo->prepare("UPDATE `discount` SET `name` = :name, `type` = :type, status = :status WHERE `id`= :id ");
-         $updateDiscount->bindParam(':name', $discountName);
-         $updateDiscount->bindParam(':type', $discountType);
-         $updateDiscount->bindParam(':id', $discountId);
-         $updateDiscount->bindParam(':status', $discountStatus);
-         $isExecuted = $updateDiscount->execute();
-
-         if (count($_POST['digit']) == count($discountDigits)) {
-             for ($i = 0; $i < count($discountTierIds); $i++) {
-                 $updateDiscountTire = $pdo->prepare("UPDATE `discount_tier` SET `minimum_spend_amount` = :minimumAmount, `discount_digit` = :digit WHERE `tier_id` = :id");
-                 $updateDiscountTire->bindParam(':minimumAmount', $minimumSpendAmount[$i]);
-                 $updateDiscountTire->bindParam(':digit', $discountDigit[$i]);
-                 $updateDiscountTire->bindParam(':id', $discountTierIds[$i]);
-                 $updateDiscountTire->execute();
-             }
-         }
-
-         if (count($_POST['digit']) > count($discountDigits)) {
-             $differenceTierDigit =  array_values(array_diff($_POST['digit'], $discountDigits));
-             $differenceTierMinimumSpendAmount = array_values(array_diff($_POST['minimum_spend_amount'], $minimumSpendAmounts));
-             for ($i = 0; ($i < count($differenceTierMinimumSpendAmount)) || ($i < count($differenceTierDigit)); $i++) {
-                 $insertDiscountTier = $pdo->prepare("INSERT INTO `discount_tier`(`discount_id`,`minimum_spend_amount`,`discount_digit`) VALUES(:discount_id, :minimum_spend_amount, :discount_digit)");
-                 $insertDiscountTier->bindParam(':discount_id', $discountId);
-                 $insertDiscountTier->bindParam(':minimum_spend_amount', $differenceTierMinimumSpendAmount[$i]);
-                 $insertDiscountTier->bindParam(':discount_digit', $differenceTierDigit[$i]);
-                 $isExecuted = $insertDiscountTier->execute();
-             }
-         }
-
-         if (count($_POST['digit']) < count($discountDigits)) {
-             $differenceTierDigit =  array_diff($discountDigits, $_POST['digit']);
-             $differenceTierMinimumSpendAmount = array_diff($minimumSpendAmounts, $_POST['minimum_spend_amount']);
-             for ($i = 0; $i < count($differenceTierDigit); $i++) {
-                 $deleteDiscountTier = $pdo->prepare("DELETE FROM `discount_tier` WHERE `minimum_spend_amount` = :minimumSpendAmount AND `discount_digit` = :discountDigit AND `discount_id` = :discount_id");
-                 $deleteDiscountTier->bindParam(':discount_id', $discountId);
-                 $deleteDiscountTier->bindParam(':minimumSpendAmount', $differenceTierMinimumSpendAmount[$i]);
-                 $deleteDiscountTier->bindParam(':discountDigit', $differenceTierDigit[$i]);
-                 $isExecuted = $deleteDiscountTier->execute();
-             }
-         }
-
-         if ($isExecuted) {
-             $_SESSION['message'] = "Discount updated successfully.";
-             header('location:../discount/list.php');
-             exit;
-         } */
 ?>
 <?php include '../layout/header.php'; ?>
 <div class="main-panel">
@@ -347,7 +361,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="discountCategory">Discount Category</label>
-                                <select id="discountCategory" class="form-control edit-category" name="category">
+                                <select id="discountCategory" class="form-control edit-category" name="category" required>
                                         <option value="">--Select Category--</option>
                                         <option value="1"
                                         <?php
