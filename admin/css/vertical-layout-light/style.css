@@ -23643,7 +23643,7 @@ code {
 
 .input-group-append,
 .input-group-prepend {
-  color: #c9c8c8;
+  color: black;
   width: auto;
   border: none;
 }

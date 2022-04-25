@@ -12,9 +12,13 @@
             header('location:/admin/discount/list.php');
             exit;
         }
-        $deleteDiscount = $pdo->prepare("DELETE FROM `discount` WHERE `id`= :id");
+
+        $deleteDiscount = $pdo->prepare("DELETE FROM `discount` WHERE `id` = :id ");
         $deleteDiscount->bindParam(':id', $discountId);
-        $isExecute = $deleteDiscount->execute();
+        $deleteDiscount->execute();
+        $deleteDiscountTier = $pdo->prepare("DELETE FROM `discount_tier` WHERE `discount_id`= :id");
+        $deleteDiscountTier->bindParam(':id', $discountId);
+        $isExecute = $deleteDiscountTier->execute();
         if ($isExecute) {
             $_SESSION['message'] = "Discount deleted successfully.";
             header('location:../discount/list.php');

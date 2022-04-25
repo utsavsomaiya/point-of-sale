@@ -53,6 +53,7 @@
             header('location:../product/add_product.php');
             exit;
         }
+        
         if (($_FILES["product_image"]["size"] > 1000000)) {
             $_SESSION['file_alert'] = "Image size exceeds 1MB.";
             header('location:../product/add_product.php');
