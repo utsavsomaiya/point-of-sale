@@ -290,7 +290,7 @@ function editPageFetchTemplate() {
         [...removeObject].forEach((remove, i) => {
             remove.innerHTML += removeTemplate.innerHTML;
             document.querySelectorAll('.fa')[i].onclick = function () {
-                removeMinimumSpendRow(i, null);
+                editProductRemoveMinimumSpendRow(i);
             }
         });
         var discountTypeSelections = document.getElementById('discountType');
@@ -326,7 +326,7 @@ function editPageFetchTemplate() {
         [...removeObject].forEach((remove, i) => {
             remove.innerHTML += removeTemplate.innerHTML;
             document.querySelectorAll('.fa')[i].onclick = function () {
-                removeMinimumSpendRow(i, null);
+                editProductRemoveMinimumSpendRow(i);
             }
         });
         for (i = 0; i < discountProducts.length; i++) {
