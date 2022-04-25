@@ -76,20 +76,22 @@ function renderMinimumSpendTemplate() {
     }
     if (flag == 1) {
         removeObject = document.getElementsByClassName('remove-minimum-spend1');
+        removeTemplate = document.getElementsByClassName('remove-minimum-spend-row-1')[0];
         [...removeObject].forEach((remove, i) => {
-            const deleteIcon = document.createElement('i');
-            deleteIcon.setAttribute('class', 'fa fa-trash-o');
-            deleteIcon.setAttribute('onclick', `removeMinimumSpendRow(${i},${null})`);
-            remove.appendChild(deleteIcon);
+            remove.innerHTML += removeTemplate.innerHTML;
+            document.querySelectorAll('.fa')[i].onclick = function () {
+                removeMinimumSpendRow(i, null);
+            }
         });
     }
     if (flag == 2) {
         removeObject = document.getElementsByClassName('remove-minimum-spend2');
+        removeTemplate = document.getElementsByClassName('remove-minimum-spend-row-2')[0];
         [...removeObject].forEach((remove, i) => {
-            const deleteIcon = document.createElement('i');
-            deleteIcon.setAttribute('class', 'fa fa-trash-o');
-            deleteIcon.setAttribute('onclick', `removeMinimumSpendRow(${i},${null})`);
-            remove.appendChild(deleteIcon);
+            remove.innerHTML += removeTemplate.innerHTML;
+            document.querySelectorAll('.fa')[i].onclick = function () {
+                removeMinimumSpendRow(i, null);
+            }
         });
     }
 }
@@ -146,11 +148,12 @@ function sessionRenderMinimumSpendTemplate() {
     }
     if (flag == 1) {
         removeObject = document.getElementsByClassName('remove-minimum-spend1');
+        removeTemplate = document.getElementsByClassName('remove-minimum-spend-row-1')[0];
         [...removeObject].forEach((remove, i) => {
-            const deleteIcon = document.createElement('i');
-            deleteIcon.setAttribute('class', 'fa fa-trash-o');
-            deleteIcon.setAttribute('onclick', `removeMinimumSpendRow(${i},"error")`);
-            remove.appendChild(deleteIcon);
+            remove.innerHTML += removeTemplate.innerHTML;
+            document.querySelectorAll('.fa')[i].onclick = function () {
+                removeMinimumSpendRow(i, null);
+            }
         });
         for (i = 0; i < discountDigit.length; i++) {
             if (errorDiscountDigit.length > 0) {
@@ -170,11 +173,12 @@ function sessionRenderMinimumSpendTemplate() {
     if (flag == 2)
     {
         removeObject = document.getElementsByClassName('remove-minimum-spend2');
+        removeTemplate = document.getElementsByClassName('remove-minimum-spend-row-2')[0];
         [...removeObject].forEach((remove, i) => {
-            const deleteIcon = document.createElement('i');
-            deleteIcon.setAttribute('class', 'fa fa-trash-o');
-            deleteIcon.setAttribute('onclick', `removeMinimumSpendRow(${i},"error")`);
-            remove.appendChild(deleteIcon);
+            remove.innerHTML += removeTemplate.innerHTML;
+            document.querySelectorAll('.fa')[i].onclick = function () {
+                removeMinimumSpendRow(i, null);
+            }
         });
         for (i = 0; i < discountProduct.length; i++) {
             if (errorDiscountProduct.length > 0) {
@@ -282,11 +286,12 @@ function editPageFetchTemplate() {
     }
     if (flag == 1) {
         removeObject = document.getElementsByClassName('remove-minimum-spend1');
+        removeTemplate = document.getElementsByClassName('remove-minimum-spend-row-1')[0];
         [...removeObject].forEach((remove, i) => {
-            const deleteIcon = document.createElement('i');
-            deleteIcon.setAttribute('class', 'fa fa-trash-o');
-            deleteIcon.setAttribute('onclick', `editDigitRemoveMinimumSpendRow(${i})`);
-            remove.appendChild(deleteIcon);
+            remove.innerHTML += removeTemplate.innerHTML;
+            document.querySelectorAll('.fa')[i].onclick = function () {
+                removeMinimumSpendRow(i, null);
+            }
         });
         var discountTypeSelections = document.getElementById('discountType');
         for (i = 0; i < discountTypeSelections.options.length; i++){
@@ -317,11 +322,12 @@ function editPageFetchTemplate() {
     }
     if (flag == 2) {
         removeObject = document.getElementsByClassName('remove-minimum-spend2');
+        removeTemplate = document.getElementsByClassName('remove-minimum-spend-row-2')[0];
         [...removeObject].forEach((remove, i) => {
-            const deleteIcon = document.createElement('i');
-            deleteIcon.setAttribute('class', 'fa fa-trash-o');
-            deleteIcon.setAttribute('onclick', `editProductRemoveMinimumSpendRow(${i})`);
-            remove.appendChild(deleteIcon);
+            remove.innerHTML += removeTemplate.innerHTML;
+            document.querySelectorAll('.fa')[i].onclick = function () {
+                removeMinimumSpendRow(i, null);
+            }
         });
         for (i = 0; i < discountProducts.length; i++) {
             discountProduct[i].value = discountProducts[i];

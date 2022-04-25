@@ -43,3 +43,6 @@
         </div>
     </div>
 </template>
+<template class="remove-minimum-spend-row-2">
+    <i class="fa fa-trash-o"></i>
+</template>
