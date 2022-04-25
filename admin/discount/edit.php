@@ -406,10 +406,8 @@
                                         if (isset($_SESSION['status']) && $_SESSION['status'] == "2") {
                                             echo 'selected="selected"';
                                             unset($_SESSION['status']);
-                                        } else {
-                                            if ($discountStatus == "2") {
-                                                echo 'selected="selected"';
-                                            }
+                                        } elseif ($discountStatus == "2") {
+                                            echo 'selected="selected"';
                                         }
                                     ?>
                                     >Active</option>
@@ -418,10 +416,8 @@
                                         if (isset($_SESSION['status']) && $_SESSION['status'] == "1") {
                                             echo 'selected="selected"';
                                             unset($_SESSION['status']);
-                                        } else {
-                                            if ($discountStatus == "1") {
-                                                echo 'selected="selected"';
-                                            }
+                                        } elseif ($discountStatus == "1") {
+                                            echo 'selected="selected"';
                                         }
                                     ?>
                                     >Inactive</option>
