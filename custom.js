@@ -17,7 +17,7 @@ function addToCart(id) {
             if (document.getElementById('stock-' + id).innerHTML > cart[index].quantity) {
                 cart[index].quantity = parseInt(cart[index].quantity) + 1;
             } else {
-                alert('Stock is over!!');
+                alert('Out of stock!!');
             }
             var price = parseInt(document.getElementById('price-' + id).innerHTML.trim());
             price *= cart[index].quantity;
