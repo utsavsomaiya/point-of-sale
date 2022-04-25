@@ -23,13 +23,12 @@
                 class="form-control minimum-spend-amount"
                 placeholder="Minium Spend Amount"
                 name="minimum_spend_amount[]"
-                required
             >
             <label class="text-danger minimum-spend-amount-error"></label>
         </div>
         <div class="input-group-append">
             <label>Discount Product</label>
-            <select class="form-control product" name="products[]" required>
+            <select class="form-control product" name="products[]">
                 <option value="">--Select Products--</option>
                 <?php if (sizeof($products) > 0) { ?>
                     <?php foreach ($products as $product) { ?>
