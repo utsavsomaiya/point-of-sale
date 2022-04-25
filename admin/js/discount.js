@@ -23,6 +23,10 @@ function insertTemplate() {
 }
 
 function categoryTemplate(checkError) {
+    if (discountCategory.value == "") {
+        document.querySelector('.category1').classList.add('d-none');
+        document.querySelector('.category2').classList.add('d-none');
+    }
     if (discountCategory.value == "1")
     {
         document.querySelector('.category1').classList.remove('d-none');
