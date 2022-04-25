@@ -61,6 +61,8 @@
         $target_path = $destination_path . basename($_FILES["product_image"]["name"]);
         move_uploaded_file($_FILES['product_image']['tmp_name'], $target_path);
 
+        $productImage = $_FILES['product_image']['name'];
+
         $insertProduct = $pdo->prepare("INSERT INTO `product`(`name`, `price`, `category_id`, `tax`, `stock`, `image`) VALUES(:product_name,:product_price,:product_category_id,:product_tax,:product_stock,:product_image_name)");
         $insertProduct->bindParam(':product_name', $productName);
         $insertProduct->bindParam(':product_price', $productPrice);
