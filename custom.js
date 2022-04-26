@@ -157,6 +157,7 @@ function displayCart() {
     var discountType = null;
     var discountId = null;
     var discountTierId = null;
+    var minimum
 
     for (i = 0; i < discountsCount; i++) {
         minimumSpendAmounts = parseInt(document.getElementById('minimum-spend-amount-' + (i + 1)).innerHTML.trim());
@@ -165,6 +166,7 @@ function displayCart() {
         }
     }
 
+    var count = [];
     var discountThread = document.getElementById('discounts-table');
     for (i = 0; i < discountsCount; i++) {
         discountThread.children[i].style.display = "none";
@@ -173,11 +175,20 @@ function displayCart() {
             minimumSpendAmount = Math.max(...applyMinimumSpendAmounts);
             discountId = parseInt(document.getElementById('discounts-table').children[i].children[0].innerHTML.trim());
             discountTierId = parseInt(document.getElementById('discount-tier-id-' + (i + 1)).innerHTML.trim());
+            if (document.getElementById('discounts-table').children[i].children[4].children.length == 1)
+                {
+                    count[i] = i;
+                }
             if (document.getElementById('discount-' + (i + 1)) != null) {
                 discountDigit = parseInt(document.getElementById('discount-' + (i + 1)).innerHTML.trim());
                 discountType = document.getElementById('discount-type-' + (i + 1)).innerHTML.trim();
             }
             discountThread.children[i].style.display = "table-row";
+        }
+    }
+    for (i = 0; i < count.length; i++){
+        if (count[i] != undefined  && count.length > 1){
+            console.log(document.getElementById('discounts-table').children[i].children[4].children[0].alt);
         }
     }
 
@@ -205,7 +216,7 @@ function displayCart() {
             }
         }
     }
-    
+
     for (let i = 0; i < cart.length; i++) {
         discount = (parseInt(cart[i].price) * discountPrice) / subTotal;
         totalDiscount += discount;

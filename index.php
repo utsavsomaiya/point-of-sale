@@ -5,7 +5,7 @@
     $fetchProducts->execute();
     $products = $fetchProducts->fetchAll();
 
-    $fetchDiscounts = $pdo->prepare("SELECT discount.id,discount.name,discount.type,discount_tier.minimum_spend_amount,discount_tier.discount_digit,discount_tier.discount_product,discount_tier.tier_id FROM `discount` JOIN `discount_tier` ON discount.id = discount_tier.discount_id WHERE discount.status = 2 ORDER BY `discount_tier`.`minimum_spend_amount` ASC");
+    $fetchDiscounts = $pdo->prepare("SELECT discount.id,discount.name,discount.type,discount_tier.minimum_spend_amount,discount_tier.discount_digit,discount_tier.discount_product,discount_tier.tier_id FROM `discount` JOIN `discount_tier` ON discount.id = discount_tier.discount_id WHERE discount.status = 2");
     $fetchDiscounts->execute();
     $discounts = $fetchDiscounts->fetchAll();
 
