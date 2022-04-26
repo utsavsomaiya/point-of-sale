@@ -52,12 +52,12 @@
                                             </div>
                                         <?php } ?>
                                     <?php } else {
-    $fetchProduct->bindParam(':name', $discounts[$i]['discount_product']);
-    $fetchProduct->execute();
-    $product = $fetchProduct->fetchAll(); ?>
-                                    <img class="w-10 h-10 object-cover rounded-md" src="admin/images/<?= $product[0]['image']?>" alt="<?= $discounts[$i]['discount_product']?>">
+                                        $fetchProduct->bindParam(':name', $discounts[$i]['discount_product']);
+                                        $fetchProduct->execute();
+                                        $product = $fetchProduct->fetchAll(); ?>
+                                        <img class="w-10 h-10 object-cover rounded-md" src="admin/images/<?= $product[0]['image']?>" alt="<?= $discounts[$i]['discount_product']?>">
                                     <?php
-} ?>
+                                    } ?>
                                 </td>
                             </tr>
                         <?php } ?>

@@ -1,9 +1,13 @@
 <?php
     session_start();
     require 'layout/db_connect.php';
-    $fetchSales = $pdo->prepare('SELECT sales.*,discount.type,discount_tier.discount_digit FROM `sales`,`discount`,`discount_tier` WHERE discount.id = sales.discount_id AND discount_tier.tier_id = sales.discount_tier_id ORDER BY `id` DESC');
+    $fetchSales = $pdo->prepare('SELECT * FROM `sales` ORDER BY `id` DESC');
     $fetchSales->execute();
     $sales = $fetchSales->fetchAll();
+
+    $fetchProduct = $pdo->prepare('SELECT `image` FROM `product` WHERE `name` = :name');
+
+    $fetchDiscount = $pdo->prepare('SELECT discount.type,discount_tier.discount_digit FROM discount,discount_tier WHERE discount.id = :discount_id AND discount_tier.tier_id = :discount_tier_id');
 ?>
 <?php include 'layout/header.php'; ?>
 <div class="main-panel">
@@ -32,16 +36,35 @@
                                         <tr onclick="window.location = '/admin/sales_item.php?id=<?= $sale['id'] ?>'" class="thumbnail">
                                             <td><?= $sale['id'] ?></td>
                                             <td><?= "$".$sale['subtotal'] ?></td>
-                                            <td>
+                                            <?php if ($sale['price_discount'] != null) {?>
                                                 <?php
-                                                    if ($sale['type'] == "1") {
-                                                        echo $sale['discount_digit']."%";
-                                                    } else {
-                                                        echo "$".$sale['discount_digit'];
-                                                    }
+                                                    $fetchDiscount->bindParam(':discount_id', $sale['discount_id']);
+                                                    $fetchDiscount->bindParam(':discount_tier_id', $sale['discount_tier_id']);
+                                                    $fetchDiscount->execute();
+                                                    $discount = $fetchDiscount->fetchAll();
+                                                ?>
+                                                <td>
+                                                    <?php
+                                                        if ($discount[0]['type'] == "1") {
+                                                            echo $discount[0]['discount_digit']."%";
+                                                        } else {
+                                                            echo "$".$discount[0]['discount_digit'];
+                                                        }
                                                     ?>
-                                            </td>
-                                            <td><?= "$".$sale['discount'] ?></td>
+                                                </td>
+                                                <td><?= "$".$sale['price_discount'] ?></td>
+                                            <?php } elseif ($sale['gift_discount'] != null) { ?>
+                                                <td>NULL</td>
+                                                <?php
+                                                    $fetchProduct->bindParam(':name', $sale['gift_discount']);
+                                                    $fetchProduct->execute();
+                                                    $product = $fetchProduct->fetchAll();
+                                                ?>
+                                                <td><img src="/admin/images/<?= $product[0]['image'] ?>"></td>
+                                            <?php } else { ?>
+                                                <td>NULL</td>
+                                                <td>NULL</td>
+                                            <?php } ?>
                                             <td><?= "$".$sale['total_tax'] ?></td>
                                             <td><?= "$".$sale['total']?></td>
                                         </tr>

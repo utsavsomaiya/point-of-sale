@@ -3,10 +3,21 @@
     if (isset($_GET['id'])) {
         $salesId = $_GET['id'];
         require 'layout/db_connect.php';
-        $fetchSalesItem = $pdo->prepare('SELECT sales_item.product_id, product.name, product.image, sales_item.product_quantity, sales_item.product_price, sales_item.product_total_price,discount_tier.discount_digit,discount.type, sales_item.product_discount,sales_item.product_taxable_price,sales_item.product_tax_percentage,sales_item.product_tax_amount,sales.subtotal,sales.total_tax,sales.discount,sales.total FROM sales_item JOIN product ON sales_item.product_id = product.id JOIN sales ON sales_item.sales_id = sales.id AND sales_item.sales_id = :sales_id JOIN discount_tier ON discount_tier.tier_id = sales_item.product_discount_tier_id JOIN discount ON discount.id = sales_item.product_discount_id');
+        $fetchSalesItem = $pdo->prepare('SELECT * FROM `sales_item` WHERE `sales_id` = :sales_id');
         $fetchSalesItem->bindParam(':sales_id', $salesId);
         $fetchSalesItem->execute();
         $salesItems = $fetchSalesItem->fetchAll();
+
+        $fetchSales = $pdo->prepare('SELECT * FROM `sales` WHERE `id` = :sales_id');
+        $fetchSales->bindParam(':sales_id', $salesId);
+        $fetchSales->execute();
+        $sales = $fetchSales->fetchAll();
+
+        $fetchDiscount = $pdo->prepare('SELECT discount.type,discount_tier.discount_digit FROM discount,discount_tier WHERE discount.id = :discount_id AND discount_tier.tier_id = :discount_tier_id');
+
+        $fetchProduct = $pdo->prepare('SELECT `name`,`image` FROM `product` WHERE id = :id');
+
+        $fetchDiscountProduct = $pdo->prepare('SELECT `image` FROM `product` WHERE `name` = :name');
     } else {
         header('location:/admin/sales.php');
         exit;
@@ -39,21 +50,47 @@
                             <?php foreach ($salesItems as $salesItem) { ?>
                                 <tr>
                                     <td><?= $salesItem['product_id'] ?></td>
-                                    <td><?= $salesItem['name'] ?></td>
-                                    <td><img src="<?= '/admin/images/' . $salesItem['image'] ?>"></td>
+                                    <?php
+                                        $fetchProduct->bindParam(':id', $salesItem['product_id']);
+                                        $fetchProduct->execute();
+                                        $product = $fetchProduct->fetchAll();
+                                    ?>
+                                    <td><?= $product[0]['name'] ?></td>
+                                    <td><img src="<?= '/admin/images/' . $product[0]['image'] ?>"></td>
                                     <td><?= "$".$salesItem['product_price'] ?></td>
                                     <td><?= $salesItem['product_quantity'] ?></td>
                                     <td><?= "$".$salesItem['product_total_price'] ?></td>
-                                    <td>
+                                    <?php if ($salesItem['product_discount'] != 0) {?>
                                         <?php
-                                            if ($salesItem['type'] == "1") {
-                                                echo $salesItem['discount_digit']."%";
-                                            } else {
-                                                echo "$".$salesItem['discount_digit'];
-                                            }
+                                            $fetchDiscount->bindParam(':discount_id', $salesItem['product_discount_id']);
+                                            $fetchDiscount->bindParam(':discount_tier_id', $salesItem['product_discount_tier_id']);
+                                            $fetchDiscount->execute();
+                                            $discount = $fetchDiscount->fetchAll();
                                         ?>
-                                    </td>
-                                    <td><?= "$".$salesItem['product_discount'] ?></td>
+                                        <td>
+                                            <?php
+                                                if ($discount[0]['type'] == "1") {
+                                                    echo $discount[0]['discount_digit']."%";
+                                                } else {
+                                                    echo "$".$discount[0]['discount_digit'];
+                                                }
+                                            ?>
+                                        </td>
+                                        <td><?= "$".$salesItem['product_discount'] ?></td>
+                                    <?php } elseif ($salesItem['product_discount'] == 0 && $salesItem['product_discount_tier_id'] != null) { ?>
+                                        <td>NULL</td>
+                                        <?php
+                                            $fetchDiscountProduct->bindParam(':name', $sales[0]['gift_discount']);
+                                            $fetchDiscountProduct->execute();
+                                            $discountProduct = $fetchDiscountProduct->fetchAll();
+                                        ?>
+                                        <td>
+                                            <img src="/admin/images/<?= $discountProduct[0]['image'] ?>">
+                                        </td>
+                                    <?php } else { ?>
+                                        <td>NULL</td>
+                                        <td>NULL</td>
+                                    <?php } ?>
                                     <td><?= "$".$salesItem['product_taxable_price'] ?></td>
                                     <td><?= $salesItem['product_tax_percentage']."%" ?></td>
                                     <td><?= "$".$salesItem['product_tax_amount'] ?></td>
@@ -69,18 +106,20 @@
                         <div style="padding-left: 750px;padding-top: 20px;">
                             <b>
                                 <span style="padding-right: 30px;">SUBTOTAL = </span>
-                                <span><?= "$".$salesItems[0]['subtotal']; ?></span>
+                                <span><?= "$".$sales[0]['subtotal']; ?></span>
                                 <br>
-                                <span style="padding-right: 40px;">Discount = </span>
-                                <span><?= "-"."$".$salesItems[0]['discount']; ?></span>
-                                <br>
+                                <?php if ($sales[0]['price_discount'] != 0) {?>
+                                    <span style="padding-right: 40px;">Discount = </span>
+                                    <span><?= "-"."$".$sales[0]['price_discount']; ?></span>
+                                    <br>
+                                <?php } ?>
                                 <span style="padding-right: 80px;">TAX = </span>
-                                <span><?= "+"."$".$salesItems[0]['total_tax']; ?></span>
+                                <span><?= "+"."$".$sales[0]['total_tax']; ?></span>
                                 <br>
                                 <span>=================</span>
                                 <br>
                                 <span style="padding-right: 10px;">GRAND TOTAL = </span>
-                                <span><?= "$".$salesItems[0]['total']; ?></span>
+                                <span><?= "$".$sales[0]['total']; ?></span>
                                 <br>
                             </b>
                         </div>

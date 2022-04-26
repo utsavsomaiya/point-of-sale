@@ -41,6 +41,11 @@
             $subtotal +=  ($productPrices[$i] * $productQuantities[$i]) ;
         }
 
+        $discountProduct = null;
+        $minimumSpendAmount = 0;
+        $productsDiscount = 0;
+        $discountType = null;
+
         $fetchDiscount = $pdo->prepare("SELECT discount.*,discount_tier.* FROM discount,discount_tier WHERE discount.id = :id AND discount_tier.tier_id = :tier_id");
         $fetchDiscount->bindParam(':id', $_POST['discount_id']);
         $fetchDiscount->bindParam(':tier_id', $_POST['discount_tier_id']);
@@ -50,6 +55,7 @@
             $minimumSpendAmount = (int) $discount['minimum_spend_amount'];
             $discountType = (int) $discount['type'];
             $productsDiscount = (int) $discount['discount_digit'];
+            $discountProduct = $discount['discount_product'];
         }
 
         $totalDiscount = 0;
@@ -57,12 +63,14 @@
         $discountPrice = 0;
         $discountId = null;
         $discountTierId = null;
-        if ($minimumSpendAmount <= $subtotal && $subtotal > $productsDiscount) {
-            $discountId = $_POST['discount_id'];
-            $discountTierId = $_POST['discount_tier_id'];
-            $discountPrice = ($subtotal * $productsDiscount) / 100;
-            if ($discountType == DISCOUNT["flat"]) {
-                $discountPrice =  $productsDiscount;
+        if ($minimumSpendAmount != 0) {
+            if ($minimumSpendAmount <= $subtotal && $subtotal > $productsDiscount) {
+                $discountId = $_POST['discount_id'];
+                $discountTierId = $_POST['discount_tier_id'];
+                $discountPrice = ($subtotal * $productsDiscount) / 100;
+                if ($discountType == DISCOUNT["flat"]) {
+                    $discountPrice =  $productsDiscount;
+                }
             }
         }
         for ($i = 0; $i < sizeof($productIds); $i++) {
@@ -74,12 +82,13 @@
         }
         $grandTotal = $subtotal - $totalDiscount + $totalTax;
 
-        $insertSales = $pdo->prepare("INSERT INTO `sales` (`subtotal`, `total_tax`, `discount_id`, `discount_tier_id`, `discount`, `total`) VALUES (:subtotal,:total_tax,:discount_id, :discount_tier_id,:discount,:total)");
+        $insertSales = $pdo->prepare("INSERT INTO `sales` (`subtotal`, `total_tax`, `discount_id`, `discount_tier_id`, `gift_discount`, `price_discount`, `total`) VALUES (:subtotal,:total_tax,:discount_id, :discount_tier_id, :gift_discount, :price_discount,:total)");
         $insertSales->bindParam(':subtotal', $subtotal);
         $insertSales->bindParam(':total_tax', $totalTax);
         $insertSales->bindParam(':discount_id', $discountId);
         $insertSales->bindParam(':discount_tier_id', $discountTierId);
-        $insertSales->bindParam(':discount', $totalDiscount);
+        $insertSales->bindParam(':gift_discount', $discountProduct);
+        $insertSales->bindParam(':price_discount', $totalDiscount);
         $insertSales->bindParam(':total', $grandTotal);
         $insertSales->execute();
         $salesId = $pdo->lastInsertId();
