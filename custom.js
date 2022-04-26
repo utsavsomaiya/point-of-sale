@@ -43,11 +43,7 @@ function existsInArray(id) {
         return element.id === id;
     });
 }
-const discountDigits = [];
-const discountIds = [];
-const discountTierIds = [];
-const minimumSpendAmounts = [];
-const discountTypes = [];
+
 function displayCart() {
     subTotal = 0;
     totalDiscount = 0;
@@ -56,8 +52,6 @@ function displayCart() {
     document.getElementById('container').innerHTML = "";
     document.getElementById('hidden-form').innerHTML = "";
     id = 1;
-
-    document.getElementById('discount-img').style.visibility = 'visible';
 
     let discount = 0;
     let tax = 0;
@@ -157,61 +151,68 @@ function displayCart() {
         id++;
     }
 
-    for (i = 0; i < discountsCount; i++) {
-        minimumSpendAmounts[i] = parseInt(document.getElementById('minimum-spend-amount-' + (i + 1)).innerHTML.trim());
-        discountDigits[i] = parseInt(document.getElementById('discount-' + (i + 1)).innerHTML.trim());
-        discountTypes[i] = document.getElementById('discount-type-' + (i + 1)).innerHTML.trim();
-        discountIds[i] = document.getElementById('discount-id-' + (i + 1)).innerHTML.trim();
-        discountTierIds[i] = document.getElementById('discount-tier-id-' + (i + 1)).innerHTML.trim();
-    }
+    const applyMinimumSpendAmounts = [];
+    var minimumSpendAmount = null;
+    var discountDigit = 0;
+    var discountType = null;
+    var discountId = null;
+    var discountTierId = null;
 
     for (i = 0; i < discountsCount; i++) {
-        if (subTotal >= minimumSpendAmounts[i]) {
-            minimumSpendAmount = minimumSpendAmounts[i];
-            discountId = discountIds[i]
-            discountDigit = discountDigits[i];
-            discountTierId = discountTierIds[i];
-            discountType = discountTypes[i];
+        minimumSpendAmounts = parseInt(document.getElementById('minimum-spend-amount-' + (i + 1)).innerHTML.trim());
+        if (subTotal >= minimumSpendAmounts) {
+            applyMinimumSpendAmounts[i] = minimumSpendAmounts;
         }
     }
 
-    var count = 0;
-    for (i = 0; i < discountsCount; i++) {
-        if (subTotal >= minimumSpendAmounts[i]) {
-            discountThread = document.getElementById('discounts-table');
-            count = i;
-        }
-    }
+    var discountThread = document.getElementById('discounts-table');
     for (i = 0; i < discountsCount; i++) {
         discountThread.children[i].style.display = "none";
-        discountThread.children[count].style.display = "table-row";
-    }
-
-
-    var inputDiscountId = document.createElement('input');
-    inputDiscountId.setAttribute('type', 'hidden');
-    inputDiscountId.setAttribute('name', 'discount_id');
-    inputDiscountId.value = discountId;
-    document.getElementById('hidden-form').appendChild(inputDiscountId);
-
-    var inputDiscountTierId = document.createElement('input');
-    inputDiscountTierId.setAttribute('type', 'hidden');
-    inputDiscountTierId.setAttribute('name', 'discount_tier_id');
-    inputDiscountTierId.value = discountTierId;
-    document.getElementById('hidden-form').appendChild(inputDiscountTierId);
-
-    if (minimumSpendAmount <= subTotal && subTotal > discountDigit) {
-        discountPrice = (subTotal * parseInt(discountDigit)) / 100;
-        if (discountType == "$") {
-            discountPrice = parseInt(discountDigit);
+        if (parseInt(discountThread.children[i].children[3].innerHTML.trim()) == Math.max(...applyMinimumSpendAmounts)) {
+            document.getElementById('discount-img').style.visibility = 'visible';
+            minimumSpendAmount = Math.max(...applyMinimumSpendAmounts);
+            discountId = parseInt(document.getElementById('discounts-table').children[i].children[0].innerHTML.trim());
+            discountTierId = parseInt(document.getElementById('discount-tier-id-' + (i + 1)).innerHTML.trim());
+            if (document.getElementById('discount-' + (i + 1)) != null) {
+                discountDigit = parseInt(document.getElementById('discount-' + (i + 1)).innerHTML.trim());
+                discountType = document.getElementById('discount-type-' + (i + 1)).innerHTML.trim();
+            }
+            discountThread.children[i].style.display = "table-row";
         }
     }
+
+    if (discountId != null) {
+        var inputDiscountId = document.createElement('input');
+        inputDiscountId.setAttribute('type', 'hidden');
+        inputDiscountId.setAttribute('name', 'discount_id');
+        inputDiscountId.value = discountId;
+        document.getElementById('hidden-form').appendChild(inputDiscountId);
+
+        var inputDiscountTierId = document.createElement('input');
+        inputDiscountTierId.setAttribute('type', 'hidden');
+        inputDiscountTierId.setAttribute('name', 'discount_tier_id');
+        inputDiscountTierId.value = discountTierId;
+        document.getElementById('hidden-form').appendChild(inputDiscountTierId);
+    }
+
+    if (minimumSpendAmount != null) {
+        if (minimumSpendAmount <= subTotal) {
+            if (discountType == "%" && subTotal > ((subTotal * parseInt(discountDigit)) / 100)) {
+                discountPrice = (subTotal * parseInt(discountDigit)) / 100;
+            }
+            if (discountType == "$" && subTotal > discountDigit) {
+                discountPrice = parseInt(discountDigit);
+            }
+        }
+    }
+    
     for (let i = 0; i < cart.length; i++) {
         discount = (parseInt(cart[i].price) * discountPrice) / subTotal;
         totalDiscount += discount;
         tax = ((parseInt(cart[i].price) - discount) * parseInt(cart[i].tax) / 100);
         totalTax += tax;
     }
+
     grandTotal = subTotal - totalDiscount + totalTax;
     document.getElementById('subtotal').innerHTML = "$" + subTotal;
     document.getElementById('sales-tax').innerHTML = "+ $" + (totalTax).toFixed(2);

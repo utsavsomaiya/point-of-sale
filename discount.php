@@ -35,21 +35,29 @@
                                     <?= $discounts[$i]['minimum_spend_amount']; ?>
                                 </td>
                                 <td class="flex pt-2">
-                                    <?php if ($discounts[$i]['type'] == "1") { ?>
-                                        <div id="discount-<?= $count ?>">
-                                            <?= $discounts[$i]['discount_digit'] ?>
-                                        </div>
-                                        <div id="discount-type-<?= $count ?>">
-                                            %
-                                        </div>
-                                    <?php } else { ?>
-                                        <div id="discount-type-<?= $count ?>">
-                                            $
-                                        </div>
-                                        <div id="discount-<?= $count ?>">
-                                            <?= $discounts[$i]['discount_digit'] ?>
-                                        </div>
-                                    <?php } ?>
+                                    <?php if ($discounts[$i]['discount_digit'] != null) { ?>
+                                        <?php if ($discounts[$i]['type'] == "1") { ?>
+                                            <div id="discount-<?= $count ?>">
+                                                <?= $discounts[$i]['discount_digit'] ?>
+                                            </div>
+                                            <div id="discount-type-<?= $count ?>">
+                                                %
+                                            </div>
+                                        <?php } else { ?>
+                                            <div id="discount-type-<?= $count ?>">
+                                                $
+                                            </div>
+                                            <div id="discount-<?= $count ?>">
+                                                <?= $discounts[$i]['discount_digit'] ?>
+                                            </div>
+                                        <?php } ?>
+                                    <?php } else {
+    $fetchProduct->bindParam(':name', $discounts[$i]['discount_product']);
+    $fetchProduct->execute();
+    $product = $fetchProduct->fetchAll(); ?>
+                                    <img class="w-10 h-10 object-cover rounded-md" src="admin/images/<?= $product[0]['image']?>" alt="<?= $discounts[$i]['discount_product']?>">
+                                    <?php
+} ?>
                                 </td>
                             </tr>
                         <?php } ?>
