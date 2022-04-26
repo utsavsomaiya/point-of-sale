@@ -103,7 +103,7 @@
                         </li>
                         <li class="nav-item nav-category">Discounts</li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/admin/discount/list.php">
+                            <a class="nav-link" href="/admin/discount/show_discount.php">
                                 <img src="/images/discount.png" style="width: 20px; margin-right: 10px;">
                                 <span class="menu-title">Discount</span>
                             </a>

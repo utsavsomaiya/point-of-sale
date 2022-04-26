@@ -6,10 +6,10 @@
     $products = $fetchProducts->fetchAll();
     if (isset($_POST['submit'])) {
         if (!isset($_POST['digit'])) {
-            require '../discount/addCategory2.php';
+            require '../discount/add_discount_category2.php';
         }
         if (!isset($_POST['products'])) {
-            require '../discount/addCategory1.php';
+            require '../discount/add_discount_category1.php';
         }
     }
 ?>
@@ -73,8 +73,8 @@
                                 </label>
                             </div>
                             <div class="categorized-container">
-                                <?php  require '../discount/tier_template1.php'; ?>
-                                <?php require '../discount/tier_template2.php'; ?>
+                                <?php  require '../discount/add_tier_template1.php'; ?>
+                                <?php require '../discount/add_tier_template2.php'; ?>
                             </div>
                             <div class="form-group">
                                 <label for="discountStatus">Status</label>
@@ -114,7 +114,7 @@
                             <button type="submit" class="btn btn-primary me-2" name="submit">
                                 Submit
                             </button>
-                            <a href="../discount/list.php" class="btn btn-light">
+                            <a href="../discount/show_discount.php" class="btn btn-light">
                                 Cancel
                             </a>
                         </form>

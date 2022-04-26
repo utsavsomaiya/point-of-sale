@@ -5,7 +5,7 @@ function discountStatusChanged(id, status) {
         status = status - 1;
     }
     $.ajax({
-        url: "edit.php",
+        url: "edit_discount.php",
         data: {
             id: id,
             status: status

@@ -9,7 +9,7 @@
         $count = $fetchSales->rowCount();
         if ($count == 1) {
             $_SESSION['message'] = "Cannot delete this discount.";
-            header('location:/admin/discount/list.php');
+            header('location:/admin/discount/show_discount.php');
             exit;
         }
 
@@ -21,10 +21,10 @@
         $isExecute = $deleteDiscountTier->execute();
         if ($isExecute) {
             $_SESSION['message'] = "Discount deleted successfully.";
-            header('location:../discount/list.php');
+            header('location:../discount/show_discount.php');
             exit;
         }
         $_SESSION['message'] = "Something went wrong.";
-        header("location:../discount/delete.php?id=$discountId");
+        header("location:../discount/delete_discount.php?id=$discountId");
         exit;
     }

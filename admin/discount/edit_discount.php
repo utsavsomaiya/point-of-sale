@@ -72,7 +72,7 @@
                 $_SESSION['product'] = $_POST['products'];
             }
             if (empty($_POST['name']) || empty($_POST['category']) || empty($_POST['status'])) {
-                header("location:../discount/edit.php?id=$discountId");
+                header("location:../discount/edit_discount.php?id=$discountId");
                 exit;
             }
             $discountName = $_POST['name'];
@@ -96,7 +96,7 @@
             }
             for ($i = 0; $i < count($_POST['products']); $i++) {
                 if (empty($_POST['minimum_spend_amount'][$i]) || empty($_POST['products'][$i])) {
-                    header("location:../discount/edit.php?id=$discountId");
+                    header("location:../discount/edit_discount.php?id=$discountId");
                     exit;
                 }
             }
@@ -122,7 +122,7 @@
                     $_SESSION['status'] = $_POST['status'];
                 }
                 if (in_array($_POST['minimum_spend_amount'][$i], $minimumSpendAmount) || in_array($_POST['products'][$i], $discountProduct)) {
-                    header("location:../discount/edit.php?id=$discountId");
+                    header("location:../discount/edit_discount.php?id=$discountId");
                     exit;
                 }
                 $discountProduct[$i] = $_POST['products'][$i];
@@ -172,7 +172,7 @@
 
             if ($isExecuted) {
                 $_SESSION['message'] = "Discount updated successfully.";
-                header('location:../discount/list.php');
+                header('location:../discount/show_discount.php');
                 exit;
             }
         }
@@ -210,7 +210,7 @@
                 $_SESSION['digit'] = $_POST['digit'];
             }
             if (empty($_POST['name']) || empty($_POST['category']) || empty($_POST['status']) || empty($_POST['type'])) {
-                header("location:../discount/edit.php?id=$discountId");
+                header("location:../discount/edit_discount.php?id=$discountId");
                 exit;
             }
 
@@ -246,7 +246,7 @@
             }
             for ($i = 0; $i < count($_POST['digit']); $i++) {
                 if (empty($_POST['minimum_spend_amount'][$i]) || empty($_POST['digit'][$i]) || ($_POST['type'] == "1" && $_POST['digit'][$i] > 100)) {
-                    header("location:../discount/edit.php?id=$discountId");
+                    header("location:../discount/edit_discount.php?id=$discountId");
                     exit;
                 }
             }
@@ -272,7 +272,7 @@
                     $_SESSION['status'] = $_POST['status'];
                 }
                 if (in_array($_POST['minimum_spend_amount'][$i], $minimumSpendAmount) || in_array($_POST['digit'][$i], $discountDigit)) {
-                    header("location:../discount/edit.php?id=$discountId");
+                    header("location:../discount/edit_discount.php?id=$discountId");
                     exit;
                 }
                 $discountDigit[$i] = $_POST['digit'][$i];
@@ -322,7 +322,7 @@
 
             if ($isExecuted) {
                 $_SESSION['message'] = "Discount updated successfully.";
-                header('location:../discount/list.php');
+                header('location:../discount/show_discount.php');
                 exit;
             }
         }
@@ -434,7 +434,7 @@
                             <button type="submit" class="btn btn-primary me-2" name="submit">
                                 Update
                             </button>
-                            <a href="../discount/list.php" class="btn btn-light">
+                            <a href="../discount/show_discount.php" class="btn btn-light">
                                 Cancel
                             </a>
                         </form>

@@ -20,6 +20,6 @@ function deleteCategory(categoryId) {
 
 function deleteDiscount(discountId) {
     if (confirm('Are you sure?')) {
-        window.location.href = '../discount/delete.php?id=' + discountId;
+        window.location.href = '../discount/delete_discount.php?id=' + discountId;
     }
 }
