@@ -46,14 +46,13 @@
         $productStock = $_POST['product_stock'];
         $_SESSION['product_stock'] = $productStock;
 
-        $productImage = $_FILES['product_image']['name'];
         $imageExtension = pathinfo($productImage, PATHINFO_EXTENSION);
         if ($imageExtension != "jpg" && $imageExtension != "png" && $imageExtension != "jpeg" && $imageExtension != "gif") {
             $_SESSION['file_alert'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
             header('location:../product/add_product.php');
             exit;
         }
-        
+
         if (($_FILES["product_image"]["size"] > 1000000)) {
             $_SESSION['file_alert'] = "Image size exceeds 1MB.";
             header('location:../product/add_product.php');
@@ -68,6 +67,8 @@
         $destination_path = "../images/";
         $target_path = $destination_path . basename($_FILES["product_image"]["name"]);
         move_uploaded_file($_FILES['product_image']['tmp_name'], $target_path);
+        
+        $productImage = $_FILES['product_image']['name'];
 
         $insertProduct = $pdo->prepare("INSERT INTO `product`(`name`, `price`, `category_id`, `tax`, `stock`, `image`) VALUES(:product_name,:product_price,:product_category_id,:product_tax,:product_stock,:product_image_name)");
         $insertProduct->bindParam(':product_name', $productName);

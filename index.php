@@ -5,10 +5,20 @@
     $fetchProducts->execute();
     $products = $fetchProducts->fetchAll();
 
-    $fetchDiscounts = $pdo->prepare("SELECT discount.id,discount.name,discount.type,discount_tier.minimum_spend_amount,discount_tier.discount_digit,discount_tier.tier_id FROM `discount` JOIN `discount_tier` ON discount.id = discount_tier.discount_id WHERE discount.status = 2 ORDER BY `discount_tier`.`minimum_spend_amount` ASC");
+    $fetchDiscounts = $pdo->prepare("SELECT discount.id,discount.name,discount.type,discount_tier.minimum_spend_amount,discount_tier.discount_digit,discount_tier.tier_id,discount_tier.discount_product FROM `discount` JOIN `discount_tier` ON discount.id = discount_tier.discount_id WHERE discount.status = 2");
     $fetchDiscounts->execute();
     $discounts = $fetchDiscounts->fetchAll();
+    $i = 0;
+    foreach ($discounts as $discount) {
+        if ($discount['discount_product'] != null) {
+            $discountProduct[$i++] = $discount['discount_product'];
+        }
+    }
 
+    $discountProduct = join("','", $discountProduct);
+    $fetchProducts = $pdo->prepare("SELECT `name`,`image` FROM `product` WHERE `name` IN ('$discountProduct')");
+    $fetchProducts->execute();
+    $discountProducts = $fetchProducts->fetchAll();
 
     define("DISCOUNT", ["flat"=>2, "percentage"=>1]);
 

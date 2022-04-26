@@ -1,7 +1,7 @@
 <?php
     session_start();
     require 'layout/db_connect.php';
-    $salesDetails = $pdo->prepare("SELECT COUNT(*) as `total_sales`, SUM(`total`) as `sales_total`, SUM(`discount`) as `total_discount`, SUM(`total_tax`) as `total_tax` FROM `sales`");
+    $salesDetails = $pdo->prepare("SELECT COUNT(*) as `total_sales`, SUM(`total`) as `sales_total`, SUM(`price_discount`) as `total_discount`, SUM(`total_tax`) as `total_tax` FROM `sales`");
     $salesDetails->execute();
     $salesDetails = $salesDetails->fetchAll();
 ?>
