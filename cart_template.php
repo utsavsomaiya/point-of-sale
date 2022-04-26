@@ -23,3 +23,4 @@
     <input type="hidden" name="discount_id" class="discount-id">
     <input type="hidden" name="discount_tier_id" class="discount-tier-id">
 </template>
+
