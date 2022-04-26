@@ -16,6 +16,8 @@ function addToCart(id) {
             var index = cart.findIndex((obj => obj.id == id));
             if (document.getElementById('stock-' + id).innerHTML > cart[index].quantity) {
                 cart[index].quantity = parseInt(cart[index].quantity) + 1;
+            } else {
+                alert('Out of stock!!');
             }
             var price = parseInt(document.getElementById('price-' + id).innerHTML.trim());
             price *= cart[index].quantity;
@@ -23,11 +25,12 @@ function addToCart(id) {
         } else {
             const product = {
                 "id": id,
-                "productId": document.getElementById('id-' + id).innerHTML,
-                "name": document.getElementById('name-' + id).innerHTML,
+                "productId": document.getElementById('id-' + id).innerHTML.trim(),
+                "name": document.getElementById('name-' + id).innerHTML.trim(),
                 "img": document.getElementById('image-' + id).src,
                 "price": document.getElementById('price-' + id).innerHTML.trim(),
                 "tax": document.getElementById('tax-' + id).innerHTML.trim(),
+                "stock": document.getElementById('stock-'+ id).innerHTML.trim(),
                 "quantity": 1
             };
             cart.push(product);
@@ -55,7 +58,6 @@ function displayCart() {
     discountPrice = 0;
     document.getElementById('container').innerHTML = "";
     document.getElementById('hidden-form').innerHTML = "";
-    id = 1;
 
     document.getElementById('discount-img').style.visibility = 'visible';
 
@@ -64,97 +66,59 @@ function displayCart() {
 
     for (let i = 0; i < cart.length; i++) {
 
-        var divMain = document.createElement('div');
-        divMain.setAttribute('class', 'flex flex-row justify-between items-center mb-4');
-        divMain.setAttribute('id', 'div-main-' + id);
-        document.getElementById('container').appendChild(divMain);
-
-        var divMainSubFirst = document.createElement('div');
-        divMainSubFirst.setAttribute('class', 'flex flex-row items-center w-2/5');
-        divMainSubFirst.setAttribute('id', 'div-sub-first-' + id);
-        document.getElementById('div-main-' + id).appendChild(divMainSubFirst);
-
-        var productId = cart[i].id;
-
-        var inputId = document.createElement('input');
-        inputId.setAttribute('type', 'hidden');
-        inputId.setAttribute('name', 'productId[]');
-        inputId.value = cart[i].productId;
-        document.getElementById('hidden-form').appendChild(inputId);
-
         var productImg = cart[i].img;
         var productName = cart[i].name;
         var productPrice = cart[i].price;
-        var productQuantity = cart[i].quantity;
 
-        var inputQuantity = document.createElement('input');
-        inputQuantity.setAttribute('type', 'hidden');
-        inputQuantity.setAttribute('name', 'productQuantity[]');
-        inputQuantity.value = productQuantity;
-        document.getElementById('hidden-form').appendChild(inputQuantity);
+        var template = document.getElementById('cart-item').innerHTML;
+        var container = document.getElementById('container');
+        container.innerHTML += template;
+
+        var hiddenTemplate = document.getElementById('cart-hidden').innerHTML;
+        var hiddenForm = document.getElementById('hidden-form');
+        hiddenForm.innerHTML += hiddenTemplate;
+
+        let hiddenIds = document.querySelectorAll('.product-id');
+        hiddenIds.forEach(function (hiddenId, key) {
+            hiddenId.value = cart[key].productId;
+        });
+
+        let hiddenQuantities = document.querySelectorAll('.product-quantity');
+        hiddenQuantities.forEach(function (hiddenQuantity,key) {
+            hiddenQuantity.value = cart[key].quantity;
+        });
+
+        document.querySelectorAll('.w-10')[i].src = productImg;
+        document.querySelectorAll('.w-10')[i].alt = productName;
+        document.querySelectorAll('.ml-4')[i].innerHTML = productName;
+
+        let decreaseButtons = document.querySelectorAll('.decrease');
+        decreaseButtons.forEach(function (button,key) {
+            button.onclick =  function (){ changeQuantity (cart[key].id,"decrease") };
+        });
+
+        let quantities = document.querySelectorAll('.input-quantity');
+        quantities.forEach(function (quantity, key) {
+            quantity.value = cart[key].quantity;
+            quantity.onchange = function () { inputQuantity(cart[key].id, (i + 1)) };
+            quantity.id = 'input-id-' + (i + 1);
+            quantity.max = cart[key].stock;
+        });
+
+        let increaseButtons = document.querySelectorAll('.increase');
+        increaseButtons.forEach(function (button,key) {
+            button.onclick =  function (){ changeQuantity (cart[key].id,"increase") };
+        });
+
+        document.querySelectorAll('.currency-sign')[i].innerHTML = "$";
+        document.querySelectorAll('.price')[i].innerHTML = productPrice;
+
+        let removeButtons = document.querySelectorAll('.bg-red-300');
+        removeButtons.forEach(function (button, key){
+            button.onclick = function () { removeFromCart(cart[key].id) };
+        });
 
         subTotal += parseInt((cart[i].price));
-
-        var imageTag = document.createElement('img');
-        imageTag.src = productImg;
-        imageTag.setAttribute('class', 'w-10 h-10 object-cover rounded-md');
-        imageTag.setAttribute('alt', productName);
-        document.getElementById('div-sub-first-' + id).appendChild(imageTag);
-
-        var spanTag = document.createElement('span');
-        spanTag.setAttribute('class', 'ml-4 font-semibold text-sm');
-        spanTag.innerHTML = productName;
-        document.getElementById('div-sub-first-' + id).appendChild(spanTag);
-
-        var divMainSubSecond = document.createElement('div');
-        divMainSubSecond.setAttribute('class', 'w-32 flex justify-between');
-        divMainSubSecond.setAttribute('id', 'div-sub-second-' + id);
-        document.getElementById('div-main-' + id).appendChild(divMainSubSecond);
-
-        var decreaseButton = document.createElement('button');
-        decreaseButton.setAttribute('class', 'px-3 py-1 rounded-md bg-gray-300');
-        decreaseButton.setAttribute('onclick', 'changeQuantity(' + productId + ',' + '"decrease"' + ')');
-        decreaseButton.innerHTML = "-";
-        document.getElementById('div-sub-second-' + id).appendChild(decreaseButton);
-
-        var inputTag = document.createElement('input');
-        inputTag.setAttribute('class', 'mx-2 border text-center w-8');
-        inputTag.setAttribute('id', 'input-id-' + id);
-        inputTag.setAttribute('type', 'number');
-        inputTag.setAttribute('max', document.getElementById('stock-' + id).innerHTML);
-        inputTag.setAttribute('onchange', 'inputQuantity(' + productId + ',' + id + ')');
-        inputTag.setAttribute('value', productQuantity);
-        document.getElementById('div-sub-second-' + id).appendChild(inputTag);
-
-        var increaseButton = document.createElement('button');
-        increaseButton.setAttribute('class', 'px-3 py-1 rounded-md bg-gray-300');
-        increaseButton.setAttribute('onclick', 'changeQuantity(' + productId + ',' + '"increase"' + ')');
-        increaseButton.innerHTML = "+";
-        document.getElementById('div-sub-second-' + id).appendChild(increaseButton);
-
-        var divMainSubThird = document.createElement('div');
-        divMainSubThird.setAttribute('class', 'flex pl-3 font-semibold text-lg w-16 text-center');
-        divMainSubThird.setAttribute('id', 'div-sub-third-' + id);
-        document.getElementById('div-main-' + id).appendChild(divMainSubThird);
-
-        var divPriceSign = document.createElement('div');
-        divPriceSign.setAttribute('id', 'div-sign-' + id);
-        divPriceSign.innerHTML = "$";
-        document.getElementById('div-sub-third-' + id).appendChild(divPriceSign);
-
-        var divPrice = document.createElement('div');
-        divPrice.setAttribute('id', 'div-price-' + id);
-        divPrice.innerHTML = productPrice;
-        document.getElementById('div-sub-third-' + id).appendChild(divPrice);
-
-
-        var deleteIcon = document.createElement('span');
-        deleteIcon.setAttribute('class', 'px-3 py-1 rounded-md bg-red-300 text-white');
-        deleteIcon.setAttribute('onclick', 'removeFromCart(' + productId + ')');
-        deleteIcon.innerHTML = "x";
-        document.getElementById('div-main-' + id).appendChild(deleteIcon);
-
-        id++;
     }
 
     for (i = 0; i < discountsCount; i++) {
@@ -187,18 +151,15 @@ function displayCart() {
         discountThread.children[count].style.display = "table-row";
     }
 
+    let inputDiscountId = document.querySelectorAll('.discount-id');
+    inputDiscountId.forEach(function (id) {
+        id.value = discountId;
+    });
 
-    var inputDiscountId = document.createElement('input');
-    inputDiscountId.setAttribute('type', 'hidden');
-    inputDiscountId.setAttribute('name', 'discount_id');
-    inputDiscountId.value = discountId;
-    document.getElementById('hidden-form').appendChild(inputDiscountId);
-
-    var inputDiscountTierId = document.createElement('input');
-    inputDiscountTierId.setAttribute('type', 'hidden');
-    inputDiscountTierId.setAttribute('name', 'discount_tier_id');
-    inputDiscountTierId.value = discountTierId;
-    document.getElementById('hidden-form').appendChild(inputDiscountTierId);
+    let inputDiscountTierId = document.querySelectorAll('.discount-tier-id');
+    inputDiscountTierId.forEach(function (tierId){
+        tierId.value = discountTierId;
+    });
 
     if (minimumSpendAmount <= subTotal && subTotal > discountDigit) {
         discountPrice = (subTotal * parseInt(discountDigit)) / 100;
@@ -228,6 +189,7 @@ function inputQuantity(productId, id) {
     if (parseInt(document.getElementById('stock-' + productId).innerHTML.trim()) > parseInt(document.getElementById('input-id-' + id).value)) {
         cart[indexOfProduct].quantity = document.getElementById('input-id-' + id).value;
     } else {
+        alert('Available stock is -> ' + document.getElementById('stock-' + productId).innerHTML.trim());
         document.getElementById('input-id-' + id).value = document.getElementById('stock-' + productId).innerHTML.trim();
         cart[indexOfProduct].quantity = document.getElementById('input-id-' + id).value;
     }

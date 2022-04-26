@@ -123,7 +123,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Retail Shop</title>
-        <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.0.2/dist/tailwind.min.css">
+        <link rel="stylesheet" href="/tailwind.min.css">
         <link rel="stylesheet" href="/admin/vendors/mdi/css/custom_styles.css">
         <link rel="stylesheet" href="custom.css">
         <link rel = "icon" href ="/admin/image/retail-store-icon-18.png" type = "image/x-icon">
@@ -234,6 +234,7 @@
                         <?php } ?>
                     </div>
                 </div>
+                <?php require 'cart_template.php'; ?>
                 <script>productsCount = <?= sizeof($products) ?>;</script>
                 <script>discountsCount = <?= sizeof($discounts) ?>;</script>
                 <script type="text/javascript" src="custom.js"></script>
