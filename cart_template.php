@@ -9,7 +9,7 @@
             <input class="mx-2 border text-center w-8 input-quantity" type="number">
             <button class="px-3 py-1 rounded-md bg-gray-300 increase">+</button>
         </div>
-        <div class="flex pl-3 font-semibold text-lg w-16 text-center" >
+        <div class="flex pl-3 font-semibold text-lg w-16 text-center">
             <div class="currency-sign"></div>
             <div class="price"></div>
         </div>
@@ -23,4 +23,3 @@
     <input type="hidden" name="discount_id" class="discount-id">
     <input type="hidden" name="discount_tier_id" class="discount-tier-id">
 </template>
-

@@ -16,7 +16,7 @@
     }
 
     $discountProduct = join("','", $discountProduct);
-    $fetchProducts = $pdo->prepare("SELECT `name`,`image` FROM `product` WHERE `name` IN ('$discountProduct')");
+    $fetchProducts = $pdo->prepare("SELECT `name`,`image`,`price` FROM `product` WHERE `name` IN ('$discountProduct')");
     $fetchProducts->execute();
     $discountProducts = $fetchProducts->fetchAll();
 
@@ -208,7 +208,10 @@
                             </span>
                         </div>
                     </div>
-                    <div class="px-5 py-4 mt-5 overflow-y-auto h-64" id="container"></div>
+                    <div class="px-5 py-4 mt-5 overflow-y-auto h-64">
+                        <div id="container"></div>
+                        <div id="discount-container"></div>
+                    </div>
                     <div class="px-5 mt-5">
                         <div class="py-4 rounded-md shadow-lg">
                             <div class=" px-4 flex justify-between">
@@ -219,7 +222,8 @@
                                 <?php if (sizeof($discounts) > 0) { ?>
                                     <span class="font-semibold text-sm">Discount</span>
                                     <img src="/images/discount.png" style="width:20px;margin-right: 0px;position:absolute;right: 430px;" onclick="displayApplicableDiscountsModal('discount-modal-id')" id="discount-img">
-                                    <?php include 'discount.php';?>
+                                    <div class="hidden overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center" id="discount-modal-id" style="overflow: auto;">
+                                    </div>
                                     <div class="hidden opacity-25 fixed inset-0 z-40 bg-black" id="discount-modal-id-backdrop"></div>
                                     <span class="font-bold" id="discount-price">- $0.00</span>
                                 <?php } ?>
@@ -246,7 +250,6 @@
                 </div>
                 <?php require 'cart_template.php'; ?>
                 <script>productsCount = <?= sizeof($products) ?>;</script>
-                <script>discountsCount = <?= sizeof($discounts) ?>;</script>
                 <script type="text/javascript" src="custom.js"></script>
                 <script>
                     <?php
@@ -259,4 +262,5 @@
             </div>
         </div>
     </body>
+    <?php include 'discount.php'; ?>
 </html>
