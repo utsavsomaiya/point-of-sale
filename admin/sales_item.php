@@ -3,7 +3,7 @@
     if (isset($_GET['id'])) {
         $salesId = $_GET['id'];
         require 'layout/db_connect.php';
-        $fetchSalesItem = $pdo->prepare('SELECT sales_item.product_id, product.name, product.image, sales_item.product_quantity, sales_item.product_price, sales_item.product_total_price,discount_tier.discount_digit,discount.type, sales_item.product_discount,sales_item.product_taxable_price,sales_item.product_tax_percentage,sales_item.product_tax_amount,sales.subtotal,sales.total_tax,sales.discount,sales.total FROM sales_item JOIN product ON sales_item.product_id = product.id JOIN sales ON sales_item.sales_id = sales.id AND sales_item.sales_id = :sales_id JOIN discount_tier ON discount_tier.tier_id = sales_item.product_discount_tier_id JOIN discount ON discount.id = sales_item.product_discount_id');
+        $fetchSalesItem = $pdo->prepare('SELECT sales_item.product_id, product.name, product.image, sales_item.product_quantity, sales_item.product_price, sales_item.product_total_price,discount_tier.discount_digit,discount.type, sales_item.product_discount,sales_item.product_taxable_price,sales_item.product_tax_percentage,sales_item.product_tax_amount,sales.subtotal,sales.total_tax,sales.total_discount,sales.discount_category,sales.total FROM sales_item JOIN product ON sales_item.product_id = product.id JOIN sales ON sales_item.sales_id = sales.id AND sales_item.sales_id = :sales_id JOIN discount_tier ON discount_tier.tier_id = sales_item.product_discount_tier_id JOIN discount ON discount.id = sales_item.product_discount_id');
         $fetchSalesItem->bindParam(':sales_id', $salesId);
         $fetchSalesItem->execute();
         $salesItems = $fetchSalesItem->fetchAll();
@@ -36,10 +36,15 @@
                                 <th>Tax percentage</th>
                                 <th>Total Tax</th>
                             </tr>
-                            <?php foreach ($salesItems as $salesItem) { ?>
+                            <?php foreach ($salesItems as $key=>$salesItem) { ?>
                                 <tr>
                                     <td><?= $salesItem['product_id'] ?></td>
-                                    <td><?= $salesItem['name'] ?></td>
+                                    <td>
+                                        <?= $salesItem['name'] ?>
+                                        <?php if ($key == sizeof($salesItems) - 1 && $salesItem['discount_category'] == "gift") { ?>
+                                            <span class="bg-warning text-white">Free</span>
+                                        <?php } ?>
+                                    </td>
                                     <td><img src="<?= '/admin/images/' . $salesItem['image'] ?>"></td>
                                     <td><?= "$".$salesItem['product_price'] ?></td>
                                     <td><?= $salesItem['product_quantity'] ?></td>
@@ -48,8 +53,10 @@
                                         <?php
                                             if ($salesItem['type'] == "1") {
                                                 echo $salesItem['discount_digit']."%";
-                                            } else {
+                                            } elseif (($salesItem['type'] == "2")) {
                                                 echo "$".$salesItem['discount_digit'];
+                                            } else {
+                                                echo "Gift Discount";
                                             }
                                         ?>
                                     </td>
@@ -72,7 +79,7 @@
                                 <span><?= "$".$salesItems[0]['subtotal']; ?></span>
                                 <br>
                                 <span style="padding-right: 40px;">Discount = </span>
-                                <span><?= "-"."$".$salesItems[0]['discount']; ?></span>
+                                <span><?= "-"."$".$salesItems[0]['total_discount']; ?></span>
                                 <br>
                                 <span style="padding-right: 80px;">TAX = </span>
                                 <span><?= "+"."$".$salesItems[0]['total_tax']; ?></span>

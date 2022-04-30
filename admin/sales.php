@@ -36,12 +36,14 @@
                                                 <?php
                                                     if ($sale['type'] == "1") {
                                                         echo $sale['discount_digit']."%";
-                                                    } else {
+                                                    } elseif ($sale['type'] == "2") {
                                                         echo "$".$sale['discount_digit'];
+                                                    } else {
+                                                        echo "Gift Discount";
                                                     }
                                                     ?>
                                             </td>
-                                            <td><?= "$".$sale['discount'] ?></td>
+                                            <td><?= "$".$sale['total_discount'] ?></td>
                                             <td><?= "$".$sale['total_tax'] ?></td>
                                             <td><?= "$".$sale['total']?></td>
                                         </tr>

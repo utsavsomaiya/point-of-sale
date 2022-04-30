@@ -50,45 +50,89 @@
             $subtotal +=  ($productPrices[$i] * $productQuantities[$i]) ;
         }
 
-        $fetchDiscount = $pdo->prepare("SELECT discount.*,discount_tier.* FROM discount,discount_tier WHERE discount.id = :id AND discount_tier.tier_id = :tier_id");
-        $fetchDiscount->bindParam(':id', $_POST['discount_id']);
-        $fetchDiscount->bindParam(':tier_id', $_POST['discount_tier_id']);
-        $fetchDiscount->execute();
-        $discounts = $fetchDiscount->fetchAll();
-        foreach ($discounts as $discount) {
-            $minimumSpendAmount = (int) $discount['minimum_spend_amount'];
-            $discountType = (int) $discount['type'];
-            $productsDiscount = (int) $discount['discount_digit'];
-        }
-
         $totalDiscount = 0;
         $totalTax = 0;
         $discountPrice = 0;
-        $discountId = null;
-        $discountTierId = null;
-        if ($minimumSpendAmount <= $subtotal && $subtotal > $productsDiscount) {
-            $discountId = $_POST['discount_id'];
-            $discountTierId = $_POST['discount_tier_id'];
-            $discountPrice = ($subtotal * $productsDiscount) / 100;
-            if ($discountType == DISCOUNT["flat"]) {
-                $discountPrice =  $productsDiscount;
+        $discountId = 0;
+        $discountTierId = 0;
+        $discountType = null;
+        $discountProduct = null;
+        $minimumSpendAmount = null;
+        $discountCategory = null;
+
+        $fetchDiscount = $pdo->prepare("SELECT discount.*,discount_tier.* FROM discount,discount_tier WHERE discount.id = :id AND discount_tier.tier_id = :tier_id");
+        $fetchDiscount->bindParam(':id', $_POST['discounts_id']);
+        $fetchDiscount->bindParam(':tier_id', $_POST['discounts_tier_id']);
+        $fetchDiscount->execute();
+        $discounts = $fetchDiscount->fetchAll();
+        /* var_dump($discounts); */
+        foreach ($discounts as $discount) {
+            $minimumSpendAmount = (int) $discount['minimum_spend_amount'];
+            if ($discount['discount_digit'] != null) {
+                $discountType = (int) $discount['type'];
+                $discountPrice = (int) $discount['discount_digit'];
+                if ($discountType == DISCOUNT["percentage"]) {
+                    $discountPrice = ($subtotal * (int) $discount['discount_digit']) / 100;
+                }
+                $discountCategory = "price";
+            } else {
+                $discountProduct = $discount['discount_product'];
+                $discountCategory = "gift";
             }
         }
+
+        if (isset($discountProduct)) {
+            $fetchDiscountProduct = $pdo->prepare("SELECT * FROM `product` WHERE `name` = :name");
+            $fetchDiscountProduct->bindParam(':name', $discountProduct);
+            $fetchDiscountProduct->execute();
+            $fetchDiscountProduct = $fetchDiscountProduct->fetchAll();
+            $discountProductId = $fetchDiscountProduct[0]['id'];
+            $discountProductName = $fetchDiscountProduct[0]['name']."(Free)";
+            $discountPrice = (int) $fetchDiscountProduct[0]['price'];
+            $discountProductQuantity = 1;
+            array_push($productIds, $discountProductId);
+            array_push($productPrices, $discountPrice);
+            array_push($productQuantities, $discountProductQuantity);
+            array_push($productTaxes, (int)$fetchDiscountProduct[0]['tax']);
+        }
+        if ($discountType == DISCOUNT["flat"]) {
+            if ($discountPrice >= $subtotal) {
+                $discountPrice = $subtotal;
+            }
+        }
+
+
+        if ($minimumSpendAmount <= $subtotal && $subtotal >= $discountPrice) {
+            $discountId = $_POST['discounts_id'];
+            $discountTierId = $_POST['discounts_tier_id'];
+        }
+
         for ($i = 0; $i < sizeof($productIds); $i++) {
             $productDiscount[$i] = round((($productPrices[$i] * $productQuantities[$i] * $discountPrice)/$subtotal), 2);
             $totalDiscount += $productDiscount[$i];
+            if ($discountCategory == "gift") {
+                $productDiscount[$i] = 0;
+                $totalDiscount = $discountPrice;
+                if ($i == sizeof($productIds)-1) {
+                    $productDiscount[array_key_last($productDiscount)] = $discountPrice;
+                }
+            }
+        }
+        for ($i = 0; $i < sizeof($productIds); $i++) {
             $productTaxablePrice[$i] = $productPrices[$i] * $productQuantities[$i] - $productDiscount[$i];
             $productsTax[$i] = ($productTaxablePrice[$i] * $productTaxes[$i])/100;
             $totalTax += $productsTax[$i];
         }
+
         $grandTotal = $subtotal - $totalDiscount + $totalTax;
 
-        $insertSales = $pdo->prepare("INSERT INTO `sales` (`subtotal`, `total_tax`, `discount_id`, `discount_tier_id`, `discount`, `total`) VALUES (:subtotal,:total_tax,:discount_id, :discount_tier_id,:discount,:total)");
+        $insertSales = $pdo->prepare("INSERT INTO `sales` (`subtotal`, `total_tax`, `total_discount`, `discount_id`, `discount_tier_id`, `discount_category`, `total`) VALUES (:subtotal,:total_tax, :total_discount,:discount_id, :discount_tier_id,:discount_category,:total)");
         $insertSales->bindParam(':subtotal', $subtotal);
         $insertSales->bindParam(':total_tax', $totalTax);
+        $insertSales->bindParam(':total_discount', $totalDiscount);
         $insertSales->bindParam(':discount_id', $discountId);
         $insertSales->bindParam(':discount_tier_id', $discountTierId);
-        $insertSales->bindParam(':discount', $totalDiscount);
+        $insertSales->bindParam(':discount_category', $discountCategory);
         $insertSales->bindParam(':total', $grandTotal);
         $insertSales->execute();
         $salesId = $pdo->lastInsertId();
@@ -241,6 +285,7 @@
                     <div class="px-5 mt-5">
                         <form method="post">
                             <div id='hidden-form'></div>
+                            <div id="discount-form"></div>
                             <button name="submit" class="px-4 py-4 rounded-md shadow-lg text-center bg-yellow-500 text-white font-semibold" style="width: 500px;">Complete Sale</button>
                         </form>
                         <?php if (isset($_SESSION['message'])) { ?>

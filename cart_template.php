@@ -20,6 +20,4 @@
 <template id="cart-hidden">
     <input type="hidden" name="productId[]" class="product-id">
     <input type="hidden" name="productQuantity[]"class="product-quantity">
-    <input type="hidden" name="discount_id" class="discount-id">
-    <input type="hidden" name="discount_tier_id" class="discount-tier-id">
 </template>
