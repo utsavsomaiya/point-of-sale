@@ -53,8 +53,8 @@
         $totalDiscount = 0;
         $totalTax = 0;
         $discountPrice = 0;
-        $discountId = 0;
-        $discountTierId = 0;
+        $discountId = null;
+        $discountTierId = null;
         $discountType = null;
         $discountProduct = null;
         $minimumSpendAmount = null;
@@ -65,7 +65,6 @@
         $fetchDiscount->bindParam(':tier_id', $_POST['discounts_tier_id']);
         $fetchDiscount->execute();
         $discounts = $fetchDiscount->fetchAll();
-        /* var_dump($discounts); */
         foreach ($discounts as $discount) {
             $minimumSpendAmount = (int) $discount['minimum_spend_amount'];
             if ($discount['discount_digit'] != null) {
@@ -105,6 +104,10 @@
         if ($minimumSpendAmount <= $subtotal && $subtotal >= $discountPrice) {
             $discountId = $_POST['discounts_id'];
             $discountTierId = $_POST['discounts_tier_id'];
+            if ($_POST['discounts_id'] == 'null') {
+                $discountId = null;
+                $discountTierId = null;
+            }
         }
 
         for ($i = 0; $i < sizeof($productIds); $i++) {
