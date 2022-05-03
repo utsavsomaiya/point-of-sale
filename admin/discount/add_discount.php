@@ -6,10 +6,10 @@
     $products = $fetchProducts->fetchAll();
     if (isset($_POST['submit'])) {
         if (!isset($_POST['digit'])) {
-            require '../discount/add_discount_category2.php';
+            require '../discount/add_page_gift_validation.php';
         }
         if (!isset($_POST['products'])) {
-            require '../discount/add_discount_category1.php';
+            require '../discount/add_page_price_validation.php';
         }
     }
 ?>
@@ -73,8 +73,8 @@
                                 </label>
                             </div>
                             <div class="categorized-container">
-                                <?php  require '../discount/add_tier_template1.php'; ?>
-                                <?php require '../discount/add_tier_template2.php'; ?>
+                                <?php  require '../discount/add_tier_price_template.php'; ?>
+                                <?php require '../discount/add_tier_gift_template.php'; ?>
                             </div>
                             <div class="form-group">
                                 <label for="discountStatus">Status</label>

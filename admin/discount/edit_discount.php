@@ -394,8 +394,8 @@
                                 </label>
                             </div>
                             <div class="categorized-container">
-                                <?php  require '../discount/edit_tier_template1.php'; ?>
-                                <?php require '../discount/edit_tier_template2.php'; ?>
+                                <?php  require '../discount/edit_tier_price_template.php'; ?>
+                                <?php require '../discount/edit_tier_gift_template.php'; ?>
                             </div>
                             <div class="form-group">
                                 <label for="discountStatus">Status</label>
