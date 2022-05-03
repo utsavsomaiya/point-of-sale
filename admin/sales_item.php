@@ -78,6 +78,8 @@
                                                 echo $discount[0]['discount_digit']."%";
                                             } elseif (($discount[0]['type'] == "2")) {
                                                 echo "$".$discount[0]['discount_digit'];
+                                            } else {
+                                                echo "$".$salesItem['product_discount'];
                                             }
                                         }
                                         ?>

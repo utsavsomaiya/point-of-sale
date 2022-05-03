@@ -9,6 +9,7 @@
     $fetchDiscounts->execute();
     $discounts = $fetchDiscounts->fetchAll();
     $i = 0;
+    $discountProduct = [];
     foreach ($discounts as $discount) {
         if ($discount['discount_product'] != null) {
             $discountProduct[$i++] = $discount['discount_product'];
@@ -91,6 +92,7 @@
             $discountProductQuantity = 1;
             array_push($productIds, $discountProductId);
             array_push($productPrices, $discountPrice);
+            $subtotal += $discountPrice;
             array_push($productQuantities, $discountProductQuantity);
             array_push($productTaxes, (int)$fetchDiscountProduct[0]['tax']);
         }
@@ -101,7 +103,7 @@
         }
 
 
-        if ($minimumSpendAmount <= $subtotal && $subtotal >= $discountPrice) {
+        if ($minimumSpendAmount < $subtotal && $subtotal > $discountPrice) {
             $discountId = $_POST['discounts_id'];
             $discountTierId = $_POST['discounts_tier_id'];
             if ($_POST['discounts_id'] == 'null') {
@@ -114,7 +116,7 @@
             $productDiscount[$i] = round((($productPrices[$i] * $productQuantities[$i] * $discountPrice)/$subtotal), 2);
             $totalDiscount += $productDiscount[$i];
             if ($discountCategory == "gift") {
-                $productDiscount[$i] = 0;
+                $productDiscount[$i] = round((($productPrices[$i] * $productQuantities[$i] * $discountPrice)/($subtotal - $discountPrice)), 2);
                 $totalDiscount = $discountPrice;
                 if ($i == sizeof($productIds)-1) {
                     $productDiscount[array_key_last($productDiscount)] = $discountPrice;
@@ -268,7 +270,7 @@
                             <div class=" px-4 flex justify-between">
                                 <?php if (sizeof($discounts) > 0) { ?>
                                     <span class="font-semibold text-sm">Discount</span>
-                                    <img src="/images/discount.png" style="width:20px;margin-right: 0px;position:absolute;right: 430px;" onclick="displayApplicableDiscountsModal('discount-modal-id')" id="discount-img">
+                                    <img src="/images/discount.png" style="width:20px;margin-right: 0px;position:absolute;right: 430px; visibility: hidden;" onclick="displayApplicableDiscountsModal('discount-modal-id')" id="discount-img">
                                     <div class="hidden overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center" id="discount-modal-id" style="overflow: auto;">
                                     </div>
                                     <div class="hidden opacity-25 fixed inset-0 z-40 bg-black" id="discount-modal-id-backdrop"></div>
@@ -298,6 +300,7 @@
                 </div>
                 <?php require 'cart_template.php'; ?>
                 <script>productsCount = <?= sizeof($products) ?>;</script>
+                <script>discountsCount = <?= sizeof($discounts) ?>;</script>
                 <script type="text/javascript" src="custom.js"></script>
                 <script>
                     <?php

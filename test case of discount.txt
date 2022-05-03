@@ -1,0 +1,13 @@
+Test case 1 : -
+=> When gift discount is available and also price discount is available then first eligible is apply and discount list provided other discount which has minimum spend amount <= subtotal.I can apply other discount product discount is removed.
+
+Test case 2 : -
+=> When both discount is available then after removed the gift discount product and after add this product at that time we can also check the subtotal >= minimum spend amount.
+
+Test case 3 : -
+=> When cart product is removed which is available in discount then automatically removed discount product from cart.
+
+Test case 4 : -
+=> When all discount is removed then not display discount column and also apply tax is based on subtotal.
+
+Test case 5 :-
