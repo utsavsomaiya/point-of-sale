@@ -39,3 +39,4 @@
         <span class="px-3 py-1 rounded-md bg-purple-300 text-white">x</span>
     </div>
 </template>
+

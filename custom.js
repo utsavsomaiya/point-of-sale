@@ -237,7 +237,6 @@ function displayDiscountCart() {
         for (let i = 0; i < cart.length; i++) {
             discount = (parseInt(cart[i].price) * parseInt(discountProductPrice)) / (subTotal - parseInt(discountProductPrice));
             totalDiscount += discount;
-            console.log(discount);
             tax = ((parseInt(cart[i].price) - discount) * parseInt(cart[i].tax) / 100);
             totalTax += tax;
         }
@@ -252,7 +251,6 @@ function displayDiscountCart() {
 
 function displayCart() {
     subTotal = 0;
-    count = 0;
 
     document.getElementById('container').innerHTML = "";
     document.getElementById('hidden-form').innerHTML = "";
