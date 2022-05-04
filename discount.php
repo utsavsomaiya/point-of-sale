@@ -38,7 +38,7 @@
                                 <td class="flex pt-2" id="discounts-price-<?= $count ?>">
                                     <?php if ($discounts[$i]['type'] != null) { ?>
                                         <?php if ($discounts[$i]['type'] == "1") { ?>
-                                            <div id="discount-digit-<?= $count ?>">
+                                            <div id="discount-digits-<?= $count ?>">
                                                 <?= $discounts[$i]['discount_digit'] ?>
                                             </div>
                                             <div id="discount-type-<?= $count ?>">

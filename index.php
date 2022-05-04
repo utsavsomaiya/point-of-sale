@@ -70,9 +70,9 @@
             $minimumSpendAmount = (int) $discount['minimum_spend_amount'];
             if ($discount['discount_digit'] != null) {
                 $discountType = (int) $discount['type'];
-                $discountPrice = (int) $discount['discount_digit'];
+                $discountPrice = (float) $discount['discount_digit'];
                 if ($discountType == DISCOUNT["percentage"]) {
-                    $discountPrice = ($subtotal * (int) $discount['discount_digit']) / 100;
+                    $discountPrice = ($subtotal * (float) $discount['discount_digit']) / 100;
                 }
                 $discountCategory = "price";
             } else {
