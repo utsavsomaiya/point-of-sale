@@ -3,10 +3,30 @@
     if (isset($_GET['id'])) {
         $salesId = $_GET['id'];
         require 'layout/db_connect.php';
-        $fetchSalesItem = $pdo->prepare('SELECT sales_item.product_id, product.name, product.image, sales_item.product_quantity, sales_item.product_price, sales_item.product_total_price,discount_tier.discount_digit,discount.type, sales_item.product_discount,sales_item.product_taxable_price,sales_item.product_tax_percentage,sales_item.product_tax_amount,sales.subtotal,sales.total_tax,sales.discount,sales.total FROM sales_item JOIN product ON sales_item.product_id = product.id JOIN sales ON sales_item.sales_id = sales.id AND sales_item.sales_id = :sales_id JOIN discount_tier ON discount_tier.tier_id = sales_item.product_discount_tier_id JOIN discount ON discount.id = sales_item.product_discount_id');
+        $fetchSalesItem = $pdo->prepare('SELECT * FROM sales_item,sales WHERE sales_item.sales_id = :sales_id AND sales.id = :sales');
         $fetchSalesItem->bindParam(':sales_id', $salesId);
+        $fetchSalesItem->bindParam(':sales', $salesId);
         $fetchSalesItem->execute();
         $salesItems = $fetchSalesItem->fetchAll();
+        foreach ($salesItems as $keys=>$salesItem) {
+            $productId[$keys] = $salesItem['product_id'];
+            $discountId = $salesItem['discount_id'];
+            $discountTierId = $salesItem['discount_tier_id'];
+        }
+        for ($i=0;$i<sizeof($productId);$i++) {
+            $fetchProducts = $pdo->prepare("SELECT * FROM product WHERE `id` = $productId[$i]");
+            $fetchProducts->execute();
+            $products[$i] = $fetchProducts->fetchAll();
+        }
+        if (is_null($discountId)) {
+            $discountId = "NULL";
+        }
+        if (is_null($discountTierId)) {
+            $discountTierId = "NULL";
+        }
+        $fetchDiscounts = $pdo->prepare("SELECT * FROM discount,discount_tier WHERE discount.id = $discountId AND discount_tier.tier_id = $discountTierId");
+        $fetchDiscounts->execute();
+        $discount = $fetchDiscounts->fetchAll();
     } else {
         header('location:/admin/sales.php');
         exit;
@@ -36,21 +56,32 @@
                                 <th>Tax percentage</th>
                                 <th>Total Tax</th>
                             </tr>
-                            <?php foreach ($salesItems as $salesItem) { ?>
+                            <?php foreach ($salesItems as $key=>$salesItem) { ?>
                                 <tr>
                                     <td><?= $salesItem['product_id'] ?></td>
-                                    <td><?= $salesItem['name'] ?></td>
-                                    <td><img src="<?= '/admin/images/' . $salesItem['image'] ?>"></td>
+                                    <td>
+                                        <?= $products[$key][0]['name'] ?>
+                                        <?php if ($key == sizeof($salesItems) - 1 && $salesItem['discount_category'] == "gift") { ?>
+                                            <span class="bg-warning text-white">Free</span>
+                                        <?php } ?>
+                                    </td>
+                                    <td><img src="<?= '/admin/images/' . $products[$key][0]['image'] ?>"></td>
                                     <td><?= "$".$salesItem['product_price'] ?></td>
                                     <td><?= $salesItem['product_quantity'] ?></td>
                                     <td><?= "$".$salesItem['product_total_price'] ?></td>
                                     <td>
                                         <?php
-                                            if ($salesItem['type'] == "1") {
-                                                echo $salesItem['discount_digit']."%";
+                                        if ($discountId == "NULL") {
+                                            echo "$0";
+                                        } else {
+                                            if ($discount[0]['type'] == "1") {
+                                                echo $discount[0]['discount_digit']."%";
+                                            } elseif (($discount[0]['type'] == "2")) {
+                                                echo "$".$discount[0]['discount_digit'];
                                             } else {
-                                                echo "$".$salesItem['discount_digit'];
+                                                echo "$".$salesItem['product_discount'];
                                             }
+                                        }
                                         ?>
                                     </td>
                                     <td><?= "$".$salesItem['product_discount'] ?></td>
@@ -72,7 +103,7 @@
                                 <span><?= "$".$salesItems[0]['subtotal']; ?></span>
                                 <br>
                                 <span style="padding-right: 40px;">Discount = </span>
-                                <span><?= "-"."$".$salesItems[0]['discount']; ?></span>
+                                <span><?= "-"."$".$salesItems[0]['total_discount']; ?></span>
                                 <br>
                                 <span style="padding-right: 80px;">TAX = </span>
                                 <span><?= "+"."$".$salesItems[0]['total_tax']; ?></span>

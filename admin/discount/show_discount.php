@@ -13,7 +13,7 @@
                 <div class="card-body">
                     <h4 class="card-title">
                         <span style="margin-right:80px;">Discounts</span>
-                        <a href="add.php">Add New Discount</a>
+                        <a href="add_discount.php">Add New Discount</a>
                     </h4>
                     <?php if (sizeof($discounts) > 0) { ?>
                         <table class="table">
@@ -47,7 +47,7 @@
                                         </td>
                                         <td>
                                             <a
-                                            href="../discount/edit.php?id=<?= $discount['id'] ?>">
+                                            href="../discount/edit_discount.php?id=<?= $discount['id'] ?>">
                                                 <img src="/admin/image/edit-icon.png">
                                             </a>
                                         </td>

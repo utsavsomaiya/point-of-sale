@@ -1,7 +1,7 @@
 <?php
     session_start();
     require 'layout/db_connect.php';
-    $salesDetails = $pdo->prepare("SELECT COUNT(*) as `total_sales`, SUM(`total`) as `sales_total`, SUM(`discount`) as `total_discount`, SUM(`total_tax`) as `total_tax` FROM `sales`");
+    $salesDetails = $pdo->prepare("SELECT COUNT(*) as `total_sales`, SUM(`total`) as `sales_total`, SUM(`total_discount`) as `total_discount`, SUM(`total_tax`) as `total_tax`, COUNT(IF(sales.discount_category = 'gift',sales.discount_category,NULL)) as `gift_discount` FROM `sales`");
     $salesDetails->execute();
     $salesDetails = $salesDetails->fetchAll();
 ?>
@@ -32,6 +32,12 @@
                                             <p class="statistics-title">Total discount offered</p>
                                             <h3 class="rate-percentage">
                                                 <?= round($salesDetails[0]['total_discount'], 2)?>
+                                            </h3>
+                                        </div>
+                                        <div>
+                                            <p class="statistics-title">Total Gift Discount</p>
+                                            <h3 class="rate-percentage">
+                                                <?= $salesDetails[0]['gift_discount'] ?>
                                             </h3>
                                         </div>
                                         <div class="d-none d-md-block">

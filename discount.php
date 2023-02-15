@@ -1,6 +1,6 @@
-<div class="hidden overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center" id="discount-modal-id">
+<template id="discount-template">
     <div class="relative w-auto my-6 mx-auto max-w-sm">
-        <div class="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+        <div class="border-0 rounded-lg shadow-lg relative flex flex-col bg-white outline-none focus:outline-none" style="width:fit-content">
             <div class="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
                 <h3 class="text-3xl font-semibold">
                     Discounts
@@ -18,7 +18,8 @@
                             <th class="pr-5">Id</th>
                             <th class="pr-5">Name</th>
                             <th class="pr-5 w-5" colspan="2">Minimum Spend Amount</th>
-                            <th class="pr-5">Price</th>
+                            <th class="pr-5 w-5">Discount (Price/Product)</th>
+                            <th class="pr-5">Action</th>
                         </tr>
                     </thead>
                     <tbody id="discounts-table">
@@ -34,22 +35,39 @@
                                 <td id="minimum-spend-amount-<?= $count ?>">
                                     <?= $discounts[$i]['minimum_spend_amount']; ?>
                                 </td>
-                                <td class="flex pt-2">
-                                    <?php if ($discounts[$i]['type'] == "1") { ?>
-                                        <div id="discount-<?= $count ?>">
-                                            <?= $discounts[$i]['discount_digit'] ?>
-                                        </div>
-                                        <div id="discount-type-<?= $count ?>">
-                                            %
-                                        </div>
+                                <td class="flex pt-2" id="discounts-price-<?= $count ?>">
+                                    <?php if ($discounts[$i]['type'] != null) { ?>
+                                        <?php if ($discounts[$i]['type'] == "1") { ?>
+                                            <div id="discount-digits-<?= $count ?>">
+                                                <?= $discounts[$i]['discount_digit'] ?>
+                                            </div>
+                                            <div id="discount-type-<?= $count ?>">
+                                                %
+                                            </div>
+                                        <?php } else { ?>
+                                            <div id="discount-type-<?= $count ?>">
+                                                $
+                                            </div>
+                                            <div id="discount-digit-<?= $count ?>">
+                                                <?= $discounts[$i]['discount_digit'] ?>
+                                            </div>
+                                            <?php } ?>
                                     <?php } else { ?>
-                                        <div id="discount-type-<?= $count ?>">
-                                            $
-                                        </div>
-                                        <div id="discount-<?= $count ?>">
-                                            <?= $discounts[$i]['discount_digit'] ?>
-                                        </div>
+                                        <?php foreach ($discountProducts as $discountProduct) { ?>
+                                            <?php if ($discountProduct['name'] == $discounts[$i]['discount_product']) { ?>
+                                                <label hidden id="discount-product-price-<?= $count ?>"><?= $discountProduct['price'] ?></label>
+                                                <img class="w-11 h-11 object-cover rounded-md" src="admin/images/<?= $discountProduct['image']?>">
+                                            <?php } ?>
                                     <?php } ?>
+                                    <?php } ?>
+                                </td>
+                                <label hidden id="discount-product-name-<?= $count ?>">
+                                    <?php if ($discounts[$i]['type'] == null) { ?>
+                                        <?= $discounts[$i]['discount_product'] ?>
+                                    <?php } ?>
+                                </label>
+                                <td id="apply-button-<?= $count ?>">
+                                    <button class="px-3 py-1 rounded-md bg-red-100 text-red-500">Apply</button>
                                 </td>
                             </tr>
                         <?php } ?>
@@ -58,4 +76,4 @@
             </div>
         </div>
     </div>
-</div>
+</template>
